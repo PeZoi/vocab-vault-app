@@ -1,5 +1,5 @@
 import { MainLayout } from 'components';
-import { AboutPage, DeckPage, HomePage } from 'pages';
+import { AboutPage, DeckDetailPage, DeckPage, HomePage } from 'pages';
 import { RouterProvider } from 'react-router';
 import { createBrowserRouter } from 'react-router-dom';
 import { PATH_CONSTANTS } from 'utils';
@@ -21,6 +21,10 @@ export function MainRouter() {
             {
                path: PATH_CONSTANTS.DECKS,
                element: <DeckPage />, // Trang decks
+            },
+            {
+               path: PATH_CONSTANTS.DECK_DETAIL,
+               element: <DeckDetailPage />,
             },
          ],
       },

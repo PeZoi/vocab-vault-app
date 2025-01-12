@@ -18,7 +18,7 @@ export const MENU_HOME =
       {
          key: PATH_CONSTANTS.DECKS,
          icon: React.createElement(FolderOpenOutlined),
-         label: 'Bộ từ vựng của bạn',
+         label: 'Bộ từ vựng của tôi',
       },
       {
          key: PATH_CONSTANTS.ABOUT,

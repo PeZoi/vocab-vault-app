@@ -16,27 +16,34 @@ export const MainLayout: React.FC = () => {
    } = theme.useToken();
 
    return (
-      <Layout className="min-h-[100vh]">
+      <Layout className="min-h-[100vh] relative">
          <Sider trigger={null} collapsible collapsed={collapsed} style={{ background: colorBgContainer }}>
-            <Button
-               type="text"
-               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-               onClick={() => setCollapsed(!collapsed)}
+            <div
+               className="sticky top-0"
                style={{
-                  fontSize: '16px',
-                  width: '100%',
-                  height: 64,
+                  zIndex: 10,
                }}
-            />
-            <Menu
-               theme="light"
-               mode="inline"
-               defaultSelectedKeys={[pathname]}
-               items={MENU_HOME}
-               onClick={({ key }) => {
-                  navigate(key);
-               }}
-            />
+            >
+               <Button
+                  type="text"
+                  icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  onClick={() => setCollapsed(!collapsed)}
+                  style={{
+                     fontSize: '16px',
+                     width: '100%',
+                     height: 64,
+                  }}
+               />
+               <Menu
+                  theme="light"
+                  mode="inline"
+                  defaultSelectedKeys={[pathname]}
+                  items={MENU_HOME}
+                  onClick={({ key }) => {
+                     navigate(key);
+                  }}
+               />
+            </div>
          </Sider>
          <Layout>
             <Header />
