@@ -7,9 +7,8 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
-@Table(name = "users")
+@Table
 public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +31,10 @@ public class User extends Auditable {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(name = "verification_code", length = 64)
+    @Column(name = "verification_code")
     private String verificationCode;
 
-    @Column(name = "reset_password_token", length = 30)
+    @Column(name = "reset_password_token")
     private String resetPasswordToken;
 
     @ManyToOne
