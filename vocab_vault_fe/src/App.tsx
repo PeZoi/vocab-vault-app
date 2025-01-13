@@ -1,5 +1,11 @@
+import { MainRouter } from 'routes';
+
 function App() {
-   return <></>;
+   return (
+      <>
+         <MainRouter />
+      </>
+   );
 }
 
 export default App;
