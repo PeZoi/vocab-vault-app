@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u WHERE u.status <> 'DELETED' OR u.status IS NULL")
     List<User> findAllUsers();
     @Modifying
     @Query("update User u set u.status = 'DELETED' WHERE u.id = ?1")
-    void deleteUser(Integer id);
+    void deleteUser(Long id);
 
     boolean existsByEmail(String email);
 
@@ -23,5 +23,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Modifying
     @Query("update User u set u.enabled = true, u.verificationCode = null where u.id = ?1")
-    void enable(Integer id);
+    void enable(Long id);
 }

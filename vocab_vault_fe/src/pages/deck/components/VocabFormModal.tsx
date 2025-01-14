@@ -65,6 +65,75 @@ export const VocabFormModal: React.FC<Props> = ({ open, setOpen }) => {
 
    const generateVocab = (_index: number) => {
       const dataCurr = form.getFieldsValue();
+      fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent', {
+         method: 'POST',
+         body: JSON.stringify({
+            generationConfig: {},
+            safetySettings: [],
+            contents: [
+               {
+                  role: 'user',
+                  parts: [
+                     {
+                        text: `
+                  Bạn là một chuyên gia ngôn ngữ có khả năng tạo flashcard chất lượng cao. Hãy tạo flashcard cho từ "${dataCurr?.items?.[_index].origin}" với ngôn ngữ english.
+                  
+                  Yêu cầu:
+                  1. Phải cung cấp thông tin chính xác và đầy đủ
+                  2. Ví dụ phải thực tế và dễ hiểu
+                  3. Ghi chú phải hữu ích cho việc ghi nhớ
+                  4. Định dạng JSON phải chính xác
+                  
+                  Trả về kết quả theo cấu trúc JSON sau và KHÔNG kèm theo bất kỳ giải thích nào:
+                  
+                  {
+                  "origin": "", // Từ gốc bằng english
+                  "define": "", // Định nghĩa bằng tiếng Việt, ngắn gọn và dễ hiểu
+                  "typeOfWord": "", // Loại từ (danh từ, động từ, tính từ, etc.)
+                  "ipa": "", // Phiên âm chuẩn IPA
+                  "examples": [
+                      {
+                      "en": "", // Câu ví dụ bằng english
+                      "vi": ""  // Dịch nghĩa tiếng Việt
+                      },
+                      {
+                      "en": "",
+                      "vi": ""
+                      }
+                  ],
+                  "note": "" // Tips ghi nhớ, cách dùng đặc biệt, hoặc các lưu ý quan trọng bằng tiếng Việt. Các dấu nháy đôi "" thay bằng dấu ngoặc () để tránh lỗi JSON
+                  }
+                  `,
+                     },
+                  ],
+               },
+            ],
+         }),
+         headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-client': 'genai-js/0.21.0',
+            'x-goog-api-key': 'AIzaSyCYRBsvnV6aNTaRahPnEO0DcskTypRX3uE',
+         },
+      })
+         .then((res) => res.json())
+         .then((data) => {
+            const regex = /```json\s*(\{.*\})\s*```/s;
+            let response = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            const match = response.match(regex);
+            if (match && match[1]) {
+               try {
+                  response = JSON.parse(match[1]);
+               } catch (e) {
+                  console.log(e);
+               }
+            }
+            const newDataArr = dataCurr?.items.map((item, index) => (index === _index ? response : item));
+            dataCurr.items = newDataArr;
+            form.setFieldsValue(dataCurr);
+         })
+         .catch((err) => {
+            console.error('Error:', err);
+         });
    };
 
    const handleSearchOrigin = useCallback(
