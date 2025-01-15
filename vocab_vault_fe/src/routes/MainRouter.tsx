@@ -1,5 +1,6 @@
 import { MainLayout } from 'components';
 import { AboutPage, DeckDetailPage, DeckPage, HomePage } from 'pages';
+import { SignInPage, SignUpPage } from 'pages/auth';
 import { RouterProvider } from 'react-router';
 import { createBrowserRouter } from 'react-router-dom';
 import { PATH_CONSTANTS } from 'utils';
@@ -27,6 +28,14 @@ export function MainRouter() {
                element: <DeckDetailPage />,
             },
          ],
+      },
+      {
+         path: PATH_CONSTANTS.SIGN_IN,
+         element: <SignInPage />,
+      },
+      {
+         path: PATH_CONSTANTS.SIGN_UP,
+         element: <SignUpPage />,
       },
    ]);
    return <RouterProvider router={router} />;
