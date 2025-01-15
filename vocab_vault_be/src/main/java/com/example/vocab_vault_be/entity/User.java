@@ -1,5 +1,6 @@
 package com.example.vocab_vault_be.entity;
 
+import com.example.vocab_vault_be.utils.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +37,9 @@ public class User extends Auditable {
 
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
+
+    @Column(name = "refresh_token", columnDefinition = "MEDIUMTEXT")
+    private String refreshToken;
 
     @ManyToOne
     @JoinColumn(name = "role_id")

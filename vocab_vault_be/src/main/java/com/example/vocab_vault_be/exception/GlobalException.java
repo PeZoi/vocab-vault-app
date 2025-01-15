@@ -4,6 +4,8 @@ package com.example.vocab_vault_be.exception;
 import com.example.vocab_vault_be.dto.response.ResponseDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,9 +22,10 @@ public class GlobalException {
     public ResponseEntity<ResponseDetail<Object>> handleAllException(Exception ex) {
 
         // Nếu ngoại lệ là một AuthenticationException (của security)
-//        if (ex instanceof AuthenticationException) {
-//            throw (AuthenticationException) ex; // Để nó được xử lý bởi AuthenticationEntryPoint
-//        }
+        if (ex instanceof AuthenticationException) {
+            throw (AuthenticationException) ex; // Để nó được xử lý bởi AuthenticationEntryPoint mà đã custom entry
+            // point trước đó
+        }
 
         ResponseDetail<Object> res = new ResponseDetail<>();
         res.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -32,12 +35,12 @@ public class GlobalException {
     }
 
     //    Khi không tìm thấy user (Của security)
-//    @ExceptionHandler(value = UsernameNotFoundException.class)
-//    public ResponseEntity<ResponseDetail<Object>> handleGlobalException(Exception exception) {
-//        ResponseDetail<Object> detailResponse = ResponseDetail.builder().status(HttpStatus.NOT_FOUND.value()).error(
-//                "User not found exception").message(exception.getMessage()).build();
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailResponse);
-//    }
+    @ExceptionHandler(value = UsernameNotFoundException.class)
+    public ResponseEntity<ResponseDetail<Object>> handleGlobalException(Exception exception) {
+        ResponseDetail<Object> detailResponse = ResponseDetail.builder().status(HttpStatus.NOT_FOUND.value()).error(
+                "User not found exception").message(exception.getMessage()).build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(detailResponse);
+    }
 
     @ExceptionHandler(value = CustomException.class)
     public ResponseEntity<ResponseDetail<Object>> handleCustomException(CustomException customException) {
