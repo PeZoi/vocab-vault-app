@@ -8,6 +8,7 @@ import com.example.vocab_vault_be.dto.response.UserReturnJwt;
 import com.example.vocab_vault_be.entity.Role;
 import com.example.vocab_vault_be.entity.User;
 import com.example.vocab_vault_be.exception.CustomException;
+import com.example.vocab_vault_be.exception.NotFoundException;
 import com.example.vocab_vault_be.repository.RoleRepository;
 import com.example.vocab_vault_be.repository.UserRepository;
 import com.example.vocab_vault_be.security.SecurityUtil;
@@ -105,5 +106,14 @@ public class AuthService {
         userService.updateRefreshTokenUser(refreshToken, user.getEmail());
 
         return new LoginResponse(accessToken, userReturnJwt);
+    }
+
+    public void logout() {
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() ? SecurityUtil.getCurrentUserLogin().get() : "";
+        if (email.equals("")) {
+            throw new NotFoundException("Access token không hợp lệ");
+        }
+
+        userService.updateRefreshTokenUser(null, email);
     }
 }

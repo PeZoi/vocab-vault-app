@@ -1,7 +1,10 @@
 package com.example.vocab_vault_be.service;
 
+import com.example.vocab_vault_be.dto.response.UserResponse;
 import com.example.vocab_vault_be.entity.User;
+import com.example.vocab_vault_be.exception.NotFoundException;
 import com.example.vocab_vault_be.repository.UserRepository;
+import com.example.vocab_vault_be.security.SecurityUtil;
 import com.example.vocab_vault_be.utils.enums.Status;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,5 +31,12 @@ public class UserService {
         }
         userInDB.setRefreshToken(refreshToken);
         userRepository.save(userInDB);
+    }
+
+    public UserResponse getProfile() {
+        String email = SecurityUtil.getCurrentUserLogin().orElseThrow(() -> new NotFoundException("Không tìm thấy " +
+                "user"));
+        User user = userRepository.findByEmail(email).orElseThrow();
+        return modelMapper.map(user, UserResponse.class);
     }
 }
