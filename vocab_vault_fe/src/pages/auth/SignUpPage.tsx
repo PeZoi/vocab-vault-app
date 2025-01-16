@@ -2,13 +2,8 @@ import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 import ICON from 'assets/icon.svg';
 import { Link } from 'react-router-dom';
+import { SignUpType } from 'types';
 import { PATH_CONSTANTS } from 'utils';
-
-type SignUpType = {
-   fullName: string;
-   email: string;
-   password: string;
-};
 
 export const SignUpPage = () => {
    const handleSignUp = (value: SignUpType) => {

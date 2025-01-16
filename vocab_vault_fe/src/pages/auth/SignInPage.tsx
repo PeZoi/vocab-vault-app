@@ -1,17 +1,31 @@
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
+import { signInAPI } from 'apis';
+import { MessageContext } from 'App';
 import ICON from 'assets/icon.svg';
-import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { SignInType } from 'types';
 import { PATH_CONSTANTS } from 'utils';
-
-type SignInType = {
-   email: string;
-   password: string;
-};
+import { updateInformationUser, updateToken } from './authSlice';
 
 export const SignInPage = () => {
-   const handleSignIn = (value: SignInType) => {
-      console.log(value);
+   const messageApi = useContext(MessageContext);
+   const dispatch = useDispatch();
+   const navigate = useNavigate();
+
+   const handleSignIn = async (value: SignInType) => {
+      const res = await signInAPI(value);
+      if (res?.status === 200) {
+         messageApi?.success('Đăng nhập thành công');
+
+         dispatch(updateInformationUser(res.data.user));
+         dispatch(updateToken(res.data.accessToken));
+         navigate(PATH_CONSTANTS.HOME);
+      } else {
+         messageApi?.error(res?.message);
+      }
    };
 
    return (
@@ -35,7 +49,7 @@ export const SignInPage = () => {
                      },
                   ]}
                >
-                  <Input prefix={<MailOutlined />} placeholder="Email" size="large" />
+                  <Input prefix={<MailOutlined />} placeholder="Email" size="large" spellCheck={false} />
                </Form.Item>
                <Form.Item
                   name="password"
@@ -46,7 +60,13 @@ export const SignInPage = () => {
                      },
                   ]}
                >
-                  <Input.Password prefix={<LockOutlined />} type="password" placeholder="Mật khẩu" size="large" />
+                  <Input.Password
+                     prefix={<LockOutlined />}
+                     type="password"
+                     placeholder="Mật khẩu"
+                     size="large"
+                     spellCheck={false}
+                  />
                </Form.Item>
                <Form.Item className="my-0">
                   <Link to="" className="text-primary">
@@ -67,6 +87,15 @@ export const SignInPage = () => {
                   </div>
                </Form.Item>
             </Form>
+            <div className="flex items-center justify-center">
+               <Button className="size-12 p-0 rounded-full">
+                  <img
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png"
+                     alt=""
+                     className="size-6 object-cover"
+                  />
+               </Button>
+            </div>
          </div>
       </div>
    );
