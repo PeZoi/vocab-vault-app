@@ -57,4 +57,11 @@ public class AuthController {
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(null);
     }
+
+    @PostMapping("/verify")
+    public ResponseEntity<String> verify(@RequestParam(value = "verifyCode") String verifyCode, @RequestParam(value =
+            "email") String email) {
+
+        return ResponseEntity.ok().body(authService.verify(verifyCode, email));
+    }
 }

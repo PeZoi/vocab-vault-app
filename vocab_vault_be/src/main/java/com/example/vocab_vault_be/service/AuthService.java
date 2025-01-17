@@ -12,19 +12,22 @@ import com.example.vocab_vault_be.exception.NotFoundException;
 import com.example.vocab_vault_be.repository.RoleRepository;
 import com.example.vocab_vault_be.repository.UserRepository;
 import com.example.vocab_vault_be.security.SecurityUtil;
+import com.example.vocab_vault_be.utils.TemplateEmail;
 import com.example.vocab_vault_be.utils.enums.Roles;
 import com.example.vocab_vault_be.utils.enums.Status;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Random;
 
 @Service
 public class AuthService {
@@ -35,13 +38,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final SecurityUtil securityUtil;
+    private final EmailService emailService;
 
     @Value("${vocab.vault.domain.frontend}")
     private String domainFE;
 
     public AuthService(UserService userService, UserRepository userRepository, RoleRepository roleRepository,
                        ModelMapper modelMapper, PasswordEncoder passwordEncoder,
-                       AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil) {
+                       AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil, EmailService emailService) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -49,6 +53,7 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtil = securityUtil;
+        this.emailService = emailService;
     }
 
     public UserResponse register(UserRequest userRequest) {
@@ -60,7 +65,8 @@ public class AuthService {
         // Lấy ra role mặc định khi user đăng ký
         Role role = roleRepository.findByName(String.valueOf(Roles.ROLE_USER));
         //   Tạo ra random code để verify account
-        String randomCode = RandomString.make(64);
+        Random random = new Random();
+        String randomCode = String.format("%06d", random.nextInt(1000000));
 
         User user = modelMapper.map(userRequest, User.class);
         //   Gán mặc định các thuộc cho user
@@ -75,12 +81,10 @@ public class AuthService {
         String verifyURL = domainFE + "/auth/verify?code=" + user.getVerificationCode() + "&email=" + user.getEmail();
 
         // Gửi email
-        // emailUtil.sendEmail(verifyURL, Constant.SUBJECT_REGISTER, Constant.EMAIL_TEMPLATE_REGISTER, user);
+        emailService.sendEmail(randomCode, TemplateEmail.SUBJECT_REGISTER, TemplateEmail.EMAIL_TEMPLATE_REGISTER, user);
         User savedUser = userRepository.save(user);
 
-        UserResponse userResponse = modelMapper.map(savedUser, UserResponse.class);
-
-        return userResponse;
+        return modelMapper.map(savedUser, UserResponse.class);
     }
 
     @Transactional
@@ -115,5 +119,21 @@ public class AuthService {
         }
 
         userService.updateRefreshTokenUser(null, email);
+    }
+
+    public String verify(String verifyCode, String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email không tồn tại"));
+
+        if (user.getVerificationCode() == null) {
+            throw new CustomException("Tài khoản đã được kích hoạt", HttpStatus.CONFLICT);
+        } else {
+            if (user.getVerificationCode().equals(verifyCode)) {
+                user.setEnabled(true);
+                userRepository.save(user);
+                return "Tài khoản kích hoạt thành công";
+            } else {
+                throw new CustomException("Sai mã kích hoạt", HttpStatus.BAD_REQUEST);
+            }
+        }
     }
 }
