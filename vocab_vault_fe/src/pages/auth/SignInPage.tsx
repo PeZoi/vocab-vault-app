@@ -1,9 +1,8 @@
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
 import { signInAPI } from 'apis';
-import { MessageContext } from 'App';
 import ICON from 'assets/icon.svg';
-import { useContext } from 'react';
+import { useMessage } from 'hooks';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { SignInType } from 'types';
@@ -11,20 +10,20 @@ import { PATH_CONSTANTS } from 'utils';
 import { updateInformationUser, updateToken } from './authSlice';
 
 export const SignInPage = () => {
-   const messageApi = useContext(MessageContext);
+   const message = useMessage();
    const dispatch = useDispatch();
    const navigate = useNavigate();
 
    const handleSignIn = async (value: SignInType) => {
       const res = await signInAPI(value);
       if (res?.status === 200) {
-         messageApi?.success('Đăng nhập thành công');
+         message?.success('Đăng nhập thành công');
 
          dispatch(updateInformationUser(res.data.user));
          dispatch(updateToken(res.data.accessToken));
          navigate(PATH_CONSTANTS.HOME);
       } else {
-         messageApi?.error(res?.message);
+         message?.error(res?.message);
       }
    };
 

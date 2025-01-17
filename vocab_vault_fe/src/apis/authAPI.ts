@@ -1,4 +1,4 @@
-import { ApiResponse, SignInType, SignUpType } from "types";
+import { ApiResponse, SignInType, SignUpType, verifyType } from "types";
 import axiosInstance from "utils/axiosInterceptor"
 
 export const signInAPI = async (value: SignInType): Promise<ApiResponse> => {
@@ -18,5 +18,10 @@ export const logOutAPI = async (): Promise<ApiResponse> => {
 
 export const getProfileAPI = async (): Promise<ApiResponse> => {
    const { data } = await axiosInstance.get("/api/users/profile");
+   return data;
+}
+
+export const verifyAPI = async (value: verifyType): Promise<ApiResponse> => {
+   const { data } = await axiosInstance.post(`/api/auth/verify?verifyCode=${value.verifyCode}&email=${value.email}`);
    return data;
 }

@@ -35,10 +35,8 @@ export const Header: React.FC = () => {
             </p>
          ),
          onClick: async () => {
-            const res = await logOutAPI();
-            if (res.status === 200) {
-               dispatch(logout());
-            }
+            await logOutAPI();
+            dispatch(logout());
          },
       },
    ];
