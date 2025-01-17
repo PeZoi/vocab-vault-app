@@ -6,4 +6,6 @@ export const PATH_CONSTANTS = {
    SIGN_UP: '/sign-up',
    SIGN_IN: '/sign-in',
    PROFILE: '/profile',
+   FORGOT_PASSWORD: '/forgot-password',
+   RESET_PASSWORD: '/reset-password',
 }

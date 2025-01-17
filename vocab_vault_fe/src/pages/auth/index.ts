@@ -1,3 +1,5 @@
 export * from "./SignInPage"
 export * from "./SignUpPage"
 export * from "./authSlice"
+export * from "./ForgotPasswordPage"
+export * from "./ResetPasswordPage"

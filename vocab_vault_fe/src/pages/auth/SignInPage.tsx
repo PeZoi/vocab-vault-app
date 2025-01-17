@@ -29,7 +29,7 @@ export const SignInPage = () => {
 
    return (
       <div className="flex items-center justify-center bg-background h-screen overflow-hidden">
-         <div className="w-[500px] h-[600px] bg-white rounded-lg flex flex-col items-center p-10">
+         <div className="w-[500px] bg-white rounded-lg flex flex-col items-center p-10">
             <Link to={PATH_CONSTANTS.HOME}>
                <img src={ICON} alt="icon" className="size-24" />
             </Link>
@@ -68,7 +68,7 @@ export const SignInPage = () => {
                   />
                </Form.Item>
                <Form.Item className="my-0">
-                  <Link to="" className="text-primary">
+                  <Link to={PATH_CONSTANTS.FORGOT_PASSWORD} className="text-primary">
                      Quên mật khẩu?
                   </Link>
                </Form.Item>
