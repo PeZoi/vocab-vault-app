@@ -35,6 +35,15 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
 
         // Trường hợp thất bại (có lỗi gì đó)
         if (status >= 400) {
+            if (body instanceof String) {
+                try {
+                    detailResponse.setData(body);
+                    // Chuyển đổi đối tượng DetailResponse thành chuỗi JSON
+                    return objectMapper.writeValueAsString(detailResponse);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             return body;
         } else {
             // Trường hợp thành công

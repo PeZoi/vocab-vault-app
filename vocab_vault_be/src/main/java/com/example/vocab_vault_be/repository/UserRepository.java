@@ -18,10 +18,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void deleteUser(Long id);
 
     boolean existsByEmail(String email);
-
+    boolean existsByEmailAndType(String email, String type);
     Optional<User> findByEmail(String email);
 
     @Modifying
     @Query("update User u set u.enabled = true, u.verificationCode = null where u.id = ?1")
     void enable(Long id);
+
+    User findUserByResetPasswordToken(String token);
 }

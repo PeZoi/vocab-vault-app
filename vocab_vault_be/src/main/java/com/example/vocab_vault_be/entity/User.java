@@ -21,13 +21,14 @@ public class User extends Auditable {
     @Column(nullable = false, unique = true, length = 30)
     private String email;
 
-    @Column(length = 64, nullable = false)
     private String password;
 
     @Column(length = 100)
     private String avatar;
 
     private boolean enabled;
+
+    private String type;
 
     @Enumerated(EnumType.STRING)
     private Status status;

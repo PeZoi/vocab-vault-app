@@ -24,8 +24,6 @@ public class EmailService {
 
     @Async
     public void sendEmail(String verifyCode, String subject, String content, User user) {
-
-
         // Lấy ra email chuẩn bị gửi
         String toAddress = user.getEmail();
 
