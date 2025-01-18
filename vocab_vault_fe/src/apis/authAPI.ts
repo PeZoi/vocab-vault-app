@@ -1,5 +1,5 @@
 import { ApiResponse, SignInType, SignUpType, verifyType } from "types";
-import axiosInstance from "utils/axiosInterceptor"
+import axiosInstance from "utils/axiosInterceptor";
 
 export const signInAPI = async (value: SignInType): Promise<ApiResponse> => {
    const { data } = await axiosInstance.post("/api/auth/login", value);
@@ -8,6 +8,16 @@ export const signInAPI = async (value: SignInType): Promise<ApiResponse> => {
 
 export const signUpAPI = async (value: SignUpType): Promise<ApiResponse> => {
    const { data } = await axiosInstance.post("/api/auth/register", value);
+   return data;
+}
+
+export const socialSignInAPI = async (loginType: string): Promise<ApiResponse> => {
+   const { data } = await axiosInstance.get("/api/auth/social-login?type=" + loginType);
+   return data;
+}
+
+export const socialCallBackAPI = async (value: { loginType: string, code: string }): Promise<ApiResponse> => {
+   const { data } = await axiosInstance.get(`/api/auth/social/callback?type=${value.loginType}&code=${value.code}`);
    return data;
 }
 

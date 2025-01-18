@@ -8,4 +8,5 @@ export const PATH_CONSTANTS = {
    PROFILE: '/profile',
    FORGOT_PASSWORD: '/forgot-password',
    RESET_PASSWORD: '/reset-password',
+   GOOGLE_CALLBACK: '/google/callback',
 }

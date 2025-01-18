@@ -23,7 +23,7 @@ export const ResetPasswordPage = () => {
          if (token) {
             const res = await resetPasswordAPI({ token });
             if (res.status !== 200) {
-               message?.error('Mã không hợp lệ');
+               message?.error(res.data);
                navigate(PATH_CONSTANTS.FORGOT_PASSWORD);
             }
             setLoadingPage(false);

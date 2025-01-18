@@ -1,6 +1,6 @@
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Form, Input } from 'antd';
-import { signInAPI } from 'apis';
+import { signInAPI, socialSignInAPI } from 'apis';
 import ICON from 'assets/icon.svg';
 import { useMessage } from 'hooks';
 import { useDispatch } from 'react-redux';
@@ -25,6 +25,15 @@ export const SignInPage = () => {
       } else {
          message?.error(res?.message);
       }
+   };
+
+   const handleClickGoogle = async () => {
+      const res = await socialSignInAPI('GOOGLE');
+      if (res.status !== 200) {
+         message?.error('Có lỗi gì đó');
+         return;
+      }
+      window.location.replace(res?.data);
    };
 
    return (
@@ -87,7 +96,7 @@ export const SignInPage = () => {
                </Form.Item>
             </Form>
             <div className="flex items-center justify-center">
-               <Button className="size-12 p-0 rounded-full">
+               <Button className="size-12 p-0 rounded-full" onClick={handleClickGoogle}>
                   <img
                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png"
                      alt=""

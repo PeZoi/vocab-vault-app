@@ -1,6 +1,6 @@
 import { MainLayout } from 'components';
 import { AboutPage, DeckDetailPage, DeckPage, HomePage } from 'pages';
-import { ForgotPasswordPage, ResetPasswordPage, SignInPage, SignUpPage } from 'pages/auth';
+import { ForgotPasswordPage, ResetPasswordPage, SignInPage, SignUpPage, SocialSignInCallback } from 'pages/auth';
 import { RouterProvider } from 'react-router';
 import { createBrowserRouter } from 'react-router-dom';
 import { PATH_CONSTANTS } from 'utils';
@@ -44,6 +44,10 @@ export function MainRouter() {
       {
          path: PATH_CONSTANTS.RESET_PASSWORD,
          element: <ResetPasswordPage />,
+      },
+      {
+         path: PATH_CONSTANTS.GOOGLE_CALLBACK,
+         element: <SocialSignInCallback />,
       },
    ]);
    return <RouterProvider router={router} />;
