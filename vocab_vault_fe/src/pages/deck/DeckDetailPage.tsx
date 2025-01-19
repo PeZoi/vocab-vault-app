@@ -8,8 +8,6 @@ import { GiChoice } from 'react-icons/gi';
 import { MdOutlinePublic } from 'react-icons/md';
 import { PiCards, PiCardsThree } from 'react-icons/pi';
 import { useParams } from 'react-router';
-import { Link } from 'react-router-dom';
-import { PATH_CONSTANTS } from 'utils';
 import { VocabFormModal } from './components';
 const { Text, Paragraph } = Typography;
 
@@ -22,13 +20,15 @@ export const DeckDetailPage = () => {
    };
    return (
       <div>
-         <Link
-            to={PATH_CONSTANTS.DECKS}
-            className="flex items-center gap-1 w-fit cursor-pointer hover:underline transition-all group "
+         <Button
+            className="flex items-center gap-1 w-fit cursor-pointer hover:underline transition-all group border-none"
+            onClick={() => {
+               window.history.back();
+            }}
          >
             <LeftOutlined className="size-3 group-hover:-translate-x-1 transition-all" />
             <span>Quay lại</span>
-         </Link>
+         </Button>
 
          <Divider />
 

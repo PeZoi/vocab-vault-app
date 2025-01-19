@@ -1,13 +1,26 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Divider, Empty, Typography } from 'antd';
 import { DeckItem } from 'components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PATH_CONSTANTS } from 'utils';
 import { DeckFormModal } from './components';
+import { getAllMyDeckAPI } from 'apis';
+import { DeckResponseType } from 'types';
 
 export function DeckPage() {
    const [open, setOpen] = useState(false);
+   const [myDecks, setMyDecks] = useState<DeckResponseType[]>([]);
+   const [rerender, setRerender] = useState(false);
+   useEffect(() => {
+      const fetchMyDecks = async () => {
+         const res = await getAllMyDeckAPI();
+         if (res.status === 200) {
+            setMyDecks(res.data);
+         }
+      };
+      fetchMyDecks();
+   }, [rerender]);
 
    const showModal = () => {
       setOpen(true);
@@ -30,24 +43,30 @@ export function DeckPage() {
       <div>
          <h2 className="text-2xl uppercase font-bold">Bộ từ vựng của tôi (7)</h2>
          <Divider />
-         <div>
-            <Button type="dashed" className="size-32 flex flex-col" onClick={showModal}>
-               <PlusCircleOutlined style={{ fontSize: '24px' }} />
-               <p>Tạo mới</p>
-            </Button>
-         </div>
-         <Divider />
-         <div className="grid grid-cols-5 gap-5">
-            {Array(10)
-               .fill(false)
-               .map((_, index) => (
-                  <Link to={PATH_CONSTANTS.DECK_DETAIL.replace(':id', index.toString())}>
-                     <DeckItem key={index} />
-                  </Link>
-               ))}
-         </div>
+         {myDecks.length === 0 ? (
+            <div className="flex items-center justify-center">
+               <EmptyDeck />
+            </div>
+         ) : (
+            <>
+               <div>
+                  <Button type="dashed" className="size-32 flex flex-col" onClick={showModal}>
+                     <PlusCircleOutlined style={{ fontSize: '24px' }} />
+                     <p>Tạo mới</p>
+                  </Button>
+               </div>
+               <Divider />
+               <div className="grid grid-cols-5 gap-5">
+                  {myDecks.map((deck) => (
+                     <Link to={PATH_CONSTANTS.DECK_DETAIL.replace(':id', deck.id ? deck.id?.toString() : '0')}>
+                        <DeckItem key={deck.id} deck={deck} />
+                     </Link>
+                  ))}
+               </div>
+            </>
+         )}
 
-         <DeckFormModal open={open} setOpen={setOpen} />
+         <DeckFormModal open={open} setOpen={setOpen} rerender={rerender} setRerender={setRerender} />
       </div>
    );
 }

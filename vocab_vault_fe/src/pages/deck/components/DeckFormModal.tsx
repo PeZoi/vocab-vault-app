@@ -1,25 +1,26 @@
 import type { FormProps } from 'antd';
-import { Checkbox, Divider, Form, Input, Modal, Tooltip } from 'antd';
+import { Checkbox, Divider, Form, Input, message, Modal, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
-
-type DeckType = {
-   title?: string;
-   description?: string;
-   isPublic?: boolean;
-};
+import { DeckRequestType } from 'types';
+import { createDeckAPI } from 'apis';
 
 type Props = {
    open: boolean;
    setOpen: (value: boolean) => void;
+
+   rerender: boolean;
+   setRerender: (value: boolean) => void;
 };
 
-export const DeckFormModal: React.FC<Props> = ({ open, setOpen }) => {
+export const DeckFormModal: React.FC<Props> = ({ open, setOpen, rerender, setRerender }) => {
    const [confirmLoading, setConfirmLoading] = useState(false);
-   const [form] = Form.useForm<DeckType>();
+   const [form] = Form.useForm<DeckRequestType>();
 
    useEffect(() => {
-      form.resetFields();
+      return () => {
+         form.resetFields();
+      };
    }, [open]);
 
    // ===== HANDLE MODAL =====
@@ -32,16 +33,20 @@ export const DeckFormModal: React.FC<Props> = ({ open, setOpen }) => {
    };
 
    // ===== HANDLE FORM =====
-   const onFinish: FormProps<DeckType>['onFinish'] = (values) => {
+   const onFinish: FormProps<DeckRequestType>['onFinish'] = async (values) => {
       setConfirmLoading(true);
-      setTimeout(() => {
+      const res = await createDeckAPI(values);
+      if (res.status === 201) {
+         message.success('Tạo thành công');
          setOpen(false);
-         setConfirmLoading(false);
-         console.log('Success:', values);
-      }, 2000);
+         setRerender(!rerender);
+      } else {
+         message.error('Tạo thất bại');
+      }
+      setConfirmLoading(false);
    };
 
-   const onFinishFailed: FormProps<DeckType>['onFinishFailed'] = (errorInfo) => {
+   const onFinishFailed: FormProps<DeckRequestType>['onFinishFailed'] = (errorInfo) => {
       console.log('Failed:', errorInfo);
    };
 
@@ -58,7 +63,7 @@ export const DeckFormModal: React.FC<Props> = ({ open, setOpen }) => {
          <div className="pb-2">
             <Divider className="my-3" />
             <Form form={form} layout="vertical" onFinish={onFinish} onFinishFailed={onFinishFailed}>
-               <Form.Item<DeckType>
+               <Form.Item<DeckRequestType>
                   label="Tên bộ đề"
                   name="title"
                   rules={[{ required: true, message: 'Vui lòng nhập tên bộ đề' }]}
@@ -66,7 +71,7 @@ export const DeckFormModal: React.FC<Props> = ({ open, setOpen }) => {
                   <Input placeholder="VD: Từ vựng TOEIC" />
                </Form.Item>
 
-               <Form.Item<DeckType> label="Mô tả" name="description">
+               <Form.Item<DeckRequestType> label="Mô tả" name="description">
                   <Input.TextArea
                      placeholder="VD: Đây là bộ đề từ vựng cơ bản cho TOEIC"
                      rows={3}
@@ -75,7 +80,7 @@ export const DeckFormModal: React.FC<Props> = ({ open, setOpen }) => {
                   />
                </Form.Item>
 
-               <Form.Item<DeckType> name="isPublic">
+               <Form.Item<DeckRequestType> name="isPublic" valuePropName="checked">
                   <div className="flex items-center">
                      <Checkbox>Công khai</Checkbox>
                      <Tooltip title="Mọi người đều có thể xem bộ đề của bạn">

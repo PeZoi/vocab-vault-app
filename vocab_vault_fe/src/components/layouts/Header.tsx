@@ -37,6 +37,7 @@ export const Header: React.FC = () => {
          onClick: async () => {
             await logOutAPI();
             dispatch(logout());
+            window.location.replace(PATH_CONSTANTS.HOME);
          },
       },
    ];
