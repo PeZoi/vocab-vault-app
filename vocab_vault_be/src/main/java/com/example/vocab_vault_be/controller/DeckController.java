@@ -22,12 +22,29 @@ public class DeckController {
     public ResponseEntity<DeckResponse> create(@RequestBody DeckRequest deckRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(deckService.create(deckRequest));
     }
+
     @GetMapping("/my-decks")
     public ResponseEntity<List<DeckResponse>> getAllMyDecks() {
         return ResponseEntity.ok(deckService.getAllMyDeck());
     }
+
     @GetMapping("/get-all")
     public ResponseEntity<List<DeckResponse>> getAllDecksPublic() {
         return ResponseEntity.ok(deckService.getAllDeckPublic());
+    }
+
+    @GetMapping("/get-deck/{id}")
+    public ResponseEntity<DeckResponse> getDeck(@PathVariable Long id) {
+        return ResponseEntity.ok(deckService.getDeckById(id));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<DeckResponse> updateDeck(@PathVariable Long id, @RequestBody DeckRequest deckRequest) {
+        return ResponseEntity.ok(deckService.update(id, deckRequest));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteDeck(@PathVariable Long id) {
+        return ResponseEntity.ok(deckService.deleteById(id));
     }
 }

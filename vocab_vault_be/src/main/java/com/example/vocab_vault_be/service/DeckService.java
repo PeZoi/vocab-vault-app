@@ -4,6 +4,7 @@ import com.example.vocab_vault_be.dto.request.DeckRequest;
 import com.example.vocab_vault_be.dto.response.DeckResponse;
 import com.example.vocab_vault_be.entity.Deck;
 import com.example.vocab_vault_be.entity.User;
+import com.example.vocab_vault_be.exception.NotFoundException;
 import com.example.vocab_vault_be.repository.DeckRepository;
 import com.example.vocab_vault_be.repository.UserRepository;
 import com.example.vocab_vault_be.security.SecurityUtil;
@@ -52,6 +53,34 @@ public class DeckService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email không tồn tại"));
         List<Deck> deckList = deckRepository.findAllByUser(user);
         return mapDecksToDeckResponses(deckList);
+    }
+
+    public DeckResponse getDeckById(Long id) {
+        Deck deck = deckRepository.findById(id).orElseThrow(() -> new NotFoundException("Id không tồn tại"));
+        DeckResponse deckResponse = modelMapper.map(deck, DeckResponse.class);
+        deckResponse.setDeckUser(modelMapper.map(deck.getUser(), DeckResponse.DeckUser.class));
+        return deckResponse;
+    }
+
+    public String deleteById(Long id) {
+        try {
+            Deck deck = deckRepository.findById(id).orElseThrow(() -> new NotFoundException("Id không tồn tại"));
+            deckRepository.delete(deck);
+            return "Xoá thành công";
+        } catch (Exception e) {
+            return "Có lỗi xảy ra! Xoá thất bại";
+        }
+    }
+
+    public DeckResponse update(Long id, DeckRequest deckRequest) {
+        Deck deck = deckRepository.findById(id).orElseThrow(() -> new NotFoundException("Id không tồn tại"));
+        deck.setPublic(deckRequest.isPublic());
+        deck.setTitle(deckRequest.getTitle());
+        deck.setDescription(deckRequest.getDescription());
+        Deck deckSaved = deckRepository.save(deck);
+        DeckResponse deckResponse = modelMapper.map(deckSaved, DeckResponse.class);
+        deckResponse.setDeckUser(modelMapper.map(deckSaved.getUser(), DeckResponse.DeckUser.class));
+        return deckResponse;
     }
 
     private List<DeckResponse> mapDecksToDeckResponses(List<Deck> deckList) {
