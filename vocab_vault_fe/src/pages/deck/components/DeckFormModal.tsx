@@ -1,9 +1,9 @@
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
 import { Checkbox, Divider, Form, Input, message, Modal, Tooltip } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { createDeckAPI, updateDeckAPI } from 'apis';
 import { useEffect, useState } from 'react';
-import { DeckRequestType } from 'types';
-import { createDeckAPI } from 'apis';
+import { DeckRequestType, DeckResponseType } from 'types';
 
 type Props = {
    open: boolean;
@@ -11,13 +11,20 @@ type Props = {
 
    rerender: boolean;
    setRerender: (value: boolean) => void;
+
+   // MODE: EDIT
+   isEdit?: boolean;
+   deck?: DeckResponseType;
 };
 
-export const DeckFormModal: React.FC<Props> = ({ open, setOpen, rerender, setRerender }) => {
+export const DeckFormModal: React.FC<Props> = ({ open, setOpen, rerender, setRerender, isEdit = false, deck }) => {
    const [confirmLoading, setConfirmLoading] = useState(false);
    const [form] = Form.useForm<DeckRequestType>();
 
    useEffect(() => {
+      if (isEdit && deck) {
+         form.setFieldsValue(deck);
+      }
       return () => {
          form.resetFields();
       };
@@ -35,13 +42,14 @@ export const DeckFormModal: React.FC<Props> = ({ open, setOpen, rerender, setRer
    // ===== HANDLE FORM =====
    const onFinish: FormProps<DeckRequestType>['onFinish'] = async (values) => {
       setConfirmLoading(true);
-      const res = await createDeckAPI(values);
-      if (res.status === 201) {
-         message.success('Tạo thành công');
+      const res = isEdit ? await updateDeckAPI(deck?.id, values) : await createDeckAPI(values);
+
+      if (res.status === 201 || res.status === 200) {
+         message.success(`${isEdit ? 'Cập nhật' : 'Tạo'} thành công`);
          setOpen(false);
          setRerender(!rerender);
       } else {
-         message.error('Tạo thất bại');
+         message.error(`${isEdit ? 'Cập nhật' : 'Tạo'} thất bại`);
       }
       setConfirmLoading(false);
    };
@@ -52,13 +60,13 @@ export const DeckFormModal: React.FC<Props> = ({ open, setOpen, rerender, setRer
 
    return (
       <Modal
-         title="Tạo bộ từ mới"
+         title={`${isEdit ? 'Chỉnh sửa' : 'Tạo'} bộ đề`}
          open={open}
          onOk={handleOk}
          confirmLoading={confirmLoading}
          onCancel={handleCancel}
          cancelText="Huỷ"
-         okText="Tạo"
+         okText={`${isEdit ? 'Cập nhật' : 'Tạo'}`}
       >
          <div className="pb-2">
             <Divider className="my-3" />
@@ -80,14 +88,14 @@ export const DeckFormModal: React.FC<Props> = ({ open, setOpen, rerender, setRer
                   />
                </Form.Item>
 
-               <Form.Item<DeckRequestType> name="isPublic" valuePropName="checked">
-                  <div className="flex items-center">
+               <div className="flex items-center">
+                  <Form.Item<DeckRequestType> name="isPublic" valuePropName="checked" className="m-0">
                      <Checkbox>Công khai</Checkbox>
-                     <Tooltip title="Mọi người đều có thể xem bộ đề của bạn">
-                        <QuestionCircleOutlined className=" cursor-pointer" />
-                     </Tooltip>
-                  </div>
-               </Form.Item>
+                  </Form.Item>
+                  <Tooltip title="Mọi người đều có thể xem bộ đề của bạn">
+                     <QuestionCircleOutlined className=" cursor-pointer" />
+                  </Tooltip>
+               </div>
             </Form>
          </div>
       </Modal>
