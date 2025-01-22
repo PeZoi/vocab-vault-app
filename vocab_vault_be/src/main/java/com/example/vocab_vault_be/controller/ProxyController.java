@@ -22,7 +22,13 @@ public class ProxyController {
     }
 
     @GetMapping("/suggestions-vi")
-    public ResponseEntity<JsonNode> fetchSuggestionsVi(@RequestParam(name = "word") String word) {
-        return ResponseEntity.ok(proxyService.fetchSuggestionsVi(word));
+    public ResponseEntity<JsonNode> fetchSuggestionsVi(@RequestParam(name = "word") String word, @RequestParam(name =
+            "prefix") String prefix) {
+        return ResponseEntity.ok(proxyService.fetchSuggestionsVi(word, prefix));
+    }
+
+    @GetMapping("/generate-word")
+    public ResponseEntity<JsonNode> generateWord(@RequestParam(name = "word") String word) {
+        return ResponseEntity.ok(proxyService.generateWord(word));
     }
 }
