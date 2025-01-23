@@ -1,6 +1,6 @@
 package com.example.vocab_vault_be.security;
 
-import com.example.vocab_vault_be.dto.response.UserReturnJwt;
+import com.example.vocab_vault_be.dto.user.UserReturnJwt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;

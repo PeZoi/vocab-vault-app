@@ -1,9 +1,12 @@
 package com.example.vocab_vault_be.service;
 
-import com.example.vocab_vault_be.dto.request.DeckRequest;
-import com.example.vocab_vault_be.dto.response.DeckResponse;
+import com.example.vocab_vault_be.dto.deck.DeckRequest;
+import com.example.vocab_vault_be.dto.deck.DeckResponse;
+import com.example.vocab_vault_be.dto.vocab.VocabResponse;
 import com.example.vocab_vault_be.entity.Deck;
+import com.example.vocab_vault_be.entity.Example;
 import com.example.vocab_vault_be.entity.User;
+import com.example.vocab_vault_be.entity.Vocabulary;
 import com.example.vocab_vault_be.exception.NotFoundException;
 import com.example.vocab_vault_be.repository.DeckRepository;
 import com.example.vocab_vault_be.repository.UserRepository;
@@ -57,8 +60,14 @@ public class DeckService {
 
     public DeckResponse getDeckById(Long id) {
         Deck deck = deckRepository.findById(id).orElseThrow(() -> new NotFoundException("Id không tồn tại"));
+        List<VocabResponse> vocabResponseList = new ArrayList<>();
+        for (Vocabulary vocabulary : deck.getVocabularies()) {
+            vocabResponseList.add(modelMapper.map(vocabulary, VocabResponse.class));
+        }
         DeckResponse deckResponse = modelMapper.map(deck, DeckResponse.class);
         deckResponse.setDeckUser(modelMapper.map(deck.getUser(), DeckResponse.DeckUser.class));
+        deckResponse.setVocabList(vocabResponseList);
+
         return deckResponse;
     }
 

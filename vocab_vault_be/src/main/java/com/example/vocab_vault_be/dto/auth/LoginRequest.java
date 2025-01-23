@@ -1,4 +1,4 @@
-package com.example.vocab_vault_be.dto.request;
+package com.example.vocab_vault_be.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -1,10 +1,10 @@
 package com.example.vocab_vault_be.service;
 
-import com.example.vocab_vault_be.dto.request.LoginRequest;
-import com.example.vocab_vault_be.dto.request.UserRequest;
-import com.example.vocab_vault_be.dto.response.LoginResponse;
-import com.example.vocab_vault_be.dto.response.UserResponse;
-import com.example.vocab_vault_be.dto.response.UserReturnJwt;
+import com.example.vocab_vault_be.dto.auth.LoginRequest;
+import com.example.vocab_vault_be.dto.user.UserRequest;
+import com.example.vocab_vault_be.dto.auth.LoginResponse;
+import com.example.vocab_vault_be.dto.user.UserResponse;
+import com.example.vocab_vault_be.dto.user.UserReturnJwt;
 import com.example.vocab_vault_be.entity.Role;
 import com.example.vocab_vault_be.entity.User;
 import com.example.vocab_vault_be.exception.CustomException;

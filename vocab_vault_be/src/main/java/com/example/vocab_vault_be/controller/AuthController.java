@@ -1,9 +1,9 @@
 package com.example.vocab_vault_be.controller;
 
-import com.example.vocab_vault_be.dto.request.LoginRequest;
-import com.example.vocab_vault_be.dto.request.UserRequest;
-import com.example.vocab_vault_be.dto.response.LoginResponse;
-import com.example.vocab_vault_be.dto.response.UserResponse;
+import com.example.vocab_vault_be.dto.auth.LoginRequest;
+import com.example.vocab_vault_be.dto.user.UserRequest;
+import com.example.vocab_vault_be.dto.auth.LoginResponse;
+import com.example.vocab_vault_be.dto.user.UserResponse;
 import com.example.vocab_vault_be.repository.UserRepository;
 import com.example.vocab_vault_be.service.AuthService;
 import jakarta.validation.Valid;

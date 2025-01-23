@@ -89,7 +89,7 @@ public class ProxyService {
                                                                                 "{\n" +
                                                                                 "   \"origin\": \"\",\n // Từ gốc bằng english" +
                                                                                 "   \"define\": \"\",\n // Định nghĩa bằng tiếng Việt, ngắn gọn và dễ hiểu" +
-                                                                                "   \"typeOfWord\": \"\",\n // Loại " +
+                                                                                "   \"partsOfSpeech\": \"\",\n // Loại " +
                                                                                 "từ (Nound, Adj, Adv, Verb, Phrasal verb, Idioms etc.)" +
                                                                                 "   \"ipa\": \"\",\n // Phiên âm " +
                                                                                 "chuẩn IPA" +
@@ -97,8 +97,10 @@ public class ProxyService {
                                                                                 "   \"examples\": [\n" +
                                                                                 "       {\"en\": \"\", \"vi\": \"\"},\n" +
                                                                                 "       {\"en\": \"\", \"vi\": \"\"},\n" +
-                                                                                "   ],\n // Ví dụ cho tôi 2 câu" +
-                                                                                "   \"note\": \"\"\n" +
+                                                                                "   ],\n // Ví dụ cho tôi 2 đơn giản " +
+                                                                                "nhất có thể" +
+                                                                                "   \"note\": \"\"\n // ghi chú bằng " +
+                                                                                "tiếng việt giúp tôi" +
                                                                                 "}", word
                                                                 )
                                                         )

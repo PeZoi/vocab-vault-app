@@ -1,6 +1,6 @@
-package com.example.vocab_vault_be.dto.response;
+package com.example.vocab_vault_be.dto.auth;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.example.vocab_vault_be.dto.user.UserReturnJwt;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

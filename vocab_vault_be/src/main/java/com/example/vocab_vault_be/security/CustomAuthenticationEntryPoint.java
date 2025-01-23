@@ -1,6 +1,6 @@
 package com.example.vocab_vault_be.security;
 
-import com.example.vocab_vault_be.dto.response.ResponseDetail;
+import com.example.vocab_vault_be.dto.ResponseDetail;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

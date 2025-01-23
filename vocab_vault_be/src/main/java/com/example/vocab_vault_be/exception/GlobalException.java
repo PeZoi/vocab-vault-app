@@ -1,7 +1,7 @@
 package com.example.vocab_vault_be.exception;
 
 
-import com.example.vocab_vault_be.dto.response.ResponseDetail;
+import com.example.vocab_vault_be.dto.ResponseDetail;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;

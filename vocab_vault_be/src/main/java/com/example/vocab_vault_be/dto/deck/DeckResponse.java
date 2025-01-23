@@ -1,9 +1,11 @@
-package com.example.vocab_vault_be.dto.response;
+package com.example.vocab_vault_be.dto.deck;
 
+import com.example.vocab_vault_be.dto.vocab.VocabResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,6 +23,8 @@ public class DeckResponse {
 
     @JsonProperty("user")
     private DeckUser deckUser;
+
+    private List<VocabResponse> vocabList;
 
     @Getter
     @Setter

@@ -1,6 +1,6 @@
 package com.example.vocab_vault_be.controller;
 
-import com.example.vocab_vault_be.dto.response.UserResponse;
+import com.example.vocab_vault_be.dto.user.UserResponse;
 import com.example.vocab_vault_be.entity.User;
 import com.example.vocab_vault_be.repository.UserRepository;
 import com.example.vocab_vault_be.service.UserService;

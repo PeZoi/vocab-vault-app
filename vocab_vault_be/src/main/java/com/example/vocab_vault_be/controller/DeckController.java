@@ -1,7 +1,7 @@
 package com.example.vocab_vault_be.controller;
 
-import com.example.vocab_vault_be.dto.request.DeckRequest;
-import com.example.vocab_vault_be.dto.response.DeckResponse;
+import com.example.vocab_vault_be.dto.deck.DeckRequest;
+import com.example.vocab_vault_be.dto.deck.DeckResponse;
 import com.example.vocab_vault_be.service.DeckService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

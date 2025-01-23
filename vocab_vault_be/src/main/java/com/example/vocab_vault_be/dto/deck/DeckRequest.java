@@ -1,4 +1,4 @@
-package com.example.vocab_vault_be.dto.request;
+package com.example.vocab_vault_be.dto.deck;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

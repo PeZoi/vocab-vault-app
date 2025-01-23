@@ -17,9 +17,9 @@ public class Example {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Lob
-    private String originSt;
+    private String en;
     @Lob
-    private String defineSt;
+    private String vi;
 
     @ManyToOne
     @JoinColumn(name = "vocabulary_id")

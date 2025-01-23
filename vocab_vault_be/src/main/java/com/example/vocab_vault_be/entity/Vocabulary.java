@@ -25,11 +25,12 @@ public class Vocabulary {
     private String partsOfSpeech;
     private String note;
     private String audio;
+    private String level;
 
     @ManyToOne
     @JoinColumn(name = "deck_id")
     private Deck deck;
 
-    @OneToMany(mappedBy = "vocabulary")
+    @OneToMany(mappedBy = "vocabulary", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Example> examples;
 }

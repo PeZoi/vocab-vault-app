@@ -1,7 +1,7 @@
 package com.example.vocab_vault_be.utils;
 
 
-import com.example.vocab_vault_be.dto.response.ResponseDetail;
+import com.example.vocab_vault_be.dto.ResponseDetail;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
