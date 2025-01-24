@@ -24,3 +24,21 @@ export const convertStringDate = (timestamp: string) => {
       year: 'numeric'
    });
 };
+
+export const convertToJSON = (input: string) => {
+
+   const regex = /```json\s*(\{.*\})\s*```/s;
+   const match = input.match(regex);
+   if (match && match[1]) {
+      try {
+         return JSON.parse(match[1]);
+      } catch (e) {
+         console.log(e);
+         return null;
+      }
+   }
+}
+
+export const capitalizeFirstLetter = (string: string = '') => {
+   return string.charAt(0).toUpperCase() + string.slice(1);
+}

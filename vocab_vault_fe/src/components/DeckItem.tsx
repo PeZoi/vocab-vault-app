@@ -19,7 +19,7 @@ export const DeckItem: React.FC<Props> = ({ deck }) => {
          </Text>
          <div className="flex items-center gap-2 my-1">
             <CopyOutlined />
-            <span className="text-base">5 từ</span>
+            <span className="text-base">{deck?.totalVocabulary} từ</span>
          </div>
          <Paragraph ellipsis={{ rows: 2, tooltip: deck.description }} className="italic min-h-11">
             {deck.description}

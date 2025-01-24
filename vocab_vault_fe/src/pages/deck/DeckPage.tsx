@@ -1,12 +1,12 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Divider, Empty, Typography } from 'antd';
+import { getAllMyDeckAPI } from 'apis';
 import { DeckItem } from 'components';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { DeckResponseType } from 'types';
 import { PATH_CONSTANTS } from 'utils';
 import { DeckFormModal } from './components';
-import { getAllMyDeckAPI } from 'apis';
-import { DeckResponseType } from 'types';
 
 export function DeckPage() {
    const [open, setOpen] = useState(false);
@@ -41,7 +41,7 @@ export function DeckPage() {
 
    return (
       <div>
-         <h2 className="text-2xl uppercase font-bold">Bộ từ vựng của tôi (7)</h2>
+         <h2 className="text-2xl uppercase font-bold">Bộ từ vựng của tôi ({myDecks.length})</h2>
          <Divider />
          {myDecks.length === 0 ? (
             <div className="flex items-center justify-center">

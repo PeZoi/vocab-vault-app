@@ -1,11 +1,11 @@
-import { DeleteOutlined, EditOutlined, LeftOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Avatar, Button, Divider, Popconfirm, Switch, Tooltip, Typography } from 'antd';
+import { CopyOutlined, DeleteOutlined, EditOutlined, LeftOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Avatar, Button, Divider, Empty, Popconfirm, Switch, Tooltip, Typography } from 'antd';
 import { deleteDeckByIdAPI, getDeckByIdAPI } from 'apis';
 import { FLAG_ENGLAND_SVG } from 'assets';
 import { VocabItem } from 'components';
 import { useMessage } from 'hooks';
 import { useEffect, useState } from 'react';
-import { FaLock, FaRegEdit } from 'react-icons/fa';
+import { FaLock } from 'react-icons/fa';
 import { GiChoice } from 'react-icons/gi';
 import { MdOutlinePublic } from 'react-icons/md';
 import { PiCards, PiCardsThree } from 'react-icons/pi';
@@ -46,6 +46,18 @@ export const DeckDetailPage = () => {
       } else {
          message?.error(res.data);
       }
+   };
+
+   const EmptyVocab = () => {
+      return (
+         <div className="my-20 mx-auto">
+            <Empty description={<Typography.Text>Bạn chưa có từ vựng nào</Typography.Text>}>
+               <Button type="primary" onClick={() => setOpenVocabModal(true)}>
+                  Tạo ngay
+               </Button>
+            </Empty>
+         </div>
+      );
    };
 
    if (!deck) {
@@ -93,12 +105,19 @@ export const DeckDetailPage = () => {
                )}
             </div>
             <Paragraph ellipsis={{ rows: 3, tooltip: deck?.description }} className="italic">
-               {deck?.description}
+               {deck?.description?.trim() || 'Không có mô tả'}
             </Paragraph>
             <div className="flex items-center justify-between">
-               <div className="flex items-center gap-2">
-                  <span>Ngôn ngữ:</span>
-                  <img src={FLAG_ENGLAND_SVG} alt="flag england" className="size-6" />
+               <div className="flex items-center gap-5">
+                  <div className="flex items-center gap-2 my-1">
+                     <CopyOutlined />
+                     <span className="text-base">{deck.vocabList?.length} từ</span>
+                  </div>
+                  <span>|</span>
+                  <div className="flex items-center gap-2">
+                     <span>Ngôn ngữ:</span>
+                     <img src={FLAG_ENGLAND_SVG} alt="flag england" className="size-6" />
+                  </div>
                </div>
                <div className="flex gap-3">
                   <Avatar src={deck?.user?.avatar} size={'large'} />
@@ -117,56 +136,76 @@ export const DeckDetailPage = () => {
 
          <Divider />
 
-         <div className="my-2 grid grid-cols-2">
-            {deck?.user?.id == user?.id && (
-               <div>
-                  <h4 className="mb-5 text-2xl font-bold">Hành động</h4>
-                  <div className="flex items-center gap-5">
-                     <Button className="size-32 flex flex-col" onClick={() => setOpenVocabModal(true)}>
-                        <PlusCircleOutlined style={{ fontSize: '24px' }} />
-                        <p>Thêm từ vựng</p>
-                     </Button>
-                     <Button className="size-32 flex flex-col">
+         {(deck.user.id != user?.id && deck.vocabList.length !== 0) || deck.user.id == user?.id ? (
+            <>
+               <div className="my-2 grid grid-cols-2">
+                  {deck?.user?.id == user?.id && (
+                     <div>
+                        <h4 className="mb-5 text-2xl font-bold">Hành động</h4>
+                        <div className="flex items-center gap-5">
+                           <Button className="size-32 flex flex-col" onClick={() => setOpenVocabModal(true)}>
+                              <PlusCircleOutlined style={{ fontSize: '24px' }} />
+                              <p>Thêm từ vựng</p>
+                           </Button>
+                           {/* <Button className="size-32 flex flex-col">
                         <FaRegEdit style={{ fontSize: '24px' }} />
                         <p>Chỉnh sửa</p>
-                     </Button>
-                  </div>
+                     </Button> */}
+                        </div>
+                     </div>
+                  )}
+                  {deck.vocabList.length > 0 && (
+                     <div>
+                        <h4 className="mb-5 text-2xl font-bold">Luyện tập</h4>
+                        <div className="flex items-center gap-5">
+                           <Button className="size-32 flex flex-col">
+                              <PiCardsThree style={{ fontSize: '24px' }} />
+                              <p>Thẻ ghi nhớ</p>
+                           </Button>
+                           <Button className="size-32 flex flex-col">
+                              <PiCards style={{ fontSize: '24px' }} />
+                              <p>Ghép thẻ</p>
+                           </Button>
+                           <Button className="size-32 flex flex-col">
+                              <GiChoice style={{ fontSize: '24px' }} />
+                              <p>Trắc nghiệm</p>
+                           </Button>
+                        </div>
+                     </div>
+                  )}
                </div>
-            )}
-            <div>
-               <h4 className="mb-5 text-2xl font-bold">Luyện tập</h4>
-               <div className="flex items-center gap-5">
-                  <Button className="size-32 flex flex-col">
-                     <PiCardsThree style={{ fontSize: '24px' }} />
-                     <p>Thẻ ghi nhớ</p>
-                  </Button>
-                  <Button className="size-32 flex flex-col">
-                     <PiCards style={{ fontSize: '24px' }} />
-                     <p>Ghép thẻ</p>
-                  </Button>
-                  <Button className="size-32 flex flex-col">
-                     <GiChoice style={{ fontSize: '24px' }} />
-                     <p>Trắc nghiệm</p>
-                  </Button>
+
+               <Divider />
+
+               <div>
+                  <h4 className="mb-5 text-2xl font-bold">Các từ vựng có trong bộ đề</h4>
+                  {deck.vocabList.length > 0 ? (
+                     <>
+                        <Switch checkedChildren="Chi tiết" unCheckedChildren="Rút gọn" defaultChecked />
+                        <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-5 my-5">
+                           {deck.vocabList.map((vocab) => (
+                              <VocabItem key={vocab.id} vocab={vocab} rerender={rerender} setRerender={setRerender} />
+                           ))}
+                        </div>
+                     </>
+                  ) : (
+                     <EmptyVocab />
+                  )}
                </div>
+            </>
+         ) : (
+            <div className="my-20 mx-auto">
+               <Empty description={<Typography.Text>Bộ đề chưa có từ vựng nào</Typography.Text>}></Empty>
             </div>
-         </div>
+         )}
 
-         <Divider />
-
-         <div>
-            <h4 className="mb-5 text-2xl font-bold">Các từ vựng có trong bộ đề</h4>
-            <Switch checkedChildren="Chi tiết" unCheckedChildren="Rút gọn" defaultChecked />
-            <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 my-5">
-               {Array(10)
-                  .fill(false)
-                  .map((_, index) => (
-                     <VocabItem key={index} />
-                  ))}
-            </div>
-         </div>
-
-         <VocabFormModal open={openVocabModal} setOpen={setOpenVocabModal} />
+         <VocabFormModal
+            open={openVocabModal}
+            setOpen={setOpenVocabModal}
+            deckId={id}
+            rerender={rerender}
+            setRerender={setRerender}
+         />
          <DeckFormModal
             open={openDeckModal}
             setOpen={setOpenDeckModal}

@@ -1,3 +1,5 @@
+import { VocabType } from "./VocabType";
+
 export type DeckRequestType = {
    title?: string;
    description?: string;
@@ -12,6 +14,8 @@ export type DeckResponseType = {
    createAt: string;
    updateAt: string;
    user: DeckUserType;
+   totalVocabulary: number;
+   vocabList: VocabType[];
 }
 
 type DeckUserType = {
