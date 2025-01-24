@@ -1,6 +1,6 @@
 package com.example.vocab_vault_be.dto.deck;
 
-import com.example.vocab_vault_be.dto.vocab.VocabResponse;
+import com.example.vocab_vault_be.dto.vocab.VocabDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -20,11 +20,12 @@ public class DeckResponse {
     private boolean isPublic;
     private Instant createAt;
     private Instant updatedAt;
+    private int totalVocabulary;
 
     @JsonProperty("user")
     private DeckUser deckUser;
 
-    private List<VocabResponse> vocabList;
+    private List<VocabDTO> vocabList;
 
     @Getter
     @Setter

@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class VocabResponse {
+public class VocabDTO {
     private Long id;
     private String origin;
     private String define;
@@ -21,6 +21,8 @@ public class VocabResponse {
     private String audio;
     private String level;
     private List<ExampleResponse> examples;
+
+    private Long deckId;
 
     @Getter
     @Setter

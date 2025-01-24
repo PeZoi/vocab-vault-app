@@ -1,7 +1,6 @@
 package com.example.vocab_vault_be.service;
 
-import com.example.vocab_vault_be.dto.vocab.VocabRequest;
-import com.example.vocab_vault_be.dto.vocab.VocabResponse;
+import com.example.vocab_vault_be.dto.vocab.VocabDTO;
 import com.example.vocab_vault_be.entity.Deck;
 import com.example.vocab_vault_be.entity.Example;
 import com.example.vocab_vault_be.entity.Vocabulary;
@@ -23,7 +22,7 @@ public class VocabService {
         this.modelMapper = modelMapper;
     }
 
-    public VocabResponse create(VocabRequest vocabRequest) {
+    public VocabDTO create(VocabDTO vocabRequest) {
         Deck deck = deckRepository.findById(vocabRequest.getDeckId()).orElseThrow(() -> new NotFoundException("ID bộ " +
                 "đề không tồn tại"));
         Vocabulary vocabulary = modelMapper.map(vocabRequest, Vocabulary.class);
@@ -34,12 +33,12 @@ public class VocabService {
         }
         Vocabulary vocabularySaved = vocabRepository.save(vocabulary);
 
-        return modelMapper.map(vocabularySaved, VocabResponse.class);
+        return modelMapper.map(vocabularySaved, VocabDTO.class);
     }
 
     public String delete(Long id) {
-        Vocabulary vocabulary = vocabRepository.findById(id).orElseThrow(() -> new NotFoundException("ID từ không " +
-                "tồn tại"));
+        Vocabulary vocabulary = vocabRepository.findById(id).orElseThrow(() -> new NotFoundException("ID từ vựng " +
+                "không tồn tại"));
         try {
             vocabRepository.delete(vocabulary);
             return "Xoá thành công";
@@ -47,4 +46,16 @@ public class VocabService {
             return "Xoá thất bại";
         }
     }
+
+    public VocabDTO update(Long id, VocabDTO vocabRequest) {
+        Vocabulary vocabulary = vocabRepository.findById(id).orElseThrow(() -> new NotFoundException("ID từ vựng không tồn tại"));
+        Vocabulary vocabMapper = modelMapper.map(vocabRequest, Vocabulary.class);
+        vocabMapper.setDeck(vocabulary.getDeck());
+        for (Example example : vocabMapper.getExamples()) {
+            example.setVocabulary(vocabMapper);
+        }
+        Vocabulary vocabularySaved = vocabRepository.save(vocabMapper);
+        return modelMapper.map(vocabularySaved, VocabDTO.class);
+    }
+
 }

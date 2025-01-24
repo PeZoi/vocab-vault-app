@@ -85,9 +85,14 @@ public class ProxyService {
                                                                                 "2. Ví dụ phải thực tế và dễ hiểu\n" +
                                                                                 "3. Ghi chú phải hữu ích cho việc ghi nhớ\n" +
                                                                                 "4. Định dạng JSON phải chính xác\n\n" +
+                                                                                "5. origin phải là tiếng anh, từ " +
+                                                                                "muốn dịch\n\n" +
+                                                                                "6. define phải là tiếng việt, từ " +
+                                                                                "định nghĩa ngắn gọn dễ hiểu\n\n" +
                                                                                 "Trả về kết quả theo cấu trúc JSON sau và KHÔNG kèm theo bất kỳ giải thích nào:\n" +
                                                                                 "{\n" +
-                                                                                "   \"origin\": \"\",\n // Từ gốc bằng english" +
+                                                                                "   \"origin\": \"\",\n // Từ muốn " +
+                                                                                "dịch nghĩa" +
                                                                                 "   \"define\": \"\",\n // Định nghĩa bằng tiếng Việt, ngắn gọn và dễ hiểu" +
                                                                                 "   \"partsOfSpeech\": \"\",\n // Loại " +
                                                                                 "từ (Nound, Adj, Adv, Verb, Phrasal verb, Idioms etc.)" +

@@ -1,7 +1,6 @@
 package com.example.vocab_vault_be.controller;
 
-import com.example.vocab_vault_be.dto.vocab.VocabRequest;
-import com.example.vocab_vault_be.dto.vocab.VocabResponse;
+import com.example.vocab_vault_be.dto.vocab.VocabDTO;
 import com.example.vocab_vault_be.service.VocabService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +16,17 @@ public class VocabController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<VocabResponse> create(@RequestBody VocabRequest vocabRequest) {
+    public ResponseEntity<VocabDTO> create(@RequestBody VocabDTO vocabRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(vocabService.create(vocabRequest));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> create(@PathVariable Long id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         return ResponseEntity.ok(vocabService.delete(id));
+    }
+
+    @PutMapping("update/{id}")
+    public ResponseEntity<VocabDTO> update(@PathVariable Long id, @RequestBody VocabDTO vocabRequest) {
+        return ResponseEntity.ok(vocabService.update(id, vocabRequest));
     }
 }
