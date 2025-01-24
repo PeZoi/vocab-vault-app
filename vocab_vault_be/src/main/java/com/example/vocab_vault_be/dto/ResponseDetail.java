@@ -1,4 +1,4 @@
-package com.example.vocab_vault_be.dto.response;
+package com.example.vocab_vault_be.dto;
 
 import lombok.*;
 
