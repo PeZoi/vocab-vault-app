@@ -31,7 +31,7 @@ public class SecurityConfiguration {
             cors.configurationSource(request -> {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
                 corsConfiguration.setAllowCredentials(true);
-                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://vocab-vault-app-pezois-projects.vercel.app"));
                 corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                 corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "x-no-retry"));
                 return corsConfiguration;

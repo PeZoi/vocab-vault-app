@@ -30,6 +30,11 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
         HttpServletResponse httpServletResponse = ((ServletServerHttpResponse) response).getServletResponse();
         int status = httpServletResponse.getStatus();
 
+        // Nếu trường hợp là audio
+        if (body instanceof byte[]) {
+            return body;
+        }
+
         ResponseDetail<Object> detailResponse = new ResponseDetail<>();
         detailResponse.setStatus(status);
 

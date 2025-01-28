@@ -119,4 +119,18 @@ public class ProxyService {
                 .block();
     }
 
+    public byte[] getSoundForWord(String word) {
+        return WebClient.builder()
+                .baseUrl("https://dict.youdao.com")
+                .build()
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/dictvoice")
+                        .queryParam("audio", word)
+                        .queryParam("type", 2)
+                        .build())
+                .retrieve()
+                .bodyToMono(byte[].class)
+                .block();
+    }
 }
