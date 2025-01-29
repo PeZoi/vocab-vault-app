@@ -19,23 +19,19 @@ public class ProxyService {
 
     public JsonNode fetchSuggestionsEn(String prefix) {
         return WebClient.builder()
-                .baseUrl("https://quizlet.com")
+                .baseUrl("https://api-ng.pons.com")
                 .build()
-                .get()
+                .post()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/webapi/3.2/suggestions/word")
-                        .queryParam("clientId", clientIdQuizlet)
-                        .queryParam("limit", 3)
-                        .queryParam("defLang", "vi")
-                        .queryParam("localTermId", -1)
-                        .queryParam("prefix", prefix)
-                        .queryParam("wordLang", "en")
+                        .path("/pons-mf-resultpage/api/dict-autocomplete")
                         .build())
-                .header("Cookie", cookieQuizlet)
+                .header("Content-Type", "application/json")
+                .bodyValue("{\"dictionary\": \"enzh\", \"prefix\": \"" + prefix + "\"}")
                 .retrieve()
                 .bodyToMono(JsonNode.class)
                 .block();
     }
+
 
     public JsonNode fetchSuggestionsVi(String word, String prefix) {
         return WebClient.builder()
