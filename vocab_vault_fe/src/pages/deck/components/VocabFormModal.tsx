@@ -2,8 +2,7 @@ import { CloseOutlined, QuestionCircleOutlined, RedoOutlined } from '@ant-design
 import type { AutoCompleteProps, FormProps } from 'antd';
 import { AutoComplete, Button, Card, Divider, Form, Input, message, Modal, Tooltip } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { generateWordAPI, suggestEnAPI, suggestViAPI } from 'apis';
-import { createVocabAPI, updateVocabAPI } from 'apis/vocabAPI';
+import { createVocabAPI, generateWordAPI, suggestEnAPI, suggestViAPI, updateVocabAPI } from 'apis';
 import { debounce } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { LuBrain } from 'react-icons/lu';
@@ -111,8 +110,11 @@ export const VocabFormModal: React.FC<Props> = ({
          const res = await suggestEnAPI(searchText);
 
          if (res.status === 200) {
-            results = res.data?.responses?.[0]?.data?.suggestions?.suggestions?.map((word: any) => {
-               return { value: word?.text };
+            results = res.data?.filter((word: any) => word?.language === 'en');
+            results = results?.map((word: any) => {
+               return {
+                  value: word?.label,
+               };
             });
          }
 
