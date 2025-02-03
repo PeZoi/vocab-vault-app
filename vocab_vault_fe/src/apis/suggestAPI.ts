@@ -15,12 +15,3 @@ export const generateWordAPI = async (word: string): Promise<ApiResponse> => {
    const { data } = await axiosInstance.get(`/api/proxy/generate-word?word=${word}`);
    return data;
 }
-
-export const getSoundForWord = async (word: string = '') => {
-   if (word) {
-      const { data } = await axiosInstance.get(`/api/proxy/sound?word=${word}`, {
-         responseType: 'blob'
-      });
-      return data;
-   }
-}

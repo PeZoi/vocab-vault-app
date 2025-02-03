@@ -1,5 +1,5 @@
 import { MainLayout } from 'components';
-import { AboutPage, DeckDetailPage, DeckPage, FlashCardPage, HomePage } from 'pages';
+import { AboutPage, DeckDetailPage, DeckPage, HomePage } from 'pages';
 import { ForgotPasswordPage, ResetPasswordPage, SignInPage, SignUpPage, SocialSignInCallback } from 'pages/auth';
 import { RouterProvider } from 'react-router';
 import { createBrowserRouter } from 'react-router-dom';
@@ -26,10 +26,6 @@ export function MainRouter() {
             {
                path: PATH_CONSTANTS.DECK_DETAIL,
                element: <DeckDetailPage />,
-            },
-            {
-               path: PATH_CONSTANTS.FLASH_CARD,
-               element: <FlashCardPage />,
             },
          ],
       },

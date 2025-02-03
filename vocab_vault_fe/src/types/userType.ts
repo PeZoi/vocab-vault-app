@@ -8,13 +8,6 @@ export type UserType = {
    updateAt: string;
 }
 
-export type UserShortenType = {
-   id: number;
-   fullName: string;
-   email: string;
-   avatar: string;
-}
-
 type RoleType = {
    id: number;
    roleName: string;
