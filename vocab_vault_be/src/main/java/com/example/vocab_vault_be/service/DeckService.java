@@ -2,6 +2,7 @@ package com.example.vocab_vault_be.service;
 
 import com.example.vocab_vault_be.dto.deck.DeckRequest;
 import com.example.vocab_vault_be.dto.deck.DeckResponse;
+import com.example.vocab_vault_be.dto.user.UserShortenResponse;
 import com.example.vocab_vault_be.dto.vocab.VocabDTO;
 import com.example.vocab_vault_be.entity.Deck;
 import com.example.vocab_vault_be.entity.User;
@@ -41,7 +42,7 @@ public class DeckService {
         deck.setUser(user);
         Deck deckSaved = deckRepository.save(deck);
         DeckResponse deckResponse = modelMapper.map(deckSaved, DeckResponse.class);
-        deckResponse.setDeckUser(modelMapper.map(user, DeckResponse.DeckUser.class));
+        deckResponse.setDeckUser(modelMapper.map(user, UserShortenResponse.class));
         return deckResponse;
     }
 
@@ -64,7 +65,7 @@ public class DeckService {
             vocabResponseList.add(modelMapper.map(vocabulary, VocabDTO.class));
         }
         DeckResponse deckResponse = modelMapper.map(deck, DeckResponse.class);
-        deckResponse.setDeckUser(modelMapper.map(deck.getUser(), DeckResponse.DeckUser.class));
+        deckResponse.setDeckUser(modelMapper.map(deck.getUser(), UserShortenResponse.class));
         deckResponse.setVocabList(vocabResponseList);
 
         return deckResponse;
@@ -87,7 +88,7 @@ public class DeckService {
         deck.setDescription(deckRequest.getDescription());
         Deck deckSaved = deckRepository.save(deck);
         DeckResponse deckResponse = modelMapper.map(deckSaved, DeckResponse.class);
-        deckResponse.setDeckUser(modelMapper.map(deckSaved.getUser(), DeckResponse.DeckUser.class));
+        deckResponse.setDeckUser(modelMapper.map(deckSaved.getUser(), UserShortenResponse.class));
         return deckResponse;
     }
 
@@ -96,7 +97,7 @@ public class DeckService {
         deckList.forEach(deck -> {
             DeckResponse deckResponse = modelMapper.map(deck, DeckResponse.class);
             deckResponse.setTotalVocabulary(deck.getVocabularies().size());
-            deckResponse.setDeckUser(modelMapper.map(deck.getUser(), DeckResponse.DeckUser.class));
+            deckResponse.setDeckUser(modelMapper.map(deck.getUser(), UserShortenResponse.class));
             deckResponseList.add(deckResponse);
         });
         deckResponseList.sort((d1, d2) -> d2.getCreateAt().compareTo(d1.getCreateAt()));
