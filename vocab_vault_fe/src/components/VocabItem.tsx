@@ -1,5 +1,6 @@
-import { CloseOutlined, SoundFilled } from '@ant-design/icons';
+import { CloseOutlined, LoadingOutlined, SoundFilled } from '@ant-design/icons';
 import { Button, Divider, message, Popconfirm, Typography } from 'antd';
+import { getSoundForWord } from 'apis';
 import { deleteVocabAPI } from 'apis/vocabAPI';
 import { VocabFormModal } from 'pages';
 import React, { useState } from 'react';
@@ -16,6 +17,25 @@ type Props = {
 
 export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender }) => {
    const [openVocabModal, setOpenVocabModal] = useState(false);
+   const [loading, setLoading] = useState(false);
+
+   const handleClickAudio = async () => {
+      setLoading(true);
+      try {
+         // Gửi yêu cầu đến API và nhận về file audio dưới dạng blob
+         const res = await getSoundForWord(vocab.origin);
+         const audioUrl = URL.createObjectURL(res);
+         const audio = new Audio(audioUrl);
+         audio.play();
+         audio.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+         };
+      } catch (error) {
+         console.error('Error playing audio:', error);
+      }
+      setLoading(false);
+   };
+
    const handleDelete = async () => {
       const res = await deleteVocabAPI(vocab.id);
       if (res.status === 200) {
@@ -32,7 +52,7 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender }) => 
                <span className="text-primary">{capitalizeFirstLetter(vocab.origin)}</span>
                <span className="text-textSecondary">{vocab.ipa}</span>
                <span className="cursor-pointer hover:opacity-80 select-none">
-                  <SoundFilled className="text-gray-700" />
+                  {loading ? <LoadingOutlined /> : <SoundFilled className="text-gray-700" onClick={handleClickAudio} />}
                </span>
             </div>
             <div className="flex flex-row-reverse items-center gap-3">

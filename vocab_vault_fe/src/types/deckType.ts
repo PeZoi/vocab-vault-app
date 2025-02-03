@@ -1,3 +1,4 @@
+import { UserShortenType } from "./userType";
 import { VocabType } from "./VocabType";
 
 export type DeckRequestType = {
@@ -13,14 +14,7 @@ export type DeckResponseType = {
    isPublic?: boolean;
    createAt: string;
    updateAt: string;
-   user: DeckUserType;
+   user: UserShortenType;
    totalVocabulary: number;
    vocabList: VocabType[];
-}
-
-type DeckUserType = {
-   id: number;
-   fullName: string;
-   email: string;
-   avatar: string;
 }

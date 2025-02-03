@@ -1,3 +1,5 @@
 export * from "./authAPI"
 export * from "./deckAPI"
 export * from "./suggestAPI"
+export * from "./vocabAPI"
+export * from "./flashCardAPI"

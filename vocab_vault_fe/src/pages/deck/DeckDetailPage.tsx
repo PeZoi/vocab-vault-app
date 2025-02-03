@@ -11,6 +11,7 @@ import { MdOutlinePublic } from 'react-icons/md';
 import { PiCards, PiCardsThree } from 'react-icons/pi';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import { DeckResponseType } from 'types';
 import { convertAroundTime, convertStringDate, PATH_CONSTANTS } from 'utils';
 import { DeckFormModal, VocabFormModal } from './components';
@@ -80,7 +81,7 @@ export const DeckDetailPage = () => {
 
          <div className="flex flex-col gap-2">
             <div className="flex justify-between">
-               <Text ellipsis={{ tooltip: 'Tiêu đề' }} className="text-3xl font-bold">
+               <Text ellipsis={{ tooltip: deck?.title }} className="text-3xl font-bold">
                   Bộ từ vựng: {deck?.title}
                </Text>
                {deck?.user?.id == user?.id && (
@@ -147,10 +148,6 @@ export const DeckDetailPage = () => {
                               <PlusCircleOutlined style={{ fontSize: '24px' }} />
                               <p>Thêm từ vựng</p>
                            </Button>
-                           {/* <Button className="size-32 flex flex-col">
-                        <FaRegEdit style={{ fontSize: '24px' }} />
-                        <p>Chỉnh sửa</p>
-                     </Button> */}
                         </div>
                      </div>
                   )}
@@ -158,10 +155,12 @@ export const DeckDetailPage = () => {
                      <div>
                         <h4 className="mb-5 text-2xl font-bold">Luyện tập</h4>
                         <div className="flex items-center gap-5">
-                           <Button className="size-32 flex flex-col">
-                              <PiCardsThree style={{ fontSize: '24px' }} />
-                              <p>Thẻ ghi nhớ</p>
-                           </Button>
+                           <Link to={PATH_CONSTANTS.FLASH_CARD.replace(':id', deck.id ? deck.id?.toString() : '0')}>
+                              <Button className="size-32 flex flex-col">
+                                 <PiCardsThree style={{ fontSize: '24px' }} />
+                                 <p>Thẻ ghi nhớ</p>
+                              </Button>
+                           </Link>
                            <Button className="size-32 flex flex-col">
                               <PiCards style={{ fontSize: '24px' }} />
                               <p>Ghép thẻ</p>
