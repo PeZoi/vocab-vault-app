@@ -1,8 +1,8 @@
 package com.example.vocab_vault_be.controller;
 
 import com.example.vocab_vault_be.dto.auth.LoginRequest;
-import com.example.vocab_vault_be.dto.user.UserRequest;
 import com.example.vocab_vault_be.dto.auth.LoginResponse;
+import com.example.vocab_vault_be.dto.user.UserRequest;
 import com.example.vocab_vault_be.dto.user.UserResponse;
 import com.example.vocab_vault_be.repository.UserRepository;
 import com.example.vocab_vault_be.service.AuthService;
@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -50,7 +52,7 @@ public class AuthController {
 
     @GetMapping("/social/callback")
     public ResponseEntity<LoginResponse> callbackSocial(@RequestParam("type") String loginType,
-                                                        @RequestParam("code") String code) {
+                                                        @RequestParam("code") String code) throws IOException {
         LoginResponse loginResponse = authService.callbackSocial(loginType, code);
         String refresh_token = userRepository.findByEmail(loginResponse.getUser().getEmail()).get().getRefreshToken();
 

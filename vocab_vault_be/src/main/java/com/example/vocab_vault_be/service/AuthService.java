@@ -1,8 +1,8 @@
 package com.example.vocab_vault_be.service;
 
 import com.example.vocab_vault_be.dto.auth.LoginRequest;
-import com.example.vocab_vault_be.dto.user.UserRequest;
 import com.example.vocab_vault_be.dto.auth.LoginResponse;
+import com.example.vocab_vault_be.dto.user.UserRequest;
 import com.example.vocab_vault_be.dto.user.UserResponse;
 import com.example.vocab_vault_be.dto.user.UserReturnJwt;
 import com.example.vocab_vault_be.entity.Role;
@@ -12,7 +12,9 @@ import com.example.vocab_vault_be.exception.NotFoundException;
 import com.example.vocab_vault_be.repository.RoleRepository;
 import com.example.vocab_vault_be.repository.UserRepository;
 import com.example.vocab_vault_be.security.SecurityUtil;
+import com.example.vocab_vault_be.utils.CommonFunction;
 import com.example.vocab_vault_be.utils.TemplateEmail;
+import com.example.vocab_vault_be.utils.UploadFile;
 import com.example.vocab_vault_be.utils.enums.Roles;
 import com.example.vocab_vault_be.utils.enums.Status;
 import org.modelmapper.ModelMapper;
@@ -30,7 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 
@@ -45,6 +49,7 @@ public class AuthService {
     private final SecurityUtil securityUtil;
     private final EmailService emailService;
     private final RestTemplate restTemplate = new RestTemplate();
+    private final UploadFile uploadFile;
 
     @Value("${vocab.vault.domain.frontend}")
     private String domainFE;
@@ -57,7 +62,7 @@ public class AuthService {
 
     public AuthService(UserService userService, UserRepository userRepository, RoleRepository roleRepository,
                        ModelMapper modelMapper, PasswordEncoder passwordEncoder,
-                       AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil, EmailService emailService) {
+                       AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil, EmailService emailService, UploadFile uploadFile) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -66,6 +71,7 @@ public class AuthService {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.securityUtil = securityUtil;
         this.emailService = emailService;
+        this.uploadFile = uploadFile;
     }
 
     public UserResponse register(UserRequest userRequest) {
@@ -199,7 +205,7 @@ public class AuthService {
         return "";
     }
 
-    public LoginResponse callbackSocial(String loginType, String code) {
+    public LoginResponse callbackSocial(String loginType, String code) throws IOException {
         String tokenUri = "https://oauth2.googleapis.com/token";
 
         // Request body for token exchange
@@ -239,8 +245,11 @@ public class AuthService {
                     HttpStatus.CONFLICT);
         }
 
-        // REGISTER IF EMAIL NOT ALREADY EXIST YET
+        // REGISTER IF EMAIL HASN'T ALREADY EXIST YET
         if (!userRepository.existsByEmail(email)) {
+            MultipartFile avatarMultipartFile = CommonFunction.convertUrlToMultipartFile(avatar, email);
+            avatar = uploadFile.uploadFileOnCloudinary(avatarMultipartFile);
+
             Role role = roleRepository.findByName(String.valueOf(Roles.ROLE_USER));
             User user = new User();
             user.setAvatar(avatar);
