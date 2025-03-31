@@ -9,4 +9,6 @@ export const PATH_CONSTANTS = {
    FORGOT_PASSWORD: '/forgot-password',
    RESET_PASSWORD: '/reset-password',
    GOOGLE_CALLBACK: '/google/callback',
+   FLASH_CARD: '/flash-card/:id',
+   CARD_MERGE: '/card-merge/:id'
 }

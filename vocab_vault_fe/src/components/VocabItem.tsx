@@ -11,10 +11,11 @@ const { Paragraph } = Typography;
 type Props = {
    vocab: VocabType;
    rerender: boolean;
+   isShorten?: boolean;
    setRerender: (value: boolean) => void;
 };
 
-export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender }) => {
+export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isShorten = false }) => {
    const [openVocabModal, setOpenVocabModal] = useState(false);
    const handleDelete = async () => {
       const res = await deleteVocabAPI(vocab.id);
@@ -62,7 +63,7 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender }) => 
          <p className="text-lg font-bold ">
             Định nghĩa: <span className="italic font-normal ml-1">{capitalizeFirstLetter(vocab?.define)}</span>
          </p>
-         <Divider className="my-2" />
+         {!isShorten &&  (<><Divider className="my-2" />
          <div className="text-lg mt-2">
             <p className="text-lg font-bold ">Ví dụ:</p>
             <div className="flex flex-col gap-1">
@@ -86,7 +87,7 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender }) => 
          >
             <span className="font-bold">Ghi chú:</span>
             <span className="italic ml-2">{vocab.note}</span>
-         </Paragraph>
+         </Paragraph></>)}
 
          <VocabFormModal
             open={openVocabModal}

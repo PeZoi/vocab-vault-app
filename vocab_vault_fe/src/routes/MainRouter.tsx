@@ -1,6 +1,8 @@
 import { MainLayout } from 'components';
 import { AboutPage, DeckDetailPage, DeckPage, HomePage } from 'pages';
 import { ForgotPasswordPage, ResetPasswordPage, SignInPage, SignUpPage, SocialSignInCallback } from 'pages/auth';
+import { CardMergePage } from 'pages/cardMerge';
+import { FlashCardPage } from 'pages/flashcard';
 import { RouterProvider } from 'react-router';
 import { createBrowserRouter } from 'react-router-dom';
 import { PATH_CONSTANTS } from 'utils';
@@ -12,20 +14,28 @@ export function MainRouter() {
          element: <MainLayout />, // MainLayout chỉ khai báo 1 lần ở đây
          children: [
             {
-               index: true, // Tương đương với path: '/'
-               element: <HomePage />, // Trang chủ
+               index: true,
+               element: <HomePage />,
             },
             {
                path: PATH_CONSTANTS.ABOUT,
-               element: <AboutPage />, // Trang về
+               element: <AboutPage />,
             },
             {
                path: PATH_CONSTANTS.DECKS,
-               element: <DeckPage />, // Trang decks
+               element: <DeckPage />,
             },
             {
                path: PATH_CONSTANTS.DECK_DETAIL,
                element: <DeckDetailPage />,
+            },
+            {
+               path: PATH_CONSTANTS.FLASH_CARD,
+               element: <FlashCardPage />,
+            },
+            {
+               path: PATH_CONSTANTS.CARD_MERGE,
+               element: <CardMergePage />,
             },
          ],
       },

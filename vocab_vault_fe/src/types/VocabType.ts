@@ -13,3 +13,14 @@ export type VocabType = {
       vi?: string;
    }[];
 };
+
+export enum TypeOfVocab {
+   UNKNOW,
+   KNOW,
+}
+
+// Để lưu trữ vào tiến trình khi học falsh card
+export type Vocab2Type = {
+   vocab: VocabType;
+   type: TypeOfVocab;
+};
