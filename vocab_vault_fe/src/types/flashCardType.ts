@@ -7,3 +7,11 @@ export type FlashCardResponse = {
    user?: UserShortenType;
    vocabList?: VocabType[];
 }
+
+export type InfoProgressType = {
+   unknow: number;
+   know: number;
+   progress: number;
+   total: number;
+   subTotal: number;
+};

@@ -26,6 +26,7 @@ export const DeckDetailPage = () => {
    const [openDeckModal, setOpenDeckModal] = useState(false);
    const [deck, setDeck] = useState<DeckResponseType>();
    const [rerender, setRerender] = useState(false);
+   const [isShorten, setIsShorten] = useState(false);
 
    useEffect(() => {
       const fetchDeck = async () => {
@@ -161,10 +162,12 @@ export const DeckDetailPage = () => {
                                  <p>Thẻ ghi nhớ</p>
                               </Button>
                            </Link>
-                           <Button className="size-32 flex flex-col">
-                              <PiCards style={{ fontSize: '24px' }} />
-                              <p>Ghép thẻ</p>
-                           </Button>
+                           <Link to={PATH_CONSTANTS.CARD_MERGE.replace(':id', deck.id ? deck.id?.toString() : '0')}>
+                              <Button className="size-32 flex flex-col">
+                                 <PiCards style={{ fontSize: '24px' }} />
+                                 <p>Ghép thẻ</p>
+                              </Button>
+                           </Link>
                            <Button className="size-32 flex flex-col">
                               <GiChoice style={{ fontSize: '24px' }} />
                               <p>Trắc nghiệm</p>
@@ -180,12 +183,20 @@ export const DeckDetailPage = () => {
                   <h4 className="mb-5 text-2xl font-bold">Các từ vựng có trong bộ đề</h4>
                   {deck.vocabList.length > 0 ? (
                      <>
-                        <Switch checkedChildren="Chi tiết" unCheckedChildren="Rút gọn" defaultChecked />
-                        <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-5 my-5">
-                           {deck.vocabList.map((vocab) => (
-                              <VocabItem key={vocab.id} vocab={vocab} rerender={rerender} setRerender={setRerender} />
-                           ))}
-                        </div>
+                        <Switch checkedChildren="Chi tiết" unCheckedChildren="Rút gọn" defaultChecked onClick={() => setIsShorten((prev) => !prev)} />
+                        {!isShorten ? (
+                           <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-5 my-5">
+                              {deck.vocabList.map((vocab) => (
+                                 <VocabItem key={vocab.id} vocab={vocab} rerender={rerender} setRerender={setRerender} />
+                              ))}
+                           </div>
+                        ) : (
+                           <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-5 my-5">
+                              {deck.vocabList.map((vocab) => (
+                                 <VocabItem key={vocab.id} vocab={vocab} rerender={rerender} setRerender={setRerender} isShorten={isShorten} />
+                              ))}
+                           </div>
+                        )}
                      </>
                   ) : (
                      <EmptyVocab />
