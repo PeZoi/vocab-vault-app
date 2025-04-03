@@ -108,7 +108,7 @@ export const CompleteFlashCard: React.FC<Props> = ({flashCardList, flashCardDone
 			<Modal title="Hoạt động ôn tập khác" open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
 				<Divider />
 				<div className='flex items-center justify-between py-10 px-10'>
-					<Link to={PATH_CONSTANTS.CARD_MERGE.replace(':id', id ? id?.toString() : '0')}>
+					<Link to={PATH_CONSTANTS.CARD_MATCH.replace(':id', id ? id?.toString() : '0')}>
 						<Button className="size-32 flex flex-col">
 								<PiCards style={{ fontSize: '24px' }} />
 								<p>Ghép thẻ</p>

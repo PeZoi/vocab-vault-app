@@ -1,3 +1,6 @@
 export * from "./home"
 export * from "./about"
 export * from "./deck"
+export * from "./cardMatch"
+export * from "./flashcard"
+export * from "./auth"

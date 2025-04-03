@@ -1,8 +1,5 @@
 import { MainLayout } from 'components';
-import { AboutPage, DeckDetailPage, DeckPage, HomePage } from 'pages';
-import { ForgotPasswordPage, ResetPasswordPage, SignInPage, SignUpPage, SocialSignInCallback } from 'pages/auth';
-import { CardMergePage } from 'pages/cardMerge';
-import { FlashCardPage } from 'pages/flashcard';
+import { AboutPage, CardMatchPage, DeckDetailPage, DeckPage, FlashCardPage, ForgotPasswordPage, HomePage, ResetPasswordPage, SignInPage, SignUpPage, SocialSignInCallback } from 'pages';
 import { RouterProvider } from 'react-router';
 import { createBrowserRouter } from 'react-router-dom';
 import { PATH_CONSTANTS } from 'utils';
@@ -34,8 +31,8 @@ export function MainRouter() {
                element: <FlashCardPage />,
             },
             {
-               path: PATH_CONSTANTS.CARD_MERGE,
-               element: <CardMergePage />,
+               path: PATH_CONSTANTS.CARD_MATCH,
+               element: <CardMatchPage />,
             },
          ],
       },

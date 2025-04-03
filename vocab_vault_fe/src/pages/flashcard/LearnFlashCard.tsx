@@ -2,7 +2,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { Button, Divider, Progress, Tooltip, Typography } from 'antd';
 import { getSoundForWord } from 'apis';
 import { Stack } from 'collections';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import React, { useState } from 'react';
 import { AiFillSound } from 'react-icons/ai';
 import { GrRevert } from 'react-icons/gr';

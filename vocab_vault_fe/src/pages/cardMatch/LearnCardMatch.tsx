@@ -1,0 +1,98 @@
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+
+type Props = {
+  data: any[];
+  countRef: React.MutableRefObject<number>;
+  setIsComplete: (isComplete: boolean) => void;
+}
+
+export const LearnCardMatch = ({
+  data,
+  countRef,
+  setIsComplete,
+}: Props) => {
+  const [arrMatch, setArrMatch] = useState<any[]>([]);
+	const [matchingCards, setMatchingCards] = useState<number[]>([]);
+	const [cardClickFirst, setCardClickFirst] = useState<number | null>(null);
+	const [cardClickSecond, setCardClickSecond] = useState<number | null>(null);
+
+	const [count, setCount] = useState(0);
+
+	useEffect(() => {
+		if (cardClickFirst !== null && cardClickSecond !== null) {
+			handelMatch();
+		}
+	}, [cardClickSecond]);
+
+  
+
+  useEffect(() => {
+    countRef.current = 0;
+    const intervalId = setInterval(() => {
+      countRef.current++;
+      setCount(countRef.current);
+    }, 1000);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  
+	const handleClickCard = (index: number) => {
+		if (cardClickFirst === index) {
+			setCardClickFirst(null);
+			setCardClickSecond(null);
+			return;
+		}
+
+		if (cardClickFirst === null) {
+			setCardClickFirst(() => index);
+		} else {
+			setCardClickSecond(() => index);
+		}
+	};
+
+	const handelMatch = () => {
+		if (cardClickFirst === null || cardClickSecond === null) return;
+
+		const isMatch = data[cardClickFirst].id_match === data[cardClickSecond].id_match;
+		if (isMatch) {
+			setMatchingCards([cardClickFirst, cardClickSecond]);
+
+			setTimeout(() => {
+				setArrMatch((prev) => [...prev, cardClickFirst, cardClickSecond]);
+				setMatchingCards([]);
+
+        if(arrMatch.length === 10) {
+          setIsComplete(true);
+        }
+			}, 600);
+		}
+
+		setCardClickFirst(null);
+		setCardClickSecond(null);
+	}
+
+  return (
+    <>
+      <div className="text-center text-lg font-bold"><span className="rounded-full bg-gray-200 px-4 py-1">{count}s</span></div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 md:gap-10 mx-4 sm:mx-10 md:mx-20 mt-8 sm:mt-12">
+        {data.map((item: any, index: number) => (
+          <motion.div
+            key={item.word}
+            className={`flex items-center justify-center rounded-md bg-gray-100 p-4 sm:p-5 min-h-40 sm:min-h-52 min-w-40 sm:min-w-52 cursor-pointer hover:border-
+              ${cardClickFirst === index || cardClickSecond === index ? 'border-4 border-primary' : ''}
+              ${arrMatch.includes(index) ? 'invisible' : ''}`}
+            onClick={() => handleClickCard(index)}
+            animate={matchingCards.includes(index) ? { scale: [1, 1.2, 0] } : {}}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="text-lg font-bold">{item.word}</span>
+          </motion.div>
+        ))}
+      </div>
+			</>
+  )
+}

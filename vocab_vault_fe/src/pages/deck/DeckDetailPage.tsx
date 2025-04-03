@@ -166,7 +166,7 @@ export const DeckDetailPage = () => {
                                  <p>Thẻ ghi nhớ</p>
                               </Button>
                            </Link>
-                           <Link to={PATH_CONSTANTS.CARD_MERGE.replace(':id', deck.id ? deck.id?.toString() : '0')}>
+                           <Link to={PATH_CONSTANTS.CARD_MATCH.replace(':id', deck.id ? deck.id?.toString() : '0')}>
                               <Button className="size-32 flex flex-col">
                                  <PiCards style={{ fontSize: '24px' }} />
                                  <p>Ghép thẻ</p>

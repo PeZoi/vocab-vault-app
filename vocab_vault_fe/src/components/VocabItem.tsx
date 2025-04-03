@@ -1,8 +1,10 @@
-import { CloseOutlined, SoundFilled } from '@ant-design/icons';
+import { CloseOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Button, Divider, message, Popconfirm, Typography } from 'antd';
+import { getSoundForWord } from 'apis';
 import { deleteVocabAPI } from 'apis/vocabAPI';
 import { VocabFormModal } from 'pages';
 import React, { useState } from 'react';
+import { AiFillSound } from 'react-icons/ai';
 import { FaRegEdit } from 'react-icons/fa';
 import { VocabType } from 'types/VocabType';
 import { capitalizeFirstLetter } from 'utils';
@@ -17,6 +19,7 @@ type Props = {
 
 export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isShorten = false }) => {
    const [openVocabModal, setOpenVocabModal] = useState(false);
+   const [loadingAudio, setLoadingAudio] = useState(false);
    const handleDelete = async () => {
       const res = await deleteVocabAPI(vocab.id);
       if (res.status === 200) {
@@ -26,6 +29,25 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isSho
          message.error(res.data);
       }
    };
+
+   const handleClickAudio = async (word: string = '') => {
+      if (word) {
+         setLoadingAudio(true);
+         try {
+            // Gửi yêu cầu đến API và nhận về file audio dưới dạng blob
+            const res = await getSoundForWord(word);
+            const audioUrl = URL.createObjectURL(res);
+            const audio = new Audio(audioUrl);
+            audio.play();
+            audio.onended = () => {
+               URL.revokeObjectURL(audioUrl);
+            };
+         } catch (error) {
+            console.error('Error playing audio:', error);
+         }
+         setLoadingAudio(false);
+      }
+   };
    return (
       <div className="bg-background border border-gray-300 rounded-md p-5 text-lg">
          <div className="flex items-center justify-between">
@@ -33,7 +55,17 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isSho
                <span className="text-primary">{capitalizeFirstLetter(vocab.origin)}</span>
                <span className="text-textSecondary">{vocab.ipa}</span>
                <span className="cursor-pointer hover:opacity-80 select-none">
-                  <SoundFilled className="text-gray-700" />
+                  {loadingAudio ? (
+                     <LoadingOutlined />
+                  ) : (
+                     <AiFillSound
+                        className="text-gray-500 cursor-pointer"
+                        onClick={(e) => {
+                           e.stopPropagation();
+                           handleClickAudio(vocab.origin);
+                        }}
+                     />
+                  )}
                </span>
             </div>
             <div className="flex flex-row-reverse items-center gap-3">
