@@ -53,7 +53,7 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isSho
          <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 font-bold">
                <span className="text-primary">{capitalizeFirstLetter(vocab.origin)}</span>
-               <span className="text-textSecondary">{vocab.ipa}</span>
+               <span className="text-textSecondary text-sm">{vocab.ipa}</span>
                <span className="cursor-pointer hover:opacity-80 select-none">
                   {loadingAudio ? (
                      <LoadingOutlined />
@@ -90,7 +90,7 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isSho
             <span className="text-lg font-bold">{vocab.partsOfSpeech}</span>
             <span>|</span>
             <span>Cấp độ:</span>
-            <span className="text-lg font-bold ">{vocab.level}</span>
+            <span className="text-lg font-bold">{vocab.level}</span>
          </div>
          <p className="text-lg font-bold ">
             Định nghĩa: <span className="italic font-normal ml-1">{capitalizeFirstLetter(vocab?.define)}</span>

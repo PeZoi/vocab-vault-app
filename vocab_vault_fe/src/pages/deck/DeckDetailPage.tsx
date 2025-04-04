@@ -14,6 +14,7 @@ import { useNavigate, useParams } from 'react-router';
 import { DeckResponseType } from 'types';
 import { convertAroundTime, convertStringDate, PATH_CONSTANTS } from 'utils';
 import { DeckFormModal, VocabFormModal } from './components';
+import { isUnlockCardMatchAPI } from 'apis/cardMatchAPI';
 import { Link } from 'react-router-dom';
 const { Text, Paragraph } = Typography;
 
@@ -27,6 +28,7 @@ export const DeckDetailPage = () => {
    const [deck, setDeck] = useState<DeckResponseType>();
    const [rerender, setRerender] = useState(false);
    const [isShorten, setIsShorten] = useState(false);
+   const [isUnlockCardMatch, setIsUnlockCardMatch] = useState<Boolean | null>(null);
 
    useEffect(() => {
       const fetchDeck = async () => {
@@ -39,6 +41,18 @@ export const DeckDetailPage = () => {
          fetchDeck();
       }
    }, [id, rerender]);
+
+   useEffect(() => {
+      const fetchUnlockCardMatch = async (id: any) => {
+         const res = await isUnlockCardMatchAPI(id);
+         if (res.status === 200) {
+            setIsUnlockCardMatch(res.data);
+         }
+      };
+      if (id) {
+         fetchUnlockCardMatch(id);
+      }
+   }, [id]);
 
    const handleDelete = async () => {
       const res = await deleteDeckByIdAPI(id);
@@ -166,11 +180,13 @@ export const DeckDetailPage = () => {
                                  <p>Thẻ ghi nhớ</p>
                               </Button>
                            </Link>
-                           <Link to={PATH_CONSTANTS.CARD_MATCH.replace(':id', deck.id ? deck.id?.toString() : '0')}>
-                              <Button className="size-32 flex flex-col">
-                                 <PiCards style={{ fontSize: '24px' }} />
-                                 <p>Ghép thẻ</p>
-                              </Button>
+                           <Link to={isUnlockCardMatch ? PATH_CONSTANTS.CARD_MATCH.replace(':id', deck.id ? deck.id?.toString() : '0') : '#'}>
+                              <Tooltip title={isUnlockCardMatch ? "" : "Bộ từ vựng cần ít nhất 6 từ để có thể mở khoá tính năng này"}>
+                                 <Button className="size-32 flex flex-col" disabled={!isUnlockCardMatch}>
+                                    <PiCards style={{ fontSize: '24px' }} />
+                                    <p>Ghép thẻ</p>
+                                 </Button>
+                              </Tooltip>
                            </Link>
                            <Button className="size-32 flex flex-col">
                               <GiChoice style={{ fontSize: '24px' }} />

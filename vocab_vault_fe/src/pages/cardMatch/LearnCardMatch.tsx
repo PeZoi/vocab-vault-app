@@ -99,7 +99,7 @@ export const LearnCardMatch = ({
             animate={matchingCards.includes(index) ? { scale: [1, 1.2, 0] } : {}}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-lg font-medium">{item.word}</span>
+            <span className="text-lg font-medium text-center">{item.word}</span>
           </motion.div>
         ))}
       </div>
