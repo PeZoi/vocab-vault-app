@@ -18,8 +18,11 @@ public class Deck extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
+
     private String description;
+
     @Column(name = "is_public")
     private boolean isPublic;
 

@@ -7,20 +7,16 @@ import com.example.vocab_vault_be.entity.Vocabulary;
 import com.example.vocab_vault_be.exception.NotFoundException;
 import com.example.vocab_vault_be.repository.DeckRepository;
 import com.example.vocab_vault_be.repository.VocabRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class VocabService {
     private final VocabRepository vocabRepository;
     private final DeckRepository deckRepository;
     private final ModelMapper modelMapper;
-
-    public VocabService(VocabRepository vocabRepository, DeckRepository deckRepository, ModelMapper modelMapper) {
-        this.vocabRepository = vocabRepository;
-        this.deckRepository = deckRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public VocabDTO create(VocabDTO vocabRequest) {
         Deck deck = deckRepository.findById(vocabRequest.getDeckId()).orElseThrow(() -> new NotFoundException("ID bộ " +

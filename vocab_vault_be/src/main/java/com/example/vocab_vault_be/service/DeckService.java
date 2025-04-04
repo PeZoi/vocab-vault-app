@@ -11,6 +11,7 @@ import com.example.vocab_vault_be.exception.NotFoundException;
 import com.example.vocab_vault_be.repository.DeckRepository;
 import com.example.vocab_vault_be.repository.UserRepository;
 import com.example.vocab_vault_be.security.SecurityUtil;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -21,16 +22,11 @@ import java.util.List;
 
 @Transactional
 @Service
+@RequiredArgsConstructor
 public class DeckService {
     private final DeckRepository deckRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-
-    public DeckService(DeckRepository deckRepository, UserRepository userRepository, ModelMapper modelMapper) {
-        this.deckRepository = deckRepository;
-        this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public DeckResponse create(DeckRequest deckRequest) {
         Deck deck = modelMapper.map(deckRequest, Deck.class);

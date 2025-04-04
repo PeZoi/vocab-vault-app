@@ -3,6 +3,7 @@ package com.example.vocab_vault_be.controller;
 import com.example.vocab_vault_be.dto.deck.DeckRequest;
 import com.example.vocab_vault_be.dto.deck.DeckResponse;
 import com.example.vocab_vault_be.service.DeckService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/decks")
 public class DeckController {
     private final DeckService deckService;
-
-    public DeckController(DeckService deckService) {
-        this.deckService = deckService;
-    }
 
     @PostMapping("/create")
     public ResponseEntity<DeckResponse> create(@RequestBody DeckRequest deckRequest) {

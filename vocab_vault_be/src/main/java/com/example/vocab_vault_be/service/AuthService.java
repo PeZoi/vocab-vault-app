@@ -17,10 +17,16 @@ import com.example.vocab_vault_be.utils.TemplateEmail;
 import com.example.vocab_vault_be.utils.UploadFile;
 import com.example.vocab_vault_be.utils.enums.Roles;
 import com.example.vocab_vault_be.utils.enums.Status;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -39,6 +45,7 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
     private final UserService userService;
     private final UserRepository userRepository;
@@ -59,20 +66,6 @@ public class AuthService {
     private String clientSecret;
     @Value("${vocab.vault.url-callback}")
     private String urlCallback;
-
-    public AuthService(UserService userService, UserRepository userRepository, RoleRepository roleRepository,
-                       ModelMapper modelMapper, PasswordEncoder passwordEncoder,
-                       AuthenticationManagerBuilder authenticationManagerBuilder, SecurityUtil securityUtil, EmailService emailService, UploadFile uploadFile) {
-        this.userService = userService;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.modelMapper = modelMapper;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.securityUtil = securityUtil;
-        this.emailService = emailService;
-        this.uploadFile = uploadFile;
-    }
 
     public UserResponse register(UserRequest userRequest) {
         // Kiểm tra điều kiện

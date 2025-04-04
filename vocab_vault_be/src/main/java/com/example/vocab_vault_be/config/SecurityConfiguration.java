@@ -14,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -27,16 +28,17 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, CustomAuthenticationEntryPoint customAuthenticationEntryPoint
     ) throws Exception {
         // Config cors
-        httpSecurity.cors(cors -> {
+        httpSecurity.cors(cors ->
             cors.configurationSource(request -> {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
                 corsConfiguration.setAllowCredentials(true);
-                corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "https://vocab-vault-app-pezois-projects.vercel.app"));
+                corsConfiguration.setAllowedOriginPatterns(List.of("*")); // Cho phép tất cả nguồn
                 corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                 corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "x-no-retry"));
                 return corsConfiguration;
-            });
-        });
+            })
+        );
+
 
         // Config authorization
         httpSecurity.authorizeHttpRequests(authorize -> authorize.requestMatchers("/api/auth/**").permitAll()

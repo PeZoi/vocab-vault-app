@@ -7,28 +7,30 @@ import com.example.vocab_vault_be.dto.user.UserResponse;
 import com.example.vocab_vault_be.repository.UserRepository;
 import com.example.vocab_vault_be.service.AuthService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
     private final UserRepository userRepository;
 
     @Value("${vocab.vault.refresh-token-expiration}")
     private long jwtRefreshTokenExpiration;
-
-    public AuthController(AuthService authService, UserRepository userRepository) {
-        this.authService = authService;
-        this.userRepository = userRepository;
-    }
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> registration(@RequestBody @Valid UserRequest userRequest) {
