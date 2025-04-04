@@ -1,70 +1,48 @@
 import { LeftOutlined } from '@ant-design/icons';
 import { Button, Divider } from "antd";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LearnCardMatch } from "./LearnCardMatch";
 import { CompleteCardMatch } from './CompleteCardMatch';
+import { useParams } from 'react-router';
+import { getCardMatchAPI } from 'apis/cardMatchAPI';
+import { CardMatchType } from 'types/cardMatchType';
+import { VocabType } from 'types/VocabType';
+import { capitalizeFirstLetter } from 'utils';
 
-
-const dataCard = [
-	{
-		word: "Apple",
-		id_match: 1,
-	},
-	{
-		word: "Quả táo",
-		id_match: 1,
-	},
-	{
-		word: "Orange",
-		id_match: 2,
-	},
-	{
-		word: "Quả cam",
-		id_match: 2,
-	},
-	{
-		word: "Banana",
-		id_match: 3,
-	},
-	{
-		word: "Quả chuối",
-		id_match: 3,
-	},
-	{
-		word: "Grape",
-		id_match: 4,
-	},
-	{
-		word: "Quả nho",
-		id_match: 4,
-	},
-	{
-		word: "Strawberry",
-		id_match: 5,
-	},
-	{
-		word: "Quả dâu",
-		id_match: 5,
-	},
-	{
-		word: "Watermelon",
-		id_match: 6,
-	},
-	{
-		word: "Quả dưa hấu",
-		id_match: 6,
-	},
-]
 
 export const CardMatchPage = () => {
 
-	const [data, setData] = useState<any[]>(dataCard.sort(() => Math.random() - 0.5));
+	const [data, setData] = useState<CardMatchType[]>([]);
+	const { id } = useParams();
 	const [isComplete, setIsComplete] = useState(false);
+
+	useEffect(() => {
+		const fetchCardMatch = async () => {
+			const res = await getCardMatchAPI(id);
+			if (res.status === 200) {
+				let formatData: CardMatchType[] = [];
+				
+				res.data?.vocabList?.forEach((item: VocabType) => {
+					formatData.push({
+						word: capitalizeFirstLetter(item.origin),
+						idMatch: item.id
+					}, {
+						word: capitalizeFirstLetter(item.define),
+						idMatch: item.id
+					});
+				});
+				setData(formatData.sort(() => Math.random() - 0.5));
+			}
+		}
+		if (id) {
+			fetchCardMatch();
+		}
+	}, [id])
 
 	const countRef = useRef(0);
 	
 	return (
-		<div>
+		<div className='h-full'>
 			<Button
 				className="flex items-center gap-1 w-fit cursor-pointer hover:underline transition-all group border-none"
 				onClick={() => {

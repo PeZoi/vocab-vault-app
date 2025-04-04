@@ -65,9 +65,9 @@ export const CompleteCardMatch: React.FC<Props> = ({count, setIsComplete}) => {
   return (
       <div className='w-[1024px] mx-auto'>
         {showConfetti && <Confetti gravity={0.8}  />}
-        <h3 className='text-3xl font-bold mt-10 mb-10 text-center text-amber-500'>{message}</h3>
+        <h3 className='text-3xl font-bold mt-10 mb-10 text-center text-primary'>{message}</h3>
         <h3 className='text-2xl font-bold mt-10 mb-10 text-center'>Chúc mừng bạn đã hoàn thành ghép thẻ 🎉 🎉</h3>
-        <p className="text-center text-xl font-semibold">Bạn đã hoàn thành trong vòng <span className='font-bold text-amber-500'>{count}</span> giây</p>
+        <p className="text-center text-xl font-semibold">Bạn đã hoàn thành trong vòng <span className='font-bold text-primary'>{count}</span> giây</p>
         <div className='flex items-center justify-center mt-10'>
           <div className='flex flex-col gap-4'>
             <Button type="primary" className='w-[440px] h-16 round rounded-lg font-semibold text-base' onClick={() => setIsModalOpen(true)}>Hoạt động khác</Button>

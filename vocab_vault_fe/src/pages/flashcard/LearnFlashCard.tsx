@@ -32,7 +32,6 @@ type Props = {
 
 export const LearnFlashCard: React.FC<Props> = ({flashCardDoneList, flashCardInfo, flashCardList, setIsCompleteFC, infoProgress, setInfoProgress, setFlipped, flipped, handleClickReset}) => {
    
-   
    const [loadingAudio, setLoadingAudio] = useState(false);
    const [_, setShuffle] = useState(false);
 

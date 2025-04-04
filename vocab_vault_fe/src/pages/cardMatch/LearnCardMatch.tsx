@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { ConfirmStartCardMatch } from './ConfirmStartCardMatch';
 
 type Props = {
   data: any[];
@@ -16,6 +17,8 @@ export const LearnCardMatch = ({
 	const [matchingCards, setMatchingCards] = useState<number[]>([]);
 	const [cardClickFirst, setCardClickFirst] = useState<number | null>(null);
 	const [cardClickSecond, setCardClickSecond] = useState<number | null>(null);
+
+  const [isStart, setIsStart] = useState(false);
 
 	const [count, setCount] = useState(0);
 
@@ -56,7 +59,7 @@ export const LearnCardMatch = ({
 	const handelMatch = () => {
 		if (cardClickFirst === null || cardClickSecond === null) return;
 
-		const isMatch = data[cardClickFirst].id_match === data[cardClickSecond].id_match;
+		const isMatch = data[cardClickFirst].idMatch === data[cardClickSecond].idMatch;
 		if (isMatch) {
 			setMatchingCards([cardClickFirst, cardClickSecond]);
 
@@ -68,28 +71,35 @@ export const LearnCardMatch = ({
           setIsComplete(true);
         }
 			}, 600);
-		}
+		} else {
+      countRef.current += 2;
+      setCount(countRef.current);
+    }
 
 		setCardClickFirst(null);
 		setCardClickSecond(null);
 	}
 
+  if(!isStart) {
+    return <ConfirmStartCardMatch setIsStart={setIsStart} />
+  }
+
   return (
     <>
-      <div className="text-center text-lg font-bold"><span className="rounded-full bg-gray-200 px-4 py-1">{count}s</span></div>
+      <div className="text-center text-lg font-bold"><span className="rounded-full bg-gray-50 ring-2 ring-[#bdbcbc] px-4 py-1">{count}s</span></div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 md:gap-10 mx-4 sm:mx-10 md:mx-20 mt-8 sm:mt-12">
         {data.map((item: any, index: number) => (
           <motion.div
             key={item.word}
-            className={`flex items-center justify-center rounded-md bg-gray-100 p-4 sm:p-5 min-h-40 sm:min-h-52 min-w-40 sm:min-w-52 cursor-pointer hover:border-
-              ${cardClickFirst === index || cardClickSecond === index ? 'border-4 border-primary' : ''}
+            className={`flex items-center justify-center rounded-md p-4 w-80 h-40 ring-2 ring-[#bdbcbc] cursor-pointer hover:border-
+              ${cardClickFirst === index || cardClickSecond === index ? 'border-4 border-primary bg-primary text-white' : ''}
               ${arrMatch.includes(index) ? 'invisible' : ''}`}
             onClick={() => handleClickCard(index)}
             animate={matchingCards.includes(index) ? { scale: [1, 1.2, 0] } : {}}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-lg font-bold">{item.word}</span>
+            <span className="text-lg font-medium">{item.word}</span>
           </motion.div>
         ))}
       </div>
