@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -32,10 +33,13 @@ public class CardMatchService {
         for (Vocabulary vocabulary : deck.getVocabularies()) {
             vocabResponseList.add(modelMapper.map(vocabulary, VocabDTO.class));
         }
+
+        Collections.shuffle(vocabResponseList);
+
         return CardMatchDTO.builder()
                 .id(deck.getId())
                 .title(deck.getTitle())
-                .vocabList(vocabResponseList)
+                .vocabList(vocabResponseList.subList(0, 6))
                 .deckUser(modelMapper.map(deck.getUser(), UserShortenResponse.class)).build();
     }
 

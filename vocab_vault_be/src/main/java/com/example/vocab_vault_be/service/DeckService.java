@@ -67,6 +67,11 @@ public class DeckService {
         return deckResponse;
     }
 
+    public Integer getVocabTotalByDeckId(Long id) {
+        Deck deck = deckRepository.findById(id).orElseThrow(() -> new NotFoundException("Id không tồn tại"));
+        return deck.getVocabularies().size();
+    }
+
     public String deleteById(Long id) {
         try {
             Deck deck = deckRepository.findById(id).orElseThrow(() -> new NotFoundException("Id không tồn tại"));

@@ -19,14 +19,14 @@ public class ProxyService {
 
     public JsonNode fetchSuggestionsEn(String prefix) {
         return WebClient.builder()
-                .baseUrl("https://api-ng.pons.com")
+                .baseUrl("https://www.oed.com")
                 .build()
-                .post()
+                .get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/pons-mf-resultpage/api/dict-autocomplete")
+                        .path("/autocomplete/dictionary/")
+                        .queryParam("q", prefix)
                         .build())
                 .header("Content-Type", "application/json")
-                .bodyValue("{\"dictionary\": \"enzh\", \"prefix\": \"" + prefix + "\"}")
                 .retrieve()
                 .bodyToMono(JsonNode.class)
                 .block();
