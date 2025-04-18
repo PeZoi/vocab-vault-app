@@ -21,14 +21,17 @@ export const getDeckByIdAPI = async (id: any): Promise<ApiResponse> => {
    return data;
 }
 
+export const getVocabTotalByDeckIdAPI = async (id: any): Promise<ApiResponse> => {
+   const { data } = await axiosInstance.get(`/api/decks/get-vocab-total/${id}`);
+   return data;
+}
+
 export const deleteDeckByIdAPI = async (id: any): Promise<ApiResponse> => {
    const { data } = await axiosInstance.delete(`/api/decks/delete/${id}`);
    return data;
 }
 
 export const updateDeckAPI = async (id: any, value: DeckRequestType): Promise<ApiResponse> => {
-   console.log(id, value);
-
    const { data } = await axiosInstance.put(`/api/decks/update/${id}`, value);
    return data;
 }

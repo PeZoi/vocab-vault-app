@@ -1,13 +1,12 @@
 import { CloseOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Button, Divider, message, Popconfirm, Typography } from 'antd';
-import { getSoundForWord } from 'apis';
 import { deleteVocabAPI } from 'apis/vocabAPI';
 import { VocabFormModal } from 'pages';
 import React, { useState } from 'react';
 import { AiFillSound } from 'react-icons/ai';
 import { FaRegEdit } from 'react-icons/fa';
 import { VocabType } from 'types/VocabType';
-import { capitalizeFirstLetter } from 'utils';
+import { capitalizeFirstLetter, handleClickAudio } from 'utils';
 const { Paragraph } = Typography;
 
 type Props = {
@@ -29,25 +28,6 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isSho
          message.error(res.data);
       }
    };
-
-   const handleClickAudio = async (word: string = '') => {
-      if (word) {
-         setLoadingAudio(true);
-         try {
-            // Gửi yêu cầu đến API và nhận về file audio dưới dạng blob
-            const res = await getSoundForWord(word);
-            const audioUrl = URL.createObjectURL(res);
-            const audio = new Audio(audioUrl);
-            audio.play();
-            audio.onended = () => {
-               URL.revokeObjectURL(audioUrl);
-            };
-         } catch (error) {
-            console.error('Error playing audio:', error);
-         }
-         setLoadingAudio(false);
-      }
-   };
    return (
       <div className="bg-background border border-gray-300 rounded-md p-5 text-lg">
          <div className="flex items-center justify-between">
@@ -62,7 +42,7 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isSho
                         className="text-gray-500 cursor-pointer"
                         onClick={(e) => {
                            e.stopPropagation();
-                           handleClickAudio(vocab.origin);
+                           handleClickAudio(vocab.origin, setLoadingAudio);
                         }}
                      />
                   )}

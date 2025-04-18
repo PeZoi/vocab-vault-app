@@ -1,5 +1,5 @@
 import { MainLayout } from 'components';
-import { AboutPage, CardMatchPage, DeckDetailPage, DeckPage, FlashCardPage, ForgotPasswordPage, HomePage, ResetPasswordPage, SignInPage, SignUpPage, SocialSignInCallback } from 'pages';
+import { AboutPage, CardMatchPage, DeckDetailPage, DeckPage, FlashCardPage, ForgotPasswordPage, HomePage, MultipleChoicePage, ResetPasswordPage, SignInPage, SignUpPage, SocialSignInCallback } from 'pages';
 import { RouterProvider } from 'react-router';
 import { createBrowserRouter } from 'react-router-dom';
 import { PATH_CONSTANTS } from 'utils';
@@ -33,6 +33,10 @@ export function MainRouter() {
             {
                path: PATH_CONSTANTS.CARD_MATCH,
                element: <CardMatchPage />,
+            },
+            {
+               path: PATH_CONSTANTS.MUTIPLE_CHOICE,
+               element: <MultipleChoicePage />,
             },
          ],
       },

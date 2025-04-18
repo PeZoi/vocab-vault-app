@@ -10,5 +10,6 @@ export const PATH_CONSTANTS = {
    RESET_PASSWORD: '/reset-password',
    GOOGLE_CALLBACK: '/google/callback',
    FLASH_CARD: '/flash-card/:id',
-   CARD_MATCH: '/card-match/:id'
+   CARD_MATCH: '/card-match/:id',
+   MUTIPLE_CHOICE: '/mutiple-choice/:id'
 }

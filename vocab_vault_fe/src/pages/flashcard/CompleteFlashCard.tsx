@@ -2,12 +2,12 @@ import { LeftOutlined } from '@ant-design/icons';
 import { Button, Divider, Modal, Progress } from 'antd';
 import { Stack } from 'collections';
 import React, { useEffect, useRef, useState } from 'react';
+import Confetti from "react-confetti";
+import { GiChoice } from 'react-icons/gi';
+import { PiCards } from 'react-icons/pi';
+import { Link, useParams } from 'react-router-dom';
 import { InfoProgressType } from 'types';
 import { TypeOfVocab, Vocab2Type, VocabType } from 'types/VocabType';
-import Confetti from "react-confetti";
-import { PiCards } from 'react-icons/pi';
-import { GiChoice } from 'react-icons/gi';
-import { Link, useParams } from 'react-router-dom';
 import { PATH_CONSTANTS } from 'utils';
 
 type Props = {
@@ -65,7 +65,7 @@ export const CompleteFlashCard: React.FC<Props> = ({flashCardList, flashCardDone
 
 	return (
 		<div className='w-[1024px] mx-auto'>
-			{showConfetti && <Confetti gravity={0.8}  />}
+			{showConfetti && <Confetti gravity={0.8} className='w-full h-full' />}
 			<h3 className='text-4xl font-bold mt-10 mb-24 text-center'>Chúc mừng bạn đã hoàn thành Flash Card 🎉 🎉</h3>
 			<div className='flex justify-between'>
 
@@ -114,10 +114,12 @@ export const CompleteFlashCard: React.FC<Props> = ({flashCardList, flashCardDone
 								<p>Ghép thẻ</p>
 						</Button>
 					</Link>
-					<Button className="size-32 flex flex-col">
-						<GiChoice style={{ fontSize: '24px' }} />
-						<p>Trắc nghiệm</p>
-					</Button>
+					<Link to={PATH_CONSTANTS.MUTIPLE_CHOICE.replace(':id', id ? id?.toString() : '0')}>
+						<Button className="size-32 flex flex-col">
+								<GiChoice style={{ fontSize: '24px' }} />
+								<p>Trắc nghiệm</p>
+						</Button>
+					</Link> 
 				</div>
 			</Modal>
 		</div>

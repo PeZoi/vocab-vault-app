@@ -45,7 +45,7 @@ export const MainLayout: React.FC = () => {
                />
             </div>
          </Sider>
-         <Layout>
+         <Layout className='relative'>
             <Header />
 
             <Content

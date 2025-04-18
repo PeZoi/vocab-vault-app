@@ -1,6 +1,5 @@
 import { LoadingOutlined } from '@ant-design/icons';
 import { Button, Divider, Progress, Tooltip, Typography } from 'antd';
-import { getSoundForWord } from 'apis';
 import { Stack } from 'collections';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
@@ -11,7 +10,7 @@ import { MdOutlineShuffle } from 'react-icons/md';
 import { RiResetLeftFill } from 'react-icons/ri';
 import { FlashCardResponse, InfoProgressType } from 'types';
 import { TypeOfVocab, Vocab2Type, VocabType } from 'types/VocabType';
-import { capitalizeFirstLetter } from 'utils';
+import { capitalizeFirstLetter, handleClickAudio } from 'utils';
 const { Text } = Typography;
 
 
@@ -34,25 +33,6 @@ export const LearnFlashCard: React.FC<Props> = ({flashCardDoneList, flashCardInf
    
    const [loadingAudio, setLoadingAudio] = useState(false);
    const [_, setShuffle] = useState(false);
-
-   const handleClickAudio = async (word: string = '') => {
-      if (word) {
-         setLoadingAudio(true);
-         try {
-            // Gửi yêu cầu đến API và nhận về file audio dưới dạng blob
-            const res = await getSoundForWord(word);
-            const audioUrl = URL.createObjectURL(res);
-            const audio = new Audio(audioUrl);
-            audio.play();
-            audio.onended = () => {
-               URL.revokeObjectURL(audioUrl);
-            };
-         } catch (error) {
-            console.error('Error playing audio:', error);
-         }
-         setLoadingAudio(false);
-      }
-   };
 
    const handleClickNext = (type: TypeOfVocab) => {
       if (type === TypeOfVocab.KNOW) {
@@ -125,7 +105,7 @@ export const LearnFlashCard: React.FC<Props> = ({flashCardDoneList, flashCardInf
                                     className="text-gray-500 cursor-pointer"
                                     onClick={(e) => {
                                        e.stopPropagation();
-                                       handleClickAudio(flashCardList.peek()?.origin);
+                                       handleClickAudio(flashCardList.peek()?.origin, setLoadingAudio);
                                     }}
                                  />
                               )}

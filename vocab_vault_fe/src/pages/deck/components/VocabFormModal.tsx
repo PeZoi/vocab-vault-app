@@ -90,7 +90,7 @@ export const VocabFormModal: React.FC<Props> = ({
             level: responseData.level,
             note: responseData.note,
             partsOfSpeech: responseData.partsOfSpeech,
-            examples: [...(dataCurr?.examples || []), ...(responseData.examples || [])],
+            examples: [...(responseData.examples || [])],
          };
          form.setFieldsValue(dataCurr);
          message.success('AI gợi ý thành công');
@@ -111,11 +111,11 @@ export const VocabFormModal: React.FC<Props> = ({
          const res = await suggestEnAPI(searchText);
 
          if (res.status === 200) {
-            results = res.data?.responses?.[0]?.data?.suggestions?.suggestions?.map((word: any) => {
-               return { value: word?.text };
+            results = res.data?.map((word: any) => {
+               return { value: word?.name };
             });
          }
-
+         
          setOriginRecommends(results);
       }, 500),
       [],

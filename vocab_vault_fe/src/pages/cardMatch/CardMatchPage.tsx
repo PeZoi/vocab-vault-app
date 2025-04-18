@@ -1,20 +1,19 @@
 import { LeftOutlined } from '@ant-design/icons';
 import { Button, Divider, message } from "antd";
-import { useEffect, useRef, useState } from "react";
-import { LearnCardMatch } from "./LearnCardMatch";
-import { CompleteCardMatch } from './CompleteCardMatch';
-import { useNavigate, useParams } from 'react-router';
 import { getCardMatchAPI } from 'apis/cardMatchAPI';
+import { useEffect, useRef, useState } from "react";
+import { useParams } from 'react-router';
 import { CardMatchType } from 'types/cardMatchType';
 import { VocabType } from 'types/VocabType';
 import { capitalizeFirstLetter, PATH_CONSTANTS } from 'utils';
+import { CompleteCardMatch } from './CompleteCardMatch';
+import { LearnCardMatch } from "./LearnCardMatch";
 
 
 export const CardMatchPage = () => {
 
 	const [data, setData] = useState<CardMatchType[]>([]);
 	const { id } = useParams();
-	const navigate = useNavigate();
 	const [isComplete, setIsComplete] = useState(false);
 
 	useEffect(() => {
@@ -36,7 +35,7 @@ export const CardMatchPage = () => {
 			}
 			if (res.status === 422) {
 				message.error(res.message);
-				navigate(PATH_CONSTANTS.DECK_DETAIL.replace(':id', id ? id?.toString() : '0'));
+				window.location.href = PATH_CONSTANTS.DECK_DETAIL.replace(':id', id ? id.toString() : '0');
 			}
 		}
 		if (id) {

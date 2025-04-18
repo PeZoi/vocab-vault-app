@@ -1,6 +1,7 @@
 import { CopyOutlined, DeleteOutlined, EditOutlined, LeftOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { Avatar, Button, Divider, Empty, Popconfirm, Switch, Tooltip, Typography } from 'antd';
-import { deleteDeckByIdAPI, getDeckByIdAPI } from 'apis';
+import { deleteDeckByIdAPI, getDeckByIdAPI, isUnlockMultipleChoiceAPI } from 'apis';
+import { isUnlockCardMatchAPI } from 'apis/cardMatchAPI';
 import { FLAG_ENGLAND_SVG } from 'assets';
 import { VocabItem } from 'components';
 import { useMessage } from 'hooks';
@@ -11,11 +12,10 @@ import { MdOutlinePublic } from 'react-icons/md';
 import { PiCards, PiCardsThree } from 'react-icons/pi';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import { DeckResponseType } from 'types';
 import { convertAroundTime, convertStringDate, PATH_CONSTANTS } from 'utils';
 import { DeckFormModal, VocabFormModal } from './components';
-import { isUnlockCardMatchAPI } from 'apis/cardMatchAPI';
-import { Link } from 'react-router-dom';
 const { Text, Paragraph } = Typography;
 
 export const DeckDetailPage = () => {
@@ -28,7 +28,8 @@ export const DeckDetailPage = () => {
    const [deck, setDeck] = useState<DeckResponseType>();
    const [rerender, setRerender] = useState(false);
    const [isShorten, setIsShorten] = useState(false);
-   const [isUnlockCardMatch, setIsUnlockCardMatch] = useState<Boolean | null>(null);
+   const [isUnlockCardMatch, setIsUnlockCardMatch] = useState<Boolean>(false);
+   const [isUnlockMultipleChoice, setIsUnlockMultipleChoice] = useState<Boolean>(false);
 
    useEffect(() => {
       const fetchDeck = async () => {
@@ -49,10 +50,17 @@ export const DeckDetailPage = () => {
             setIsUnlockCardMatch(res.data);
          }
       };
+      const fetchUnlockMultipleChoice = async (id: any) => {
+         const res = await isUnlockMultipleChoiceAPI(id);
+         if (res.status === 200) {
+            setIsUnlockMultipleChoice(res.data);
+         }
+      }
       if (id) {
          fetchUnlockCardMatch(id);
+         fetchUnlockMultipleChoice(id);
       }
-   }, [id]);
+   }, [id, rerender]);
 
    const handleDelete = async () => {
       const res = await deleteDeckByIdAPI(id);
@@ -96,7 +104,7 @@ export const DeckDetailPage = () => {
 
          <div className="flex flex-col gap-2">
             <div className="flex justify-between">
-               <Text ellipsis={{ tooltip: 'Tiêu đề' }} className="text-3xl font-bold">
+               <Text ellipsis={{ tooltip: deck?.title }} className="text-3xl font-bold">
                   Bộ từ vựng: {deck?.title}
                </Text>
                {deck?.user?.id == user?.id && (
@@ -188,10 +196,14 @@ export const DeckDetailPage = () => {
                                  </Button>
                               </Tooltip>
                            </Link>
-                           <Button className="size-32 flex flex-col">
-                              <GiChoice style={{ fontSize: '24px' }} />
-                              <p>Trắc nghiệm</p>
-                           </Button>
+                           <Link to={isUnlockMultipleChoice ? PATH_CONSTANTS.MUTIPLE_CHOICE.replace(':id', deck.id ? deck.id?.toString() : '0') : '#'}>
+                              <Tooltip title={isUnlockMultipleChoice ? "" : "Bộ từ vựng cần ít nhất 4 từ để có thể mở khoá tính năng này"}>
+                                 <Button className="size-32 flex flex-col" disabled={!isUnlockMultipleChoice}>
+                                    <GiChoice style={{ fontSize: '24px' }} />
+                                    <p>Trắc nghiệm</p>
+                                 </Button>
+                              </Tooltip>
+                           </Link> 
                         </div>
                      </div>
                   )}

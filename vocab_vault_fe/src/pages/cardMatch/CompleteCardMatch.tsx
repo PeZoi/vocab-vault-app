@@ -1,10 +1,10 @@
 import { Button, Divider, Modal } from 'antd';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import Confetti from "react-confetti";
-import { PATH_CONSTANTS } from 'utils';
-import { Link, useParams } from 'react-router-dom';
-import { PiCards } from 'react-icons/pi';
 import { GiChoice } from 'react-icons/gi';
+import { PiCards } from 'react-icons/pi';
+import { Link, useParams } from 'react-router-dom';
+import { PATH_CONSTANTS } from 'utils';
 
 const MESSAGES_MAP: Record<number, string[]> = {
   10: [
@@ -64,7 +64,7 @@ export const CompleteCardMatch: React.FC<Props> = ({count, setIsComplete}) => {
   
   return (
       <div className='w-[1024px] mx-auto'>
-        {showConfetti && <Confetti gravity={0.8}  />}
+        {showConfetti && <Confetti gravity={0.8} className='w-full h-full' />}
         <h3 className='text-3xl font-bold mt-10 mb-10 text-center text-primary'>{message}</h3>
         <h3 className='text-2xl font-bold mt-10 mb-10 text-center'>Chúc mừng bạn đã hoàn thành ghép thẻ 🎉 🎉</h3>
         <p className="text-center text-xl font-semibold">Bạn đã hoàn thành trong vòng <span className='font-bold text-primary'>{count}</span> giây</p>
@@ -86,10 +86,12 @@ export const CompleteCardMatch: React.FC<Props> = ({count, setIsComplete}) => {
                   <p>Thẻ ghi nhớ</p>
               </Button>
             </Link>
-            <Button className="size-32 flex flex-col">
-              <GiChoice style={{ fontSize: '24px' }} />
-              <p>Trắc nghiệm</p>
-            </Button>
+            <Link to={PATH_CONSTANTS.MUTIPLE_CHOICE.replace(':id', id ? id?.toString() : '0')}>
+                <Button className="size-32 flex flex-col">
+                  <GiChoice style={{ fontSize: '24px' }} />
+                  <p>Trắc nghiệm</p>
+                </Button>
+            </Link> 
           </div>
         </Modal>
     </div>
