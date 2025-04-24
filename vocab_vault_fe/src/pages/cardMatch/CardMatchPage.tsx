@@ -4,10 +4,10 @@ import { getCardMatchAPI } from 'apis/cardMatchAPI';
 import { useEffect, useRef, useState } from "react";
 import { useParams } from 'react-router';
 import { CardMatchType } from 'types/cardMatchType';
-import { VocabType } from 'types/VocabType';
 import { capitalizeFirstLetter, PATH_CONSTANTS } from 'utils';
 import { CompleteCardMatch } from './CompleteCardMatch';
 import { LearnCardMatch } from "./LearnCardMatch";
+import { VocabType } from 'types';
 
 
 export const CardMatchPage = () => {

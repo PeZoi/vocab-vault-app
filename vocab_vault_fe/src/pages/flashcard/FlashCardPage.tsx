@@ -4,8 +4,7 @@ import { getFlashCardAPI } from 'apis';
 import { Stack } from 'collections';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
-import { FlashCardResponse, InfoProgressType } from 'types';
-import { Vocab2Type, VocabType } from 'types/VocabType';
+import { FlashCardResponse, InfoProgressType, Vocab2Type, VocabType } from 'types';
 import { LearnFlashCard } from './LearnFlashCard';
 import { CompleteFlashCard } from './CompleteFlashCard';
 
@@ -22,7 +21,6 @@ export const FlashCardPage = () => {
    const [flipped, setFlipped] = useState(false);
 
    const [isCompleteFC, setIsCompleteFC] = useState(false);
-
 
    useEffect(() => {
       const fetchFlashCard = async () => {

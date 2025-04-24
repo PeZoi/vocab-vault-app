@@ -1,4 +1,4 @@
-import { VocabType } from "./VocabType";
+import { VocabType } from "./vocabType";
 
 export type DeckRequestType = {
    title?: string;

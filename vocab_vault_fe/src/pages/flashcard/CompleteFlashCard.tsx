@@ -6,8 +6,7 @@ import Confetti from "react-confetti";
 import { GiChoice } from 'react-icons/gi';
 import { PiCards } from 'react-icons/pi';
 import { Link, useParams } from 'react-router-dom';
-import { InfoProgressType } from 'types';
-import { TypeOfVocab, Vocab2Type, VocabType } from 'types/VocabType';
+import { InfoProgressType, TypeOfVocab, Vocab2Type, VocabType } from 'types';
 import { PATH_CONSTANTS } from 'utils';
 
 type Props = {

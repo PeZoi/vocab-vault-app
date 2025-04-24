@@ -7,7 +7,7 @@ import { createVocabAPI, updateVocabAPI } from 'apis/vocabAPI';
 import { debounce } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { LuBrain } from 'react-icons/lu';
-import { VocabType } from 'types/VocabType';
+import { VocabType } from 'types';
 import { convertToJSON } from 'utils';
 
 type Props = {

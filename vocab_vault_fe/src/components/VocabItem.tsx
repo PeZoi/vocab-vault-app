@@ -5,7 +5,7 @@ import { VocabFormModal } from 'pages';
 import React, { useState } from 'react';
 import { AiFillSound } from 'react-icons/ai';
 import { FaRegEdit } from 'react-icons/fa';
-import { VocabType } from 'types/VocabType';
+import { VocabType } from 'types';
 import { capitalizeFirstLetter, handleClickAudio } from 'utils';
 const { Paragraph } = Typography;
 

@@ -127,7 +127,7 @@ export const MultipleChoicePage = () => {
 
   if (!confirmMultipleChoice) {
     return (<Modal title="Cấu hình bài trắc nghiệm" open={isModalOpen} onCancel={handleBack} footer={null}>
-      <div className="flex items-center justify-between mt-5">
+      <div className="flex justify-between mt-5">
         <span className="text-base">Tổng số câu hỏi: </span>
         <div className='flex flex-col items-center'>
           <InputNumber min={1} max={totalQuestion} value={selectNumberQuestion} onChange={(value: number | null) => handleOnChangeNumberQuestion(value)} />

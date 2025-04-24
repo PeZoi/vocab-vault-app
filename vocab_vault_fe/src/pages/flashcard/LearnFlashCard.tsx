@@ -8,8 +8,7 @@ import { GrRevert } from 'react-icons/gr';
 import { IoCheckmarkSharp, IoClose } from 'react-icons/io5';
 import { MdOutlineShuffle } from 'react-icons/md';
 import { RiResetLeftFill } from 'react-icons/ri';
-import { FlashCardResponse, InfoProgressType } from 'types';
-import { TypeOfVocab, Vocab2Type, VocabType } from 'types/VocabType';
+import { FlashCardResponse, InfoProgressType, Vocab2Type, VocabType, TypeOfVocab } from 'types';
 import { capitalizeFirstLetter, handleClickAudio } from 'utils';
 const { Text } = Typography;
 

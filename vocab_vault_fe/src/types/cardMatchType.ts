@@ -1,5 +1,5 @@
 import { UserShortenType } from "./userType";
-import { VocabType } from "./VocabType";
+import { VocabType } from "./vocabType";
 
 export type CardMatchResponse = {
   id?: number;
