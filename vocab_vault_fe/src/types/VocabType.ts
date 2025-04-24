@@ -7,12 +7,14 @@ export type VocabType = {
    level?: string;
    note?: string;
    deckId?: string;
-   examples?: {
-      id?: number;
-      en?: string;
-      vi?: string;
-   }[];
+   examples?: ExampleType[];
 };
+
+export type ExampleType = {
+   id?: number;
+   en?: string;
+   vi?: string;
+}
 
 export enum TypeOfVocab {
    UNKNOW,

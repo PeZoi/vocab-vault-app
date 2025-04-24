@@ -8,7 +8,7 @@ import { GrRevert } from 'react-icons/gr';
 import { IoCheckmarkSharp, IoClose } from 'react-icons/io5';
 import { MdOutlineShuffle } from 'react-icons/md';
 import { RiResetLeftFill } from 'react-icons/ri';
-import { FlashCardResponse, InfoProgressType, Vocab2Type, VocabType, TypeOfVocab } from 'types';
+import { FlashCardResponse, InfoProgressType, Vocab2Type, VocabType, TypeOfVocab, ExampleType } from 'types';
 import { capitalizeFirstLetter, handleClickAudio } from 'utils';
 const { Text } = Typography;
 
@@ -132,7 +132,7 @@ export const LearnFlashCard: React.FC<Props> = ({flashCardDoneList, flashCardInf
                               flashCardList
                                  .peek()
                                  ?.examples?.slice(0, 2)
-                                 ?.map((example, index) => (
+                                 ?.map((example: ExampleType, index: number) => (
                                     <>
                                        <p>
                                           {index + 1}. {example.en}

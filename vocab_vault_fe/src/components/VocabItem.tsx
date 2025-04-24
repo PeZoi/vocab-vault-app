@@ -5,7 +5,7 @@ import { VocabFormModal } from 'pages';
 import React, { useState } from 'react';
 import { AiFillSound } from 'react-icons/ai';
 import { FaRegEdit } from 'react-icons/fa';
-import { VocabType } from 'types';
+import { ExampleType, VocabType } from 'types';
 import { capitalizeFirstLetter, handleClickAudio } from 'utils';
 const { Paragraph } = Typography;
 
@@ -79,7 +79,7 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isSho
          <div className="text-lg mt-2">
             <p className="text-lg font-bold ">Ví dụ:</p>
             <div className="flex flex-col gap-1">
-               {vocab?.examples?.map((example, index) => (
+               {vocab?.examples?.map((example: ExampleType, index: number) => (
                   <div key={example.id}>
                      <p className="font-bold text-textPrimary">
                         {index + 1}. {example.en}
