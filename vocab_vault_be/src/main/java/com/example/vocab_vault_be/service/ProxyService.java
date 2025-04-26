@@ -60,7 +60,7 @@ public class ProxyService {
                 .build()
                 .post()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/v1beta/models/gemini-1.5-flash:generateContent")
+                        .path("/v1beta/models/gemini-2.0-flash:generateContent")
                         .queryParam("key", geminiApiKey)
                         .build())
                 .header("Content-Type", "application/json")
@@ -103,6 +103,55 @@ public class ProxyService {
                                                                                 "   \"note\": \"\"\n // ghi chú bằng " +
                                                                                 "tiếng việt giúp tôi" +
                                                                                 "}", word
+                                                                )
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .block();
+    }
+
+    public JsonNode checkParagraph(String paragraph) {
+        return WebClient.builder()
+                .baseUrl("https://generativelanguage.googleapis.com")
+                .build()
+                .post()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/v1beta/models/gemini-2.0-flash:generateContent")
+                        .queryParam("key", geminiApiKey)
+                        .build())
+                .header("Content-Type", "application/json")
+                .bodyValue(
+                        Map.of(
+                                "generationConfig", new HashMap<>(),
+                                "safetySettings", new ArrayList<>(),
+                                "contents", List.of(
+                                        Map.of(
+                                                "role", "user",
+                                                "parts", List.of(
+                                                        Map.of(
+                                                                "text", String.format(
+                                                                        "Bạn là một chuyên gia kiểm tra chính tả và ngữ pháp rất chính xác. Khi tôi cung cấp cho bạn một đoạn văn bạn hãy kiểm tra nó giúp tôi với các yêu cầu sau:\n" +
+                                                                                "1. edited: đây là đoạn văn bạn đã chỉnh sửa từ đoạn văn gốc và hãy trả về cho tôi dạng html, nếu từ nào sai hay ngữ pháp không đúng hãy css bằng tailwind với gạch ngang là màu " +
+                                                                                "đỏ từ sai đó và sửa lại ngay bên cạnh bằng từ đúng và css bằng tailwind với gạch chân dưới là màu xanh từ đúng đó. Không cần bọc thẻ tag gì ở ngoài hết. Ví dụ: This is a apple," +
+                                                                                " " +
+                                                                                "thì hãy sửa thành: This is <span className='line-through text-red-500'>a</span> <span className='underline text-green-500'>an</span> apple\n" +
+                                                                                "2. explains: là một mảng các lỗi sai và giải đáp thắc mắc tại sao lại sai\n" +
+                                                                                "3. Tất cả các key trong chuỗi json là \"\";\n" +
+                                                                                "4. Tất cả giá trị dạng html đổi \"\" thành '' và class thành className và không có bất cứ ký tự sau: \\', \\\"\n" +
+                                                                                "5. Trả về kết quả theo cấu trúc JSON sau và không kèm theo lời giải thích nào:\n" +
+                                                                                "{\n" +
+                                                                                "edited: // Lấy toàn bộ đoạn văn gốc và chỉnh sửa lô sai trên câu gốc đó, nếu không sai gì hết thì trả về câu gốc\n" +
+                                                                                "explains: // Nếu không sai gì hết thì không ần trả v [\n" +
+                                                                                "{wrongWord: // Đây là từ sai;   explain: // Đây là giải đáp tại sao từ đó lại sai bằng tiếng việt}\n" +
+                                                                                "]\n" +
+                                                                                "vi: // dịch câu gốc ra thành tiếng việt\n" +
+                                                                                "}\n" +
+                                                                                "Câu gốc: " + paragraph
                                                                 )
                                                         )
                                                 )

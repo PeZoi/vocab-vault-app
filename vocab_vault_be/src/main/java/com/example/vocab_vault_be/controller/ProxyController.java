@@ -7,8 +7,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,6 +33,11 @@ public class ProxyController {
     @GetMapping("/generate-word")
     public ResponseEntity<JsonNode> generateWord(@RequestParam(name = "word") String word) {
         return ResponseEntity.ok(proxyService.generateWord(word));
+    }
+
+    @PostMapping("/check-paragraph")
+    public ResponseEntity<JsonNode> checkParagraph(@RequestPart("paragraph") String paragraph) {
+        return ResponseEntity.ok(proxyService.checkParagraph(paragraph));
     }
 
     @GetMapping("/sound")
