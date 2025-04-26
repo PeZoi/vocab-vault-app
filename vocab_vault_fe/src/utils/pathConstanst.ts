@@ -11,5 +11,6 @@ export const PATH_CONSTANTS = {
    GOOGLE_CALLBACK: '/google/callback',
    FLASH_CARD: '/flash-card/:id',
    CARD_MATCH: '/card-match/:id',
-   MUTIPLE_CHOICE: '/mutiple-choice/:id'
+   MUTIPLE_CHOICE: '/mutiple-choice/:id',
+   CHECK_PAGARAPH: '/check-paragraph'
 }
