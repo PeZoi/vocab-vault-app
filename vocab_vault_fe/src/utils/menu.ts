@@ -5,6 +5,7 @@ import {
 } from '@ant-design/icons';
 import React from 'react';
 import { PATH_CONSTANTS } from './pathConstanst';
+import { FaRegCircleCheck } from 'react-icons/fa6';
 
 
 // key === path
@@ -19,6 +20,11 @@ export const MENU_HOME =
          key: PATH_CONSTANTS.DECKS,
          icon: React.createElement(FolderOpenOutlined),
          label: 'Bộ từ vựng của tôi',
+      },
+      {
+         key: PATH_CONSTANTS.CHECK_PAGARAPH,
+         icon: React.createElement(FaRegCircleCheck),
+         label: 'Kiểm tra đoạn văn',
       },
       {
          key: PATH_CONSTANTS.ABOUT,

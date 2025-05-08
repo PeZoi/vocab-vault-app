@@ -1,7 +1,5 @@
-import { ApiResponse } from "types";
-import { VocabType } from "types/VocabType";
+import { ApiResponse, VocabType } from "types";
 import axiosInstance from "utils/axiosInterceptor";
-
 export const createVocabAPI = async (value: VocabType): Promise<ApiResponse> => {
    const { data } = await axiosInstance.post("/api/vocabs/create", value);
    return data;
