@@ -1,5 +1,6 @@
 package com.example.vocab_vault_be.entity;
 
+import com.example.vocab_vault_be.utils.enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,9 +8,8 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
-@Table(name = "users")
+@Table
 public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,6 @@ public class User extends Auditable {
     @Column(nullable = false, unique = true, length = 30)
     private String email;
 
-    @Column(length = 64, nullable = false)
     private String password;
 
     @Column(length = 100)
@@ -29,14 +28,19 @@ public class User extends Auditable {
 
     private boolean enabled;
 
+    private String type;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(name = "verification_code", length = 64)
+    @Column(name = "verification_code")
     private String verificationCode;
 
-    @Column(name = "reset_password_token", length = 30)
+    @Column(name = "reset_password_token")
     private String resetPasswordToken;
+
+    @Column(name = "refresh_token", columnDefinition = "MEDIUMTEXT")
+    private String refreshToken;
 
     @ManyToOne
     @JoinColumn(name = "role_id")

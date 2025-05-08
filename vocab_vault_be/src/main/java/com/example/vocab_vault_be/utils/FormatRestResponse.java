@@ -1,7 +1,7 @@
 package com.example.vocab_vault_be.utils;
 
 
-import com.example.vocab_vault_be.dto.response.ResponseDetail;
+import com.example.vocab_vault_be.dto.ResponseDetail;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
@@ -30,11 +30,25 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
         HttpServletResponse httpServletResponse = ((ServletServerHttpResponse) response).getServletResponse();
         int status = httpServletResponse.getStatus();
 
+        // Nếu trường hợp là audio
+        if (body instanceof byte[]) {
+            return body;
+        }
+
         ResponseDetail<Object> detailResponse = new ResponseDetail<>();
         detailResponse.setStatus(status);
 
         // Trường hợp thất bại (có lỗi gì đó)
         if (status >= 400) {
+            if (body instanceof String) {
+                try {
+                    detailResponse.setData(body);
+                    // Chuyển đổi đối tượng DetailResponse thành chuỗi JSON
+                    return objectMapper.writeValueAsString(detailResponse);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             return body;
         } else {
             // Trường hợp thành công
