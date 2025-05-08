@@ -137,9 +137,9 @@ public class ProxyService {
                                                                 "text", String.format(
                                                                         "Bạn là một chuyên gia kiểm tra chính tả và ngữ pháp rất chính xác. Khi tôi cung cấp cho bạn một đoạn văn bạn hãy kiểm tra nó giúp tôi với các yêu cầu sau:\n" +
                                                                                 "1. edited: đây là đoạn văn bạn đã chỉnh sửa từ đoạn văn gốc và hãy trả về cho tôi dạng html, nếu từ nào sai hay ngữ pháp không đúng hãy css bằng tailwind với gạch ngang là màu " +
-                                                                                "đỏ từ sai đó và sửa lại ngay bên cạnh bằng từ đúng và css bằng tailwind với gạch chân dưới là màu xanh từ đúng đó. Không cần bọc thẻ tag gì ở ngoài hết. Ví dụ: This is a apple," +
-                                                                                " " +
-                                                                                "thì hãy sửa thành: This is <span className='line-through text-red-500'>a</span> <span className='underline text-green-500'>an</span> apple\n" +
+                                                                                "đỏ từ sai đó và sửa lại ngay bên cạnh bằng từ đúng và css bằng tailwind với gạch chân dưới là màu xanh từ đúng đó. Không cần bọc thẻ tag gì ở ngoài hết. Nếu không sai mà chỉ " +
+                                                                                "thiếu từ thì không cần gạch ngang màu đỏ, từ nào thêm thì gạch chân và màu chữ màu xanh từ mà bạn thêm" +
+                                                                                ". Ví dụ: This is a apple, thì hãy sửa thành: This is <span className='line-through text-red-500'>a</span> <span className='underline text-green-500'>an</span> apple\n" +
                                                                                 "2. explains: là một mảng các lỗi sai và giải đáp thắc mắc tại sao lại sai\n" +
                                                                                 "3. Tất cả các key trong chuỗi json là \"\";\n" +
                                                                                 "4. Tất cả giá trị dạng html đổi \"\" thành '' và class thành className và không có bất cứ ký tự sau: \\', \\\"\n" +
