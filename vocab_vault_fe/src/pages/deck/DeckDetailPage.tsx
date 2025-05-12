@@ -1,5 +1,5 @@
-import { CopyOutlined, DeleteOutlined, EditOutlined, LeftOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import { Avatar, Button, Divider, Empty, Popconfirm, Switch, Tooltip, Typography } from 'antd';
+import { CopyOutlined, DeleteOutlined, EditOutlined, LeftOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Avatar, Button, Divider, Empty, Input, Popconfirm, Switch, Tooltip, Typography } from 'antd';
 import { deleteDeckByIdAPI, getDeckByIdAPI, isUnlockMultipleChoiceAPI } from 'apis';
 import { isUnlockCardMatchAPI } from 'apis/cardMatchAPI';
 import { FLAG_ENGLAND_SVG } from 'assets';
@@ -30,6 +30,7 @@ export const DeckDetailPage = () => {
    const [isShorten, setIsShorten] = useState(false);
    const [isUnlockCardMatch, setIsUnlockCardMatch] = useState<Boolean>(false);
    const [isUnlockMultipleChoice, setIsUnlockMultipleChoice] = useState<Boolean>(false);
+   const [searchTerm, setSearchTerm] = useState('');
 
    useEffect(() => {
       const fetchDeck = async () => {
@@ -87,6 +88,11 @@ export const DeckDetailPage = () => {
    if (!deck) {
       return <></>;
    }
+
+   const filteredVocabs = deck.vocabList.filter(vocab => 
+      (vocab.origin?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+       vocab.define?.toLowerCase().includes(searchTerm.toLowerCase())) ?? false
+   );
 
    return (
       <div>
@@ -171,10 +177,6 @@ export const DeckDetailPage = () => {
                               <PlusCircleOutlined style={{ fontSize: '24px' }} />
                               <p>Thêm từ vựng</p>
                            </Button>
-                           {/* <Button className="size-32 flex flex-col">
-                        <FaRegEdit style={{ fontSize: '24px' }} />
-                        <p>Chỉnh sửa</p>
-                     </Button> */}
                         </div>
                      </div>
                   )}
@@ -215,19 +217,33 @@ export const DeckDetailPage = () => {
                   <h4 className="mb-5 text-2xl font-bold">Các từ vựng có trong bộ đề</h4>
                   {deck.vocabList.length > 0 ? (
                      <>
-                        <Switch checkedChildren="Chi tiết" unCheckedChildren="Rút gọn" defaultChecked onClick={() => setIsShorten((prev) => !prev)} />
+                        <div className="flex items-center justify-between mb-4">
+                           <div className="flex-1 max-w-md">
+                              <Input 
+                                 prefix={<SearchOutlined />} 
+                                 placeholder="Tìm kiếm từ vựng..." 
+                                 value={searchTerm}
+                                 onChange={(e) => setSearchTerm(e.target.value)}
+                                 allowClear
+                              />
+                           </div>
+                           <Switch checkedChildren="Chi tiết" unCheckedChildren="Rút gọn" defaultChecked onClick={() => setIsShorten((prev) => !prev)} />
+                        </div>
                         {!isShorten ? (
                            <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-5 my-5">
-                              {deck.vocabList.map((vocab) => (
+                              {filteredVocabs.map((vocab) => (
                                  <VocabItem key={vocab.id} vocab={vocab} rerender={rerender} setRerender={setRerender} />
                               ))}
                            </div>
                         ) : (
                            <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-5 my-5">
-                              {deck.vocabList.map((vocab) => (
+                              {filteredVocabs.map((vocab) => (
                                  <VocabItem key={vocab.id} vocab={vocab} rerender={rerender} setRerender={setRerender} isShorten={isShorten} />
                               ))}
                            </div>
+                        )}
+                        {filteredVocabs.length === 0 && (
+                           <Empty description={<Typography.Text>Không tìm thấy từ vựng phù hợp</Typography.Text>} />
                         )}
                      </>
                   ) : (

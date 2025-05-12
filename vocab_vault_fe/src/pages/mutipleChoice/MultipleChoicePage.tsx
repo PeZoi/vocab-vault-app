@@ -41,6 +41,8 @@ export const MultipleChoicePage = () => {
         setTotalQuestion(res.data);
         if (res.data < 20) {
           setSelectNumberQuestion(res.data);
+        } else {
+          setSelectNumberQuestion(20);
         }
       }
     }
