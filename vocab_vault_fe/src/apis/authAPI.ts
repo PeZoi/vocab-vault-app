@@ -26,6 +26,11 @@ export const logOutAPI = async (): Promise<ApiResponse> => {
    return data;
 }
 
+export const refreshTokenAPI = async (): Promise<ApiResponse> => {
+   const { data } = await axiosInstance.post("/api/auth/refresh-token");
+   return data;
+}
+
 export const getProfileAPI = async (): Promise<ApiResponse> => {
    const { data } = await axiosInstance.get("/api/users/profile");
    return data;

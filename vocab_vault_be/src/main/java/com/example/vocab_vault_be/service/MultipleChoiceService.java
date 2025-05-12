@@ -1,5 +1,13 @@
 package com.example.vocab_vault_be.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+
 import com.example.vocab_vault_be.dto.multipleChoice.MultipleChoiceDTO;
 import com.example.vocab_vault_be.dto.multipleChoice.ResultMultipleChoiceDTO;
 import com.example.vocab_vault_be.entity.Deck;
@@ -8,28 +16,21 @@ import com.example.vocab_vault_be.exception.CustomException;
 import com.example.vocab_vault_be.exception.NotFoundException;
 import com.example.vocab_vault_be.repository.DeckRepository;
 import com.example.vocab_vault_be.repository.VocabRepository;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class MultipleChoiceService {
     private final DeckRepository deckRepository;
     private final VocabRepository vocabRepository;
-    private final ModelMapper modelMapper;
     private final int keyVirtual = 2003;
 
     public List<MultipleChoiceDTO> getListMultipleChoiceId(Long id, Integer totalQuestion) {
         Deck deck = deckRepository.findById(id).orElseThrow(() -> new NotFoundException("ID không tồn tại"));
         if (deck.getVocabularies().size() < 4) {
-            throw new CustomException("Bộ đề phải có ít nhất 4 từ mở khoá tính năng này", HttpStatus.UNPROCESSABLE_ENTITY);
+            throw new CustomException("Bộ đề phải có ít nhất 4 từ mở khoá tính năng này",
+                    HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
         List<MultipleChoiceDTO> multipleChoiceDTOList = new ArrayList<>();
@@ -50,8 +51,10 @@ public class MultipleChoiceService {
             answerCorrect.setId(vocabulary.getId() + keyVirtual);
             answerList.add(answerCorrect);
 
-            // Get all vocabularies, but ignore vocabulary is correct. That's make answers to question
-            List<Vocabulary> vocabularyList = new ArrayList<>(deck.getVocabularies().stream().filter(v -> !Objects.equals(v.getId(), vocabulary.getId())).toList());
+            // Get all vocabularies, but ignore vocabulary is correct. That's make answers
+            // to question
+            List<Vocabulary> vocabularyList = new ArrayList<>(deck.getVocabularies().stream()
+                    .filter(v -> !Objects.equals(v.getId(), vocabulary.getId())).toList());
             Collections.shuffle(vocabularyList);
 
             // Get 3 vocabularies

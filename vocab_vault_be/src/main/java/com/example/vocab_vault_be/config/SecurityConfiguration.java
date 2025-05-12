@@ -25,27 +25,28 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, CustomAuthenticationEntryPoint customAuthenticationEntryPoint
-    ) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
+            CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
         // Config cors
-        httpSecurity.cors(cors ->
-            cors.configurationSource(request -> {
-                CorsConfiguration corsConfiguration = new CorsConfiguration();
-                corsConfiguration.setAllowCredentials(true);
-                corsConfiguration.setAllowedOriginPatterns(List.of("*")); // Cho phép tất cả nguồn
-                corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-                corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "x-no-retry"));
-                return corsConfiguration;
-            })
-        );
-
+        httpSecurity.cors(cors -> cors.configurationSource(request -> {
+            CorsConfiguration corsConfiguration = new CorsConfiguration();
+            corsConfiguration.setAllowCredentials(true);
+            corsConfiguration.setAllowedOriginPatterns(List.of("*")); // Cho phép tất cả nguồn
+            corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+            corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "x-no-retry"));
+            corsConfiguration.setExposedHeaders(Arrays.asList("Set-Cookie"));
+            return corsConfiguration;
+        }));
 
         // Config authorization
-        httpSecurity.authorizeHttpRequests(authorize -> authorize.requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().permitAll())
+        httpSecurity.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/api/auth/refresh-token").permitAll() // Explicitly permit refresh token endpoint
+                .requestMatchers("/api/auth/**").permitAll()
+                .anyRequest().permitAll())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()).authenticationEntryPoint(customAuthenticationEntryPoint))
-                .csrf().disable()
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())
+                        .authenticationEntryPoint(customAuthenticationEntryPoint))
+                .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);
 
         return httpSecurity.build();

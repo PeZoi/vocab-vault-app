@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CookieValue;
 
 import java.io.IOException;
 
@@ -42,7 +43,8 @@ public class AuthController {
         LoginResponse loginResponse = authService.login(loginRequest);
         String refresh_token = userRepository.findByEmail(loginResponse.getUser().getEmail()).get().getRefreshToken();
 
-        ResponseCookie responseCookie = ResponseCookie.from("refresh_token", refresh_token).httpOnly(true).secure(true).path("/").maxAge(jwtRefreshTokenExpiration).build();
+        ResponseCookie responseCookie = ResponseCookie.from("refresh_token", refresh_token).httpOnly(true).secure(true)
+                .path("/").maxAge(jwtRefreshTokenExpiration).build();
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(loginResponse);
     }
@@ -54,13 +56,42 @@ public class AuthController {
 
     @GetMapping("/social/callback")
     public ResponseEntity<LoginResponse> callbackSocial(@RequestParam("type") String loginType,
-                                                        @RequestParam("code") String code) throws IOException {
+            @RequestParam("code") String code) throws IOException {
         LoginResponse loginResponse = authService.callbackSocial(loginType, code);
         String refresh_token = userRepository.findByEmail(loginResponse.getUser().getEmail()).get().getRefreshToken();
 
-        ResponseCookie responseCookie = ResponseCookie.from("refresh_token", refresh_token).httpOnly(true).secure(true).path("/").maxAge(jwtRefreshTokenExpiration).build();
+        ResponseCookie responseCookie = ResponseCookie.from("refresh_token", refresh_token).httpOnly(true).secure(true)
+                .path("/").maxAge(jwtRefreshTokenExpiration).build();
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body(loginResponse);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<LoginResponse> refreshToken(
+            @CookieValue(name = "refresh_token", required = false) String refreshToken) {
+        // Log the received refresh token (masked for security)
+        System.out.println(
+                "Received refresh token request: " + (refreshToken != null ? "token present" : "token missing"));
+
+        try {
+            LoginResponse loginResponse = authService.refreshToken(refreshToken);
+            String newRefreshToken = userRepository.findByEmail(loginResponse.getUser().getEmail()).get()
+                    .getRefreshToken();
+
+            ResponseCookie responseCookie = ResponseCookie.from("refresh_token", newRefreshToken)
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .maxAge(jwtRefreshTokenExpiration)
+                    .build();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                    .body(loginResponse);
+        } catch (Exception e) {
+            System.out.println("Error in refresh token endpoint: " + e.getMessage());
+            throw e;
+        }
     }
 
     @GetMapping("/logout")
@@ -79,8 +110,8 @@ public class AuthController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<String> verify(@RequestParam(value = "verifyCode") String verifyCode, @RequestParam(value =
-            "email") String email) {
+    public ResponseEntity<String> verify(@RequestParam(value = "verifyCode") String verifyCode,
+            @RequestParam(value = "email") String email) {
 
         return ResponseEntity.ok().body(authService.verify(verifyCode, email));
     }
@@ -88,7 +119,8 @@ public class AuthController {
     @PostMapping("/forgot-password")
     public ResponseEntity<String> requestForgotPassword(@RequestParam(value = "email") String email) {
         authService.requestForgotPassword(email);
-        return ResponseEntity.ok("Chúng tôi đã gửi một liên kết đặt lại mật khẩu đến địa chỉ email của bạn. Vui lòng kiểm tra!");
+        return ResponseEntity
+                .ok("Chúng tôi đã gửi một liên kết đặt lại mật khẩu đến địa chỉ email của bạn. Vui lòng kiểm tra!");
     }
 
     @PostMapping("/reset-password")
@@ -101,7 +133,8 @@ public class AuthController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<String> updatePasswordInForgotForm(@RequestParam(value = "token") String token, @RequestParam(value = "password") String newPassword) {
+    public ResponseEntity<String> updatePasswordInForgotForm(@RequestParam(value = "token") String token,
+            @RequestParam(value = "password") String newPassword) {
         authService.changePassword(token, newPassword);
         return ResponseEntity.ok("Đổi mật khẩu thành công.");
     }

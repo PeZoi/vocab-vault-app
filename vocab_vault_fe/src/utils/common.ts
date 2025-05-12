@@ -10,6 +10,29 @@ export const setTokenByLocalStorage = (value: string) => {
    localStorage.setItem('access_token', value);
 }
 
+// Function to manually refresh the token
+export const refreshToken = async () => {
+   try {
+      // Create a direct axios instance that bypasses interceptors
+      const response = await fetch(`${import.meta.env.VITE_URL_API}/api/auth/refresh-token`, {
+         method: 'POST',
+         credentials: 'include', // Include cookies
+      });
+
+      if (response.ok) {
+         const data = await response.json();
+         if (data && data.accessToken) {
+            setTokenByLocalStorage(data.accessToken);
+            return true;
+         }
+      }
+      return false;
+   } catch (error) {
+      console.error("Error refreshing token manually:", error);
+      return false;
+   }
+}
+
 // Example: 2025-01-15T12:19:52.700228 => 1 giây trước, 1 phút trước, ...
 export const convertAroundTime = (timestamp: string) => {
    const date = new Date(timestamp);

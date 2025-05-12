@@ -75,12 +75,12 @@ public class AuthService {
 
         // Lấy ra role mặc định khi user đăng ký
         Role role = roleRepository.findByName(String.valueOf(Roles.ROLE_USER));
-        //   Tạo ra random code để verify account
+        // Tạo ra random code để verify account
         Random random = new Random();
         String randomCode = String.format("%06d", random.nextInt(1000000));
 
         User user = modelMapper.map(userRequest, User.class);
-        //   Gán mặc định các thuộc cho user
+        // Gán mặc định các thuộc cho user
         user.setAvatar("https://res.cloudinary.com/dqnoopa0x/image/upload/v1712482876/ooozzfj7t7p1zokgonni.jpg");
         user.setVerificationCode(randomCode);
         user.setEnabled(false);
@@ -88,7 +88,7 @@ public class AuthService {
         user.setRole(role);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        //   Link để active account
+        // Link để active account
         String verifyURL = domainFE + "/auth/verify?code=" + user.getVerificationCode() + "&email=" + user.getEmail();
 
         // Gửi email
@@ -101,7 +101,8 @@ public class AuthService {
     @Transactional
     public LoginResponse login(LoginRequest loginRequest) {
         // Nạp input gồm username/password vào Security
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                loginRequest.getEmail(), loginRequest.getPassword());
         // Xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
@@ -133,7 +134,8 @@ public class AuthService {
     }
 
     public String verify(String verifyCode, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email không tồn tại"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Email không tồn tại"));
 
         if (user.getVerificationCode() == null) {
             throw new CustomException("Tài khoản đã được kích hoạt", HttpStatus.CONFLICT);
@@ -149,7 +151,8 @@ public class AuthService {
     }
 
     public void requestForgotPassword(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email không tồn tại"));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Email không tồn tại"));
 
         if (!user.getType().isEmpty()) {
             throw new CustomException("Email của bạn được đăng ký dưới dạng mạng xã hội! Không thể khôi phục mật khẩu",
@@ -226,7 +229,8 @@ public class AuthService {
         userInfoHeaders.setBearerAuth(accessToken);
 
         HttpEntity<?> userInfoRequest = new HttpEntity<>(userInfoHeaders);
-        ResponseEntity<Map> userInfoResponse = restTemplate.exchange(userInfoUri, HttpMethod.GET, userInfoRequest, Map.class);
+        ResponseEntity<Map> userInfoResponse = restTemplate.exchange(userInfoUri, HttpMethod.GET, userInfoRequest,
+                Map.class);
         Map responseBody = userInfoResponse.getBody();
 
         String email = (String) responseBody.get("email");
@@ -265,5 +269,40 @@ public class AuthService {
         userService.updateRefreshTokenUser(refreshToken, user.getEmail());
 
         return new LoginResponse(accessTokenSystem, userReturnJwt);
+    }
+
+    public LoginResponse refreshToken(String refreshToken) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw new CustomException("Refresh token không hợp lệ", HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+            // Validate the refresh token
+            var jwt = securityUtil.checkValidRefreshToken(refreshToken);
+            String email = jwt.getSubject();
+
+            // Check if the user exists and the refresh token matches
+            var userOptional = userRepository.findByEmail(email);
+            if (userOptional.isEmpty()) {
+                throw new CustomException("User không tồn tại", HttpStatus.UNAUTHORIZED);
+            }
+
+            User user = userOptional.get();
+
+            if (user.getRefreshToken() == null || !refreshToken.equals(user.getRefreshToken())) {
+                throw new CustomException("Refresh token không khớp hoặc đã hết hạn", HttpStatus.UNAUTHORIZED);
+            }
+
+            // Create user data for JWT
+            UserReturnJwt userReturnJwt = modelMapper.map(user, UserReturnJwt.class);
+            userReturnJwt.setRoleName(user.getRole().getName());
+
+            // Generate new tokens
+            String newAccessToken = securityUtil.createAccessToken(email, userReturnJwt);
+
+            return new LoginResponse(newAccessToken, userReturnJwt);
+        } catch (Exception e) {
+            throw new CustomException("Không thể làm mới token: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
     }
 }

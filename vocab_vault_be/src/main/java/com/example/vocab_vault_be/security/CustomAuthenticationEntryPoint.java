@@ -28,22 +28,22 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
+            AuthenticationException authException) throws IOException, ServletException {
         this.delegate.commence(request, response, authException);
         response.setContentType("application/json;charset=UTF-8");
 
         ResponseDetail<Object> res = new ResponseDetail<Object>();
         res.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-        String errorMessage =
-                Optional.ofNullable(authException.getCause()).map(Throwable::getMessage).orElse(authException.getMessage());
+        String errorMessage = Optional.ofNullable(authException.getCause()).map(Throwable::getMessage)
+                .orElse(authException.getMessage());
         res.setError(errorMessage);
         switch (errorMessage) {
             case "User is disabled" -> res.setMessage("Tài khoản đã bị khoá hoặc chưa kích hoạt");
             case "User account is locked" -> res.setMessage("Tài khoản đã bị khoá");
             case "Bad credentials" -> res.setMessage("Tài khoản hoặc mật khẩu không đúng");
             default ->
-                    res.setMessage("Token không hợp lệ (hết hạn, không đúng định dạng, hoặc không truyền JWT ở header)...");
+                res.setMessage("Token không hợp lệ (hết hạn, không đúng định dạng, hoặc không truyền JWT ở header)...");
         }
 
         mapper.writeValue(response.getWriter(), res);
