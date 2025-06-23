@@ -1,11 +1,12 @@
 import { LeftOutlined } from '@ant-design/icons';
 import { Button, Divider, InputNumber, message, Modal } from "antd";
-import { getMultipleChoiceAPI, getResultMultipleChoiceAPI, getVocabTotalByDeckIdAPI, isUnlockMultipleChoiceAPI } from 'apis';
+import { getMultipleChoiceAPI, getResultMultipleChoiceAPI } from 'apis';
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
 import { IoWarningOutline } from 'react-icons/io5';
 import { useNavigate, useParams } from "react-router";
+import { useGetVocabTotalByDeckIdQuery, useIsUnlockMultipleChoiceQuery } from 'redux/api';
 import { MultipleChoiceType, ResultAnswerType } from "types";
 import { PATH_CONSTANTS } from 'utils';
 import { CompleteMutipleChoice } from './CompleteMutipleChoice';
@@ -27,31 +28,26 @@ export const MultipleChoicePage = () => {
   const [totalQuestion, setTotalQuestion] = useState(20);
   const [selectNumberQuestion, setSelectNumberQuestion] = useState(0);
 
+  const { data: isUnlockMultipleChoice, error: unlockError} = useIsUnlockMultipleChoiceQuery(id ?? '');
+  const { data: vocabTotal, error: vocabTotalError} = useGetVocabTotalByDeckIdQuery(id ?? '');
+
   useEffect(() => {
-    const fetchCheckIsUnlock = async () => {
-      const res = await isUnlockMultipleChoiceAPI(id);
-      if (res.status === 200 && res.data === false) {
-        window.location.href = PATH_CONSTANTS.DECK_DETAIL.replace(':id', id ? id.toString() : '0');
-      }
-    };
-
-    const fetchGetVocabTotal = async () => {
-      const res = await getVocabTotalByDeckIdAPI(id);
-      if (res.status === 200) {
-        setTotalQuestion(res.data);
-        if (res.data < 20) {
-          setSelectNumberQuestion(res.data);
-        } else {
-          setSelectNumberQuestion(20);
-        }
+    if (vocabTotalError || unlockError) {
+      message.error("Có lỗi gì đó");
+      navigate(PATH_CONSTANTS.DECK_DETAIL.replace(':id', id ? id.toString() : '0'), {replace: true});
+    }
+    if (isUnlockMultipleChoice === false) {
+      navigate(PATH_CONSTANTS.DECK_DETAIL.replace(':id', id ? id.toString() : '0'), {replace: true});
+    }
+    if (vocabTotal) {
+      setTotalQuestion(vocabTotal);
+      if (vocabTotal < 20) {
+        setSelectNumberQuestion(vocabTotal);
+      } else {
+        setSelectNumberQuestion(20);
       }
     }
-
-    if (id) {
-      fetchCheckIsUnlock();
-      fetchGetVocabTotal();
-    }
-  }, [id]);
+  }, [isUnlockMultipleChoice, vocabTotal, vocabTotalError, unlockError])
 
   useEffect(() => {
     if(questions.length > 0) {

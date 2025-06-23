@@ -3,10 +3,10 @@ import type { AutoCompleteProps, FormProps } from 'antd';
 import { AutoComplete, Button, Card, Divider, Form, Input, message, Modal, Tooltip } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { generateWordAPI, suggestEnAPI, suggestViAPI } from 'apis';
-import { createVocabAPI, updateVocabAPI } from 'apis/vocabAPI';
 import { debounce } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { LuBrain } from 'react-icons/lu';
+import { useCreateVocabMutation, useUpdateVocabMutation } from 'redux/api';
 import { VocabType } from 'types';
 import { convertToJSON } from 'utils';
 
@@ -15,8 +15,7 @@ type Props = {
    open: boolean;
    setOpen: (value: boolean) => void;
 
-   rerender: boolean;
-   setRerender: (value: boolean) => void;
+   refetch: () => void;
 
    // MODE: EDIT
    isEdit?: boolean;
@@ -27,10 +26,9 @@ export const VocabFormModal: React.FC<Props> = ({
    open,
    setOpen,
    deckId = '',
-   rerender,
-   setRerender,
    isEdit,
    vocab,
+   refetch,
 }) => {
    const [confirmLoading, setConfirmLoading] = useState(false);
    const [generateLoading, setGenerateLoading] = useState(false);
@@ -38,6 +36,9 @@ export const VocabFormModal: React.FC<Props> = ({
 
    const [originRecommends, setOriginRecommends] = useState<AutoCompleteProps['options']>([]);
    const [defineRecommends, setDefineRecommends] = useState<AutoCompleteProps['options']>([]);
+
+   const [createVocab] = useCreateVocabMutation();
+   const [updateVocab] = useUpdateVocabMutation();
 
    useEffect(() => {
       if (isEdit && vocab) {
@@ -64,16 +65,20 @@ export const VocabFormModal: React.FC<Props> = ({
    const onFinish: FormProps<VocabType>['onFinish'] = async (values) => {
       setConfirmLoading(true);
       const payload: VocabType = { ...values, deckId: deckId, id: vocab?.id };
-      const res = isEdit ? await updateVocabAPI(vocab?.id, payload) : await createVocabAPI(payload);
-      if (res.status === 201 || res.status === 200) {
+
+      try {
+         isEdit ? await updateVocab({ id: vocab?.id, data: payload }).unwrap() : await createVocab(payload).unwrap();
          setOpen(false);
-         setRerender(!rerender);
+         refetch();
          message.success(`${isEdit ? 'Cập nhật' : 'Thêm'} từ vựng thành công`);
-      } else {
+      } catch (err) {
          message.error('Có lỗi xảy ra');
+         console.error('Mutation error:', err);
       }
+
       setConfirmLoading(false);
-   };
+      };
+
 
    const generateVocab = async () => {
       setGenerateLoading(true);
@@ -188,7 +193,7 @@ export const VocabFormModal: React.FC<Props> = ({
                      <Form.Item
                         label="Thuật ngữ"
                         name={'origin'}
-                        rules={[{ required: true, message: 'Thuật ngữ không đươc để trống' }]}
+                        rules={[{ required: true, message: 'Thuật ngữ không được để trống' }]}
                      >
                         <AutoComplete
                            options={originRecommends}
@@ -199,7 +204,7 @@ export const VocabFormModal: React.FC<Props> = ({
                      <Form.Item
                         label="Định nghĩa"
                         name={'define'}
-                        rules={[{ required: true, message: 'Định nghĩa không đươc để trống' }]}
+                        rules={[{ required: true, message: 'Định nghĩa không được để trống' }]}
                      >
                         <AutoComplete
                            options={defineRecommends}
@@ -240,7 +245,7 @@ export const VocabFormModal: React.FC<Props> = ({
                                                 <Form.Item
                                                    name={[subField.name, 'en']}
                                                    className="w-full m-0"
-                                                   rules={[{ required: true, message: 'Không đươc để trống' }]}
+                                                   rules={[{ required: true, message: 'Không được để trống' }]}
                                                 >
                                                    <Input placeholder="This is a apple" />
                                                 </Form.Item>
@@ -250,7 +255,7 @@ export const VocabFormModal: React.FC<Props> = ({
                                                 <Form.Item
                                                    name={[subField.name, 'vi']}
                                                    className="w-full m-0"
-                                                   rules={[{ required: true, message: 'Không đươc để trống' }]}
+                                                   rules={[{ required: true, message: 'Không được để trống' }]}
                                                 >
                                                    <Input placeholder="Đây là trái táo" />
                                                 </Form.Item>

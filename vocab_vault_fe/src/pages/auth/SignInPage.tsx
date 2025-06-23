@@ -1,8 +1,7 @@
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { signInAPI, socialSignInAPI } from 'apis';
 import ICON from 'assets/icon.svg';
-import { useMessage } from 'hooks';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { SignInType } from 'types';
@@ -10,7 +9,6 @@ import { PATH_CONSTANTS } from 'utils';
 import { updateInformationUser, updateToken } from './authSlice';
 
 export const SignInPage = () => {
-   const message = useMessage();
    const dispatch = useDispatch();
    const navigate = useNavigate();
 

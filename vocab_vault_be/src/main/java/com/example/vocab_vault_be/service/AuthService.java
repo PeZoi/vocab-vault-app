@@ -1,23 +1,9 @@
 package com.example.vocab_vault_be.service;
 
-import com.example.vocab_vault_be.dto.auth.LoginRequest;
-import com.example.vocab_vault_be.dto.auth.LoginResponse;
-import com.example.vocab_vault_be.dto.user.UserRequest;
-import com.example.vocab_vault_be.dto.user.UserResponse;
-import com.example.vocab_vault_be.dto.user.UserReturnJwt;
-import com.example.vocab_vault_be.entity.Role;
-import com.example.vocab_vault_be.entity.User;
-import com.example.vocab_vault_be.exception.CustomException;
-import com.example.vocab_vault_be.exception.NotFoundException;
-import com.example.vocab_vault_be.repository.RoleRepository;
-import com.example.vocab_vault_be.repository.UserRepository;
-import com.example.vocab_vault_be.security.SecurityUtil;
-import com.example.vocab_vault_be.utils.CommonFunction;
-import com.example.vocab_vault_be.utils.TemplateEmail;
-import com.example.vocab_vault_be.utils.UploadFile;
-import com.example.vocab_vault_be.utils.enums.Roles;
-import com.example.vocab_vault_be.utils.enums.Status;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Random;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,9 +26,25 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Random;
+import com.example.vocab_vault_be.dto.auth.LoginRequest;
+import com.example.vocab_vault_be.dto.auth.LoginResponse;
+import com.example.vocab_vault_be.dto.user.UserRequest;
+import com.example.vocab_vault_be.dto.user.UserResponse;
+import com.example.vocab_vault_be.dto.user.UserReturnJwt;
+import com.example.vocab_vault_be.entity.Role;
+import com.example.vocab_vault_be.entity.User;
+import com.example.vocab_vault_be.exception.CustomException;
+import com.example.vocab_vault_be.exception.NotFoundException;
+import com.example.vocab_vault_be.repository.RoleRepository;
+import com.example.vocab_vault_be.repository.UserRepository;
+import com.example.vocab_vault_be.security.SecurityUtil;
+import com.example.vocab_vault_be.utils.CommonFunction;
+import com.example.vocab_vault_be.utils.TemplateEmail;
+import com.example.vocab_vault_be.utils.UploadFile;
+import com.example.vocab_vault_be.utils.enums.Roles;
+import com.example.vocab_vault_be.utils.enums.Status;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

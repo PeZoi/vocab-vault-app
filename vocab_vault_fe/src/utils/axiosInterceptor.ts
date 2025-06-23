@@ -33,7 +33,7 @@ let failedQueue: QueueItem[] = [];
 
 // Process the queue of failed requests
 const processQueue = (error: Error | null, token: string | null = null) => {
-   failedQueue.forEach(prom => {
+   failedQueue.forEach((prom) => {
       if (error) {
          prom.reject(error);
       } else {
@@ -93,16 +93,14 @@ axiosInstance.interceptors.response.use(
       if (isRefreshing) {
          return new Promise((resolve, reject) => {
             failedQueue.push({ resolve, reject });
-            console.log({ failedQueue });
-
          })
-            .then(token => {
+            .then((token) => {
                if (originalRequest.headers) {
                   originalRequest.headers.Authorization = 'Bearer ' + token;
                }
                return axiosInstance(originalRequest);
             })
-            .catch(err => {
+            .catch((err) => {
                return Promise.reject(err);
             });
       }

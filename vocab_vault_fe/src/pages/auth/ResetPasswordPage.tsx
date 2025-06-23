@@ -1,8 +1,7 @@
 import { LockOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { changePasswordAPI, resetPasswordAPI } from 'apis';
 import ICON from 'assets/icon.svg';
-import { useMessage } from 'hooks';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { PATH_CONSTANTS } from 'utils';
@@ -17,7 +16,6 @@ export const ResetPasswordPage = () => {
    const token = searchParams.get('token');
    const [loadingPage, setLoadingPage] = useState(true);
    const navigate = useNavigate();
-   const message = useMessage();
    useEffect(() => {
       const handleCheckToken = async () => {
          if (token) {

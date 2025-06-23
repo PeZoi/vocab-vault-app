@@ -1,9 +1,9 @@
 package com.example.vocab_vault_be.exception;
 
-import lombok.Builder;
+import org.springframework.http.HttpStatus;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter

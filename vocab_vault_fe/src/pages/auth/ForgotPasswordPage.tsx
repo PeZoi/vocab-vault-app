@@ -1,7 +1,6 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { forgotPasswordAPI } from 'apis';
 import ICON from 'assets/icon.svg';
-import { useMessage } from 'hooks';
 import { Link } from 'react-router-dom';
 import { PATH_CONSTANTS } from 'utils';
 
@@ -10,7 +9,6 @@ type ForgotPasswordType = {
 };
 
 export const ForgotPasswordPage = () => {
-   const message = useMessage();
    const [form] = Form.useForm<ForgotPasswordType>();
    const handleForgotPassword = async (data: ForgotPasswordType) => {
       const res = await forgotPasswordAPI(data);

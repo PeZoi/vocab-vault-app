@@ -1,6 +1,5 @@
-import { Spin } from 'antd';
+import { message, Spin } from 'antd';
 import { socialCallBackAPI } from 'apis';
-import { useMessage } from 'hooks';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -9,7 +8,6 @@ import { updateInformationUser, updateToken } from './authSlice';
 
 export const SocialSignInCallback = () => {
    const navigate = useNavigate();
-   const message = useMessage();
    const dispatch = useDispatch();
    const [searchParams] = useSearchParams();
    const code = searchParams.get('code') || '';

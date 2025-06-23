@@ -1,3 +1,3 @@
 export * from "./FlashCardPage"
-export * from "./LearnFlashCard"
-export * from "./CompleteFlashCard"
+export * from "./components/LearnFlashCard"
+export * from "./components/CompleteFlashCard"

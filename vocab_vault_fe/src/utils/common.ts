@@ -1,4 +1,3 @@
-import { getSoundForWord } from "apis";
 import { formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
 
@@ -67,13 +66,10 @@ export const capitalizeFirstLetter = (string: string = '') => {
    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export const handleClickAudio = async (word: string = '', setLoadingAudio: (value: boolean) => void) => {
-   if (word) {
-      setLoadingAudio(true);
+export const handlePlayAudio = async (audioData: Blob) => {
+   if (audioData) {
       try {
-         // Gửi yêu cầu đến API và nhận về file audio dưới dạng blob
-         const res = await getSoundForWord(word.toLowerCase());
-         const audioUrl = URL.createObjectURL(res);
+         const audioUrl = URL.createObjectURL(audioData);
          const audio = new Audio(audioUrl);
          audio.play();
          audio.onended = () => {
@@ -82,6 +78,5 @@ export const handleClickAudio = async (word: string = '', setLoadingAudio: (valu
       } catch (error) {
          console.error('Error playing audio:', error);
       }
-      setLoadingAudio(false);
    }
 };

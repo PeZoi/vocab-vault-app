@@ -1,8 +1,7 @@
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import { signUpAPI, verifyAPI } from 'apis';
 import ICON from 'assets/icon.svg';
-import { useMessage } from 'hooks';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { SignUpType } from 'types';
@@ -13,7 +12,6 @@ type VerifyFormType = {
 };
 
 export const SignUpPage = () => {
-   const message = useMessage();
    const navigate = useNavigate();
    const [isRegisted, setIsRegisted] = useState(false);
    const [emailRegisted, setEmailRegisted] = useState('');

@@ -2,17 +2,16 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { Button, Divider, Progress, Tooltip, Typography } from 'antd';
 import { Stack } from 'collections';
 import { motion } from 'framer-motion';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiFillSound } from 'react-icons/ai';
 import { GrRevert } from 'react-icons/gr';
 import { IoCheckmarkSharp, IoClose } from 'react-icons/io5';
 import { MdOutlineShuffle } from 'react-icons/md';
 import { RiResetLeftFill } from 'react-icons/ri';
-import { FlashCardResponse, InfoProgressType, Vocab2Type, VocabType, TypeOfVocab, ExampleType } from 'types';
-import { capitalizeFirstLetter, handleClickAudio } from 'utils';
+import { useGetSoundForWordQuery } from 'redux/api/vocabApi';
+import { ExampleType, FlashCardResponse, InfoProgressType, TypeOfVocab, Vocab2Type, VocabType } from 'types';
+import { capitalizeFirstLetter, handlePlayAudio } from 'utils';
 const { Text } = Typography;
-
-
 
 type Props = {
    flashCardInfo: FlashCardResponse | null,
@@ -29,9 +28,15 @@ type Props = {
 
 
 export const LearnFlashCard: React.FC<Props> = ({flashCardDoneList, flashCardInfo, flashCardList, setIsCompleteFC, infoProgress, setInfoProgress, setFlipped, flipped, handleClickReset}) => {
-   
-   const [loadingAudio, setLoadingAudio] = useState(false);
    const [_, setShuffle] = useState(false);
+
+   const [currentWord, setCurrentWord] = useState<string>('');
+   const { data: audioData, isLoading: isLoadingAudio } = useGetSoundForWordQuery({ word: currentWord }, { skip: !currentWord});
+   useEffect(() => {
+      if (audioData) {
+         handlePlayAudio(audioData);
+      }
+   }, [audioData])
 
    const handleClickNext = (type: TypeOfVocab) => {
       if (type === TypeOfVocab.KNOW) {
@@ -97,14 +102,17 @@ export const LearnFlashCard: React.FC<Props> = ({flashCardDoneList, flashCardInf
                      >
                         <div className="absolute top-3 right-3">
                            <div className="w-fit p-1">
-                              {loadingAudio ? (
+                              {isLoadingAudio ? (
                                  <LoadingOutlined />
                               ) : (
                                  <AiFillSound
                                     className="text-gray-500 cursor-pointer"
                                     onClick={(e) => {
                                        e.stopPropagation();
-                                       handleClickAudio(flashCardList.peek()?.origin, setLoadingAudio);
+                                       setCurrentWord(flashCardList.peek()?.origin || '');
+                                       if (flashCardList.peek()?.origin === currentWord) {
+                                          handlePlayAudio(audioData);
+                                       }
                                     }}
                                  />
                               )}

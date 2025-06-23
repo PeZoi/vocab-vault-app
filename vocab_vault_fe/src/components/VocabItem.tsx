@@ -1,31 +1,40 @@
 import { CloseOutlined, LoadingOutlined } from '@ant-design/icons';
 import { Button, Divider, message, Popconfirm, Typography } from 'antd';
-import { deleteVocabAPI } from 'apis/vocabAPI';
 import { VocabFormModal } from 'pages';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiFillSound } from 'react-icons/ai';
 import { FaRegEdit } from 'react-icons/fa';
+import { useDeleteVocabMutation, useGetSoundForWordQuery } from 'redux/api';
 import { ExampleType, VocabType } from 'types';
-import { capitalizeFirstLetter, handleClickAudio } from 'utils';
+import { capitalizeFirstLetter, handlePlayAudio } from 'utils';
 const { Paragraph } = Typography;
 
 type Props = {
    vocab: VocabType;
-   rerender: boolean;
    isShorten?: boolean;
-   setRerender: (value: boolean) => void;
+   refetch: () => void;
 };
 
-export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isShorten = false }) => {
+export const VocabItem: React.FC<Props> = ({ vocab, refetch, isShorten = false }) => {
    const [openVocabModal, setOpenVocabModal] = useState(false);
-   const [loadingAudio, setLoadingAudio] = useState(false);
+   const [currentWord, setCurrentWord] = useState<string>('');
+
+   const [deleteVocab] = useDeleteVocabMutation();
+   const { data: audioData, isLoading: isLoadingAudio} = useGetSoundForWordQuery({ word: currentWord.toLowerCase() }, { skip: !currentWord.toLowerCase() });
+
+   useEffect(() => {
+      if (audioData) {
+         handlePlayAudio(audioData);
+      }
+   }, [audioData])
+
    const handleDelete = async () => {
-      const res = await deleteVocabAPI(vocab.id);
-      if (res.status === 200) {
-         setRerender(!rerender);
-         message.success(res.data);
-      } else {
-         message.error(res.data);
+      try {
+         const res: any = await deleteVocab({id: vocab.id}).unwrap();
+         message.success(res);
+         refetch();
+      } catch (error) {
+         message.error("Lỗi xoá từ vựng");
       }
    };
    return (
@@ -35,14 +44,17 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isSho
                <span className="text-primary">{capitalizeFirstLetter(vocab.origin)}</span>
                <span className="text-textSecondary text-sm">{vocab.ipa}</span>
                <span className="cursor-pointer hover:opacity-80 select-none">
-                  {loadingAudio ? (
+                  {isLoadingAudio ? (
                      <LoadingOutlined />
                   ) : (
                      <AiFillSound
                         className="text-gray-500 cursor-pointer"
                         onClick={(e) => {
                            e.stopPropagation();
-                           handleClickAudio(vocab.origin, setLoadingAudio);
+                           setCurrentWord(vocab.origin || '');
+                           if (vocab.origin === currentWord) {
+                              handlePlayAudio(audioData);
+                           }
                         }}
                      />
                   )}
@@ -104,10 +116,9 @@ export const VocabItem: React.FC<Props> = ({ vocab, rerender, setRerender, isSho
          <VocabFormModal
             open={openVocabModal}
             setOpen={setOpenVocabModal}
-            rerender={rerender}
-            setRerender={setRerender}
             isEdit={true}
             vocab={vocab}
+            refetch={refetch}
          />
       </div>
    );

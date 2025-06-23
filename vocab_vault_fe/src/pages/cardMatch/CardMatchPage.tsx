@@ -1,46 +1,43 @@
 import { LeftOutlined } from '@ant-design/icons';
 import { Button, Divider, message } from "antd";
-import { getCardMatchAPI } from 'apis/cardMatchAPI';
 import { useEffect, useRef, useState } from "react";
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
+import { useGetCardMatchQuery } from 'redux/api';
+import { CardMatchType, VocabType } from 'types';
 import { capitalizeFirstLetter, PATH_CONSTANTS } from 'utils';
 import { CompleteCardMatch } from './CompleteCardMatch';
 import { LearnCardMatch } from "./LearnCardMatch";
-import { CardMatchType, VocabType } from 'types';
-
 
 export const CardMatchPage = () => {
-
 	const [data, setData] = useState<CardMatchType[]>([]);
 	const { id } = useParams();
+	const navigate = useNavigate();
 	const [isComplete, setIsComplete] = useState(false);
 
+	const { data: cardMatchData, isLoading: loading, error } = useGetCardMatchQuery({ id: id ?? '' });
+
 	useEffect(() => {
-		const fetchCardMatch = async () => {
-			const res = await getCardMatchAPI(id);
-			if (res.status === 200) {
-				let formatData: CardMatchType[] = [];
-				
-				res.data?.vocabList?.forEach((item: VocabType) => {
-					formatData.push({
-						word: capitalizeFirstLetter(item.origin),
-						idMatch: item.id
-					}, {
-						word: capitalizeFirstLetter(item.define),
-						idMatch: item.id
-					});
+		if (error) {
+				message?.error(error as any);
+				navigate(PATH_CONSTANTS.HOME);
+		}
+	}, [error]);
+
+	useEffect(() => {
+		if (cardMatchData) {
+			let formatData: CardMatchType[] = [];
+			cardMatchData?.vocabList?.forEach((item: VocabType) => {
+				formatData.push({
+					word: capitalizeFirstLetter(item.origin),
+					idMatch: item.id
+				}, {
+					word: capitalizeFirstLetter(item.define),
+					idMatch: item.id
 				});
-				setData(formatData.sort(() => Math.random() - 0.5));
-			}
-			if (res.status === 422) {
-				message.error(res.message);
-				window.location.href = PATH_CONSTANTS.DECK_DETAIL.replace(':id', id ? id.toString() : '0');
-			}
+			});
+			setData(formatData.sort(() => Math.random() - 0.5));
 		}
-		if (id) {
-			fetchCardMatch();
-		}
-	}, [id])
+	}, [cardMatchData])
 
 	const countRef = useRef(0);
 	
@@ -59,7 +56,7 @@ export const CardMatchPage = () => {
 			<Divider />
 			
 			{isComplete ? <CompleteCardMatch count={countRef.current} setIsComplete={setIsComplete} /> : <LearnCardMatch
-				data={data}
+				data={data || []}
 				countRef={countRef}
 				setIsComplete={setIsComplete}
 			/>}

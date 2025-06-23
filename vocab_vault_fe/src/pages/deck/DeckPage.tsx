@@ -1,26 +1,19 @@
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Divider, Empty, Typography } from 'antd';
-import { getAllMyDeckAPI } from 'apis';
 import { DeckItem } from 'components';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { DeckResponseType } from 'types';
+import { Link, useNavigate } from 'react-router-dom';
+import { useGetMyDecksQuery } from 'redux/api';
 import { PATH_CONSTANTS } from 'utils';
 import { DeckFormModal } from './components';
+import { useSelector } from 'react-redux';
 
 export function DeckPage() {
    const [open, setOpen] = useState(false);
-   const [myDecks, setMyDecks] = useState<DeckResponseType[]>([]);
-   const [rerender, setRerender] = useState(false);
-   useEffect(() => {
-      const fetchMyDecks = async () => {
-         const res = await getAllMyDeckAPI();
-         if (res.status === 200) {
-            setMyDecks(res.data);
-         }
-      };
-      fetchMyDecks();
-   }, [rerender]);
+   const navigate = useNavigate();
+   const { data: myDecks, isLoading: isLoadingMyDecks, refetch } = useGetMyDecksQuery();
+   const { user } = useSelector((state: any) => state.auth);
+
 
    const showModal = () => {
       setOpen(true);
@@ -39,11 +32,21 @@ export function DeckPage() {
       );
    };
 
+   if (!user) {
+      return <div className="my-20">
+            <Empty description={<Typography.Text>Bạn cần phải đăng nhập</Typography.Text>}>
+               <Button type="primary" onClick={() => navigate(PATH_CONSTANTS.SIGN_IN)}>
+                  Đăng nhập
+               </Button>
+            </Empty>
+         </div>;
+   }
+
    return (
       <div>
-         <h2 className="text-2xl uppercase font-bold">Bộ từ vựng của tôi ({myDecks.length})</h2>
+         <h2 className="text-2xl uppercase font-bold">Bộ từ vựng của tôi ({myDecks?.length})</h2>
          <Divider />
-         {myDecks.length === 0 ? (
+         {myDecks?.length === 0 ? (
             <div className="flex items-center justify-center">
                <EmptyDeck />
             </div>
@@ -57,7 +60,7 @@ export function DeckPage() {
                </div>
                <Divider />
                <div className="grid grid-cols-5 gap-5">
-                  {myDecks.map((deck) => (
+                  {myDecks?.map((deck) => (
                      <Link to={PATH_CONSTANTS.DECK_DETAIL.replace(':id', deck.id ? deck.id?.toString() : '0')}>
                         <DeckItem key={deck.id} deck={deck} />
                      </Link>
@@ -66,7 +69,7 @@ export function DeckPage() {
             </>
          )}
 
-         <DeckFormModal open={open} setOpen={setOpen} rerender={rerender} setRerender={setRerender} />
+         <DeckFormModal open={open} setOpen={setOpen} refetch={refetch} />
       </div>
    );
 }

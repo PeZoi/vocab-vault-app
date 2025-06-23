@@ -1,30 +1,22 @@
-import { getAllDeckPublicAPI } from 'apis';
+import { Skeleton } from 'antd';
 import { DeckItem } from 'components';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useGetAllPublicDecksQuery } from 'redux/api/deckApi';
 import { DeckResponseType } from 'types';
 import { PATH_CONSTANTS } from 'utils';
 
 export function HomePage() {
-   const [decks, setDecks] = useState<DeckResponseType[]>([]);
    const [searchTerm, setSearchTerm] = useState('');
    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-   useEffect(() => {
-      const fetchGetAllDecks = async () => {
-         const res = await getAllDeckPublicAPI();
-         if (res.status === 200) {
-            setDecks(res.data);
-         }
-      };
-      fetchGetAllDecks();
-   }, []);
+   const { data: decks, isLoading } = useGetAllPublicDecksQuery();
 
-   const filteredAndSortedDecks = decks
-      .filter((deck) => 
+   const filteredAndSortedDecks = (decks || [])
+      .filter((deck: DeckResponseType) => 
          deck.title?.toLowerCase().includes(searchTerm.toLowerCase())
       )
-      .sort((a, b) => {
+      .sort((a: DeckResponseType, b: DeckResponseType) => {
          const dateA = new Date(a.createAt || 0).getTime();
          const dateB = new Date(b.createAt || 0).getTime();
          return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
@@ -36,7 +28,7 @@ export function HomePage() {
             <input
                type="text"
                placeholder="Tìm kiếm bộ từ vựng theo tên..."
-               className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+               className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-72"
                value={searchTerm}
                onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -50,7 +42,10 @@ export function HomePage() {
             </select>
          </div>
          <div className="grid grid-cols-5 gap-5">
-            {filteredAndSortedDecks.map((deck) => (
+            {isLoading && Array.from({ length: 13 }).map((_, index) => (
+               <Skeleton.Node key={index} active className='min-w-full min-h-[200px]' />
+            ))}
+            {decks && filteredAndSortedDecks.map((deck: DeckResponseType) => (
                <Link 
                   key={deck.id}
                   to={PATH_CONSTANTS.DECK_DETAIL.replace(':id', deck.id ? deck.id?.toString() : '0')}

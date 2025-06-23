@@ -3,23 +3,25 @@ import type { FormProps } from 'antd';
 import { Checkbox, Divider, Form, Input, message, Modal, Tooltip } from 'antd';
 import { createDeckAPI, updateDeckAPI } from 'apis';
 import { useEffect, useState } from 'react';
+import { useCreateDeckMutation } from 'redux/api';
+import { useUpdateDeckMutation } from 'redux/api';
 import { DeckRequestType, DeckResponseType } from 'types';
 
 type Props = {
    open: boolean;
    setOpen: (value: boolean) => void;
 
-   rerender: boolean;
-   setRerender: (value: boolean) => void;
-
+   refetch: () => void;
    // MODE: EDIT
    isEdit?: boolean;
-   deck?: DeckResponseType;
+   deck?: DeckResponseType | null;
 };
 
-export const DeckFormModal: React.FC<Props> = ({ open, setOpen, rerender, setRerender, isEdit = false, deck }) => {
-   const [confirmLoading, setConfirmLoading] = useState(false);
+export const DeckFormModal: React.FC<Props> = ({ open, setOpen, refetch, isEdit = false, deck }) => {
    const [form] = Form.useForm<DeckRequestType>();
+
+   const [createDeck, {isLoading: createDeckLoading}] = useCreateDeckMutation();
+   const [updateDeck, {isLoading: updateDeckLoading}] = useUpdateDeckMutation();
 
    useEffect(() => {
       if (isEdit && deck) {
@@ -41,17 +43,14 @@ export const DeckFormModal: React.FC<Props> = ({ open, setOpen, rerender, setRer
 
    // ===== HANDLE FORM =====
    const onFinish: FormProps<DeckRequestType>['onFinish'] = async (values) => {
-      setConfirmLoading(true);
-      const res = isEdit ? await updateDeckAPI(deck?.id, values) : await createDeckAPI(values);
-
-      if (res.status === 201 || res.status === 200) {
+      try {
+         isEdit ? await updateDeck({id: deck?.id, data: values}).unwrap() : await createDeck(values).unwrap();
          message.success(`${isEdit ? 'Cập nhật' : 'Tạo'} thành công`);
          setOpen(false);
-         setRerender(!rerender);
-      } else {
+         refetch();
+      } catch (error) {
          message.error(`${isEdit ? 'Cập nhật' : 'Tạo'} thất bại`);
       }
-      setConfirmLoading(false);
    };
 
    const onFinishFailed: FormProps<DeckRequestType>['onFinishFailed'] = (errorInfo) => {
@@ -63,7 +62,7 @@ export const DeckFormModal: React.FC<Props> = ({ open, setOpen, rerender, setRer
          title={`${isEdit ? 'Chỉnh sửa' : 'Tạo'} bộ đề`}
          open={open}
          onOk={handleOk}
-         confirmLoading={confirmLoading}
+         confirmLoading={createDeckLoading || updateDeckLoading}
          onCancel={handleCancel}
          cancelText="Huỷ"
          okText={`${isEdit ? 'Cập nhật' : 'Tạo'}`}
