@@ -2,6 +2,7 @@ import { CopyOutlined, DeleteOutlined, EditOutlined, LeftOutlined, PlusCircleOut
 import { Avatar, Button, Divider, Empty, Input, message, Popconfirm, Switch, Tooltip, Typography } from 'antd';
 import { FLAG_ENGLAND_SVG } from 'assets';
 import { VocabItem } from 'components';
+import { useSEO } from 'hooks';
 import { useCallback, useEffect, useState } from 'react';
 import { FaLock } from 'react-icons/fa';
 import { GiChoice } from 'react-icons/gi';
@@ -13,7 +14,7 @@ import { Link } from 'react-router-dom';
 import { useIsUnlockCardMatchQuery } from 'redux/api/cardMatchApi';
 import { useDeleteDeckMutation, useGetDeckByIdQuery } from 'redux/api/deckApi';
 import { useIsUnlockMultipleChoiceQuery } from 'redux/api/multipleChoiceApi';
-import { convertAroundTime, convertStringDate, PATH_CONSTANTS } from 'utils';
+import { convertAroundTime, convertStringDate, PATH_CONSTANTS, generateEducationalContentStructuredData, generateBreadcrumbStructuredData } from 'utils';
 import { DeckDetailLoading, DeckFormModal, VocabFormModal } from './components';
 const { Text, Paragraph } = Typography;
 
@@ -30,6 +31,27 @@ export const DeckDetailPage = () => {
    const { data: isUnlockCardMatch, isLoading: cardMatchLoading, refetch: refetchUnlockCardMatch } = useIsUnlockCardMatchQuery(id ?? '');
    const { data: isUnlockMultipleChoice, isLoading: multipleChoiceLoading, refetch: refetchUnlockMutipleChoice} = useIsUnlockMultipleChoiceQuery(id ?? '');
    const [deleteDeck] = useDeleteDeckMutation();
+
+   // SEO optimization for deck detail page
+   useSEO({
+      title: deck ? `${deck.title} - Bộ Từ Vựng | Vocab Vault` : 'Bộ Từ Vựng - Vocab Vault',
+      description: deck 
+         ? `Học từ vựng ${deck.title} với ${deck.vocabList?.length || 0} từ. Luyện tập với flashcard tương tác, trò chơi ghép thẻ và bài kiểm tra. ${deck.description || ''}`
+         : 'Học từ vựng với flashcard tương tác, trò chơi và bài kiểm tra trên Vocab Vault.',
+      keywords: deck 
+         ? `${deck.title}, từ vựng, flashcard, ${deck.vocabList?.slice(0, 5).map(v => v.origin).join(', ')}, học tiếng anh`
+         : 'từ vựng, flashcard, học ngôn ngữ',
+      url: `https://vocab-vault.site/decks/${id}`,
+      type: 'article',
+      structuredData: deck ? {
+         ...generateEducationalContentStructuredData(deck),
+         ...generateBreadcrumbStructuredData([
+            { name: 'Trang Chủ', url: 'https://vocab-vault.site' },
+            { name: 'Bộ Từ Vựng', url: 'https://vocab-vault.site/decks' },
+            { name: deck.title || 'Bộ Từ Vựng', url: `https://vocab-vault.site/decks/${id}` }
+         ])
+      } : undefined
+   });
 
    const refetch = useCallback(() => {
       refetchGetDeckById();

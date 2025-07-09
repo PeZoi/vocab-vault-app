@@ -1,6 +1,8 @@
 import { Card, Typography, Space, Row, Col, Avatar, Divider } from 'antd';
 import { BookOutlined, BulbOutlined, TeamOutlined, ToolOutlined, ReadOutlined, RocketOutlined } from '@ant-design/icons';
+import { useSEO } from 'hooks';
 import React from 'react';
+import { generateFAQStructuredData } from 'utils';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -34,10 +36,20 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) =
 };
 
 export function AboutPage() {
+  // SEO optimization for About page
+  useSEO({
+    title: 'Giới Thiệu Vocab Vault - Nền Tảng Học Từ Vựng Tiên Tiến',
+    description: 'Tìm hiểu về Vocab Vault, nền tảng học từ vựng hiện đại giúp bạn mở rộng vốn từ vựng hiệu quả với flashcard tương tác, trò chơi và công nghệ lặp lại ngắt quãng.',
+    keywords: 'giới thiệu vocab vault, nền tảng học từ vựng, lặp lại ngắt quãng, ứng dụng flashcard, học ngôn ngữ, công nghệ giáo dục',
+    url: 'https://vocab-vault.site/about',
+    type: 'article',
+    structuredData: generateFAQStructuredData()
+  });
+
   return (
     <div className="max-w-6xl mx-auto py-5">
       <Typography className="about-page">
-        <div className="text-center mb-10">
+        <header className="text-center mb-10">
           <Title level={1} className="text-blue-500 font-semibold relative inline-block">
             Giới Thiệu Về Vocab Vault
             <div className="h-0.5 w-20 bg-blue-500 mx-auto mt-4"></div>
@@ -45,7 +57,7 @@ export function AboutPage() {
           <Paragraph className="text-base max-w-2xl mx-auto text-gray-500">
             Nền tảng học từ vựng hiện đại giúp bạn mở rộng vốn từ một cách hiệu quả và thú vị
           </Paragraph>
-        </div>
+        </header>
         
         <Card className="mb-8 shadow-md rounded-lg overflow-hidden border-0" bordered={false}>
           <Row gutter={[32, 24]}>

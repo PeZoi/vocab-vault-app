@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Trang chính -->
+  <url>
+    <loc>https://vocab-vault.site/</loc>
+    <lastmod>2025-07-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Trang giới thiệu -->
+  <url>
+    <loc>https://vocab-vault.site/about</loc>
+    <lastmod>2025-07-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Trang danh sách bộ từ vựng -->
+  <url>
+    <loc>https://vocab-vault.site/decks</loc>
+    <lastmod>2025-07-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Trang luyện đọc hiểu -->
+  <url>
+    <loc>https://vocab-vault.site/check-paragraph</loc>
+    <lastmod>2025-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Trang đăng ký -->
+  <url>
+    <loc>https://vocab-vault.site/sign-up</loc>
+    <lastmod>2025-07-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- 
+  Các trang bộ từ vựng động sẽ được thêm tự động
+  Ví dụ cấu trúc:
+  <url>
+    <loc>https://vocab-vault.site/decks/1</loc>
+    <lastmod>2025-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  -->
+  
+</urlset> 

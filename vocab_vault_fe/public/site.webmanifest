@@ -1,0 +1,56 @@
+{
+   "name": "Vocab Vault - Nền Tảng Học Từ Vựng",
+   "short_name": "Vocab Vault",
+   "description": "Thành thạo từ vựng với flashcard tương tác, trò chơi và bài kiểm tra",
+   "start_url": "/",
+   "display": "standalone",
+   "background_color": "#ffffff",
+   "theme_color": "#3b82f6",
+   "orientation": "portrait-primary",
+   "scope": "/",
+   "lang": "vi",
+   "icons": [
+      {
+         "src": "/android-chrome-192x192.png",
+         "sizes": "192x192",
+         "type": "image/png"
+      },
+      {
+         "src": "/android-chrome-512x512.png",
+         "sizes": "512x512",
+         "type": "image/png"
+      },
+      {
+         "src": "/apple-touch-icon.png",
+         "sizes": "180x180",
+         "type": "image/png"
+      }
+   ],
+   "categories": ["education", "learning", "vocabulary"],
+   "shortcuts": [
+      {
+         "name": "Duyệt Bộ Từ Vựng",
+         "short_name": "Bộ Từ",
+         "description": "Duyệt các bộ từ vựng",
+         "url": "/decks",
+         "icons": [
+            {
+               "src": "/android-chrome-192x192.png",
+               "sizes": "192x192"
+            }
+         ]
+      },
+      {
+         "name": "Luyện Đọc",
+         "short_name": "Đọc Hiểu",
+         "description": "Luyện tập đọc hiểu",
+         "url": "/check-paragraph",
+         "icons": [
+            {
+               "src": "/android-chrome-192x192.png",
+               "sizes": "192x192"
+            }
+         ]
+      }
+   ]
+}

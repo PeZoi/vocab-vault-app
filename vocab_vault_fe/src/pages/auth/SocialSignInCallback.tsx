@@ -12,6 +12,7 @@ export const SocialSignInCallback = () => {
    const [searchParams] = useSearchParams();
    const code = searchParams.get('code') || '';
    const scope = searchParams.get('scope');
+   const error = searchParams.get('error');
    let loginType = '';
 
    const handleCallbackGoogle = async () => {
@@ -31,6 +32,10 @@ export const SocialSignInCallback = () => {
    };
 
    useEffect(() => {
+      if (error) {
+         message?.error("Đăng nhập thất bại");
+         navigate(PATH_CONSTANTS.SIGN_IN);
+      }
       // HANDLE DETECT TO LOGIN TYPE (GOOGLE OR FACEBOOK)
       if (scope) {
          if (scope.includes('googleapis.com')) {
