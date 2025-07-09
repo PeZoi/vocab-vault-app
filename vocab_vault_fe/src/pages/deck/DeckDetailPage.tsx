@@ -8,7 +8,7 @@ import { GiChoice } from 'react-icons/gi';
 import { MdOutlinePublic } from 'react-icons/md';
 import { PiCards, PiCardsThree } from 'react-icons/pi';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useIsUnlockCardMatchQuery } from 'redux/api/cardMatchApi';
 import { useDeleteDeckMutation, useGetDeckByIdQuery } from 'redux/api/deckApi';
@@ -214,13 +214,13 @@ export const DeckDetailPage = () => {
                               {!isShorten ? (
                                  <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-5 my-5">
                                     {filteredVocabs?.map((vocab) => (
-                                       <VocabItem key={vocab.id} vocab={vocab} refetch={refetch} />
+                                       <VocabItem key={vocab.id} vocab={vocab} refetch={refetch} hasPermissionModify={deck?.user?.id == user?.id} />
                                     ))}
                                  </div>
                               ) : (
                                  <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-5 my-5">
                                     {filteredVocabs?.map((vocab) => (
-                                       <VocabItem key={vocab.id} vocab={vocab} refetch={refetch} isShorten={isShorten} />
+                                       <VocabItem key={vocab.id} vocab={vocab} refetch={refetch} isShorten={isShorten} hasPermissionModify={deck?.user?.id == user?.id} />
                                     ))}
                                  </div>
                               )}

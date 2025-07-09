@@ -23,9 +23,7 @@ function App() {
    }, [accessToken]);
 
    return (
-      <>
-         <MainRouter />
-      </>
+      <MainRouter />
    );
 }
 export default App;

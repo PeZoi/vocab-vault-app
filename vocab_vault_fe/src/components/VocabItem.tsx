@@ -12,10 +12,11 @@ const { Paragraph } = Typography;
 type Props = {
    vocab: VocabType;
    isShorten?: boolean;
+   hasPermissionModify?: boolean;
    refetch: () => void;
 };
 
-export const VocabItem: React.FC<Props> = ({ vocab, refetch, isShorten = false }) => {
+export const VocabItem: React.FC<Props> = ({ vocab, refetch, isShorten = false, hasPermissionModify }) => {
    const [openVocabModal, setOpenVocabModal] = useState(false);
    const [currentWord, setCurrentWord] = useState<string>('');
 
@@ -60,7 +61,7 @@ export const VocabItem: React.FC<Props> = ({ vocab, refetch, isShorten = false }
                   )}
                </span>
             </div>
-            <div className="flex flex-row-reverse items-center gap-3">
+            {hasPermissionModify && <div className="flex flex-row-reverse items-center gap-3">
                <Popconfirm
                   title="Xoá từ vựng"
                   description={`Bạn có chắc xoá từ ${capitalizeFirstLetter(vocab.origin)} chứ?`}
@@ -75,7 +76,7 @@ export const VocabItem: React.FC<Props> = ({ vocab, refetch, isShorten = false }
                <Button onClick={() => setOpenVocabModal(true)}>
                   <FaRegEdit />
                </Button>
-            </div>
+            </div>}
          </div>
          <div className="flex items-center gap-3">
             <span>Loại từ: </span>

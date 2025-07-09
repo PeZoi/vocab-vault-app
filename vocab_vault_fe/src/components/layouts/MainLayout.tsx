@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Button, Layout, Menu, theme } from 'antd';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { MENU_HOME } from 'utils';
 import { Header } from './Header';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const { Sider, Content } = Layout;
 
 export const MainLayout: React.FC = () => {
    const navigate = useNavigate();
    const { pathname } = useLocation();
+   const { user } = useSelector((state: any) => state.auth);
    const [collapsed, setCollapsed] = useState(false);
    const {
       token: { colorBgContainer, borderRadiusLG },
@@ -38,7 +40,7 @@ export const MainLayout: React.FC = () => {
                   theme="light"
                   mode="inline"
                   defaultSelectedKeys={[pathname]}
-                  items={MENU_HOME}
+                  items={MENU_HOME.filter((item: any) => user ? item : !item.isLogin)}
                   onClick={({ key }) => {
                      navigate(key);
                   }}

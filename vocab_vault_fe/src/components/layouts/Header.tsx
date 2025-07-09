@@ -1,9 +1,9 @@
 import { Avatar, Button, Dropdown, Layout, MenuProps } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
-import ICON from 'assets/icon.svg';
+import { ICON_SVG } from 'assets';
 import { useDispatch, useSelector } from 'react-redux';
 import { CgProfile } from 'react-icons/cg';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { logOutAPI } from 'apis';
 import { logout } from 'pages/auth';
 import { PATH_CONSTANTS } from 'utils';
@@ -45,7 +45,7 @@ export const Header: React.FC = () => {
    return (
       <Headerr className="bg-white px-0 flex items-center">
          <div className="flex items-center justify-between flex-1 px-5">
-            <img src={ICON} alt="icon" className="size-20" />
+            <img src={ICON_SVG} alt="icon" className="size-20" />
             {user ? (
                <>
                   <Dropdown menu={{ items }} placement="bottomRight" className="cursor-pointer">
