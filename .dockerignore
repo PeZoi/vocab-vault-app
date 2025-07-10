@@ -1,0 +1,50 @@
+# Node modules
+vocab_vault_fe/node_modules
+vocab_vault_be/node_modules
+**/node_modules
+
+# Build outputs
+vocab_vault_fe/dist
+vocab_vault_fe/build
+vocab_vault_be/target
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Documentation (except essential)
+*.md
+!README.md
+
+# Cache
+.cache
+.parcel-cache
+.nyc_output
+coverage
+
+# Temporary files
+*.tmp
+*.temp 

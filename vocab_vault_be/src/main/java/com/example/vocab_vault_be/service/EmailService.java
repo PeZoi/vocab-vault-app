@@ -5,6 +5,7 @@ import com.example.vocab_vault_be.exception.CustomException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EmailService {
     private final JavaMailSender javaMailSender;
     @Value("${vocab.vault.email}")
@@ -40,9 +42,19 @@ public class EmailService {
             helper.setText(content, true);
 
             javaMailSender.send(message);
+            log.info("Email sent successfully to: {}", toAddress);
         } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new CustomException("Lỗi không gửi được email!", HttpStatus.BAD_REQUEST);
+            // For local development, log the error but don't throw exception
+            log.error("Failed to send email to {}: {}. Verify Code: {}", toAddress, e.getMessage(), verifyCode);
+            log.warn(
+                    "Email functionality disabled for local development. Check your Gmail App Password configuration.");
+            // Uncomment the line below when you have proper email configuration:
+            throw new CustomException("Lỗi không gửi được email!",
+                    HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            log.error("Failed to send email to {}: {}. Verify Code: {}", toAddress, e.getMessage(), verifyCode);
+            log.warn(
+                    "Email functionality disabled for local development. Check your Gmail App Password configuration.");
         }
-
     }
 }

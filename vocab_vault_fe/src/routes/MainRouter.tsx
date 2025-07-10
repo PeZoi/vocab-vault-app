@@ -1,6 +1,6 @@
 import { MainLayout } from 'components';
 import { AboutPage, CardMatchPage, CheckParaGraphPage, DeckDetailPage, DeckPage, FlashCardPage, ForgotPasswordPage, HomePage, MultipleChoicePage, ResetPasswordPage, SignInPage, SignUpPage, SocialSignInCallback } from 'pages';
-import { RouterProvider } from 'react-router';
+import { RouterProvider } from 'react-router-dom';
 import { createBrowserRouter } from 'react-router-dom';
 import { PATH_CONSTANTS } from 'utils';
 

@@ -16,16 +16,23 @@ export const SocialSignInCallback = () => {
    let loginType = '';
 
    const handleCallbackGoogle = async () => {
-      const res = await socialCallBackAPI({ loginType, code });
-      if (res?.status === 200) {
-         message?.success('Đăng nhập thành công');
-         dispatch(updateInformationUser(res.data.user));
-         dispatch(updateToken(res.data.accessToken));
-         navigate(PATH_CONSTANTS.HOME);
-      } else if (res.status === 409) {
-         message?.error(res?.message);
-         navigate(PATH_CONSTANTS.SIGN_IN);
-      } else {
+      
+      try {
+         console.log('=== Pending ===');
+         const res = await socialCallBackAPI({ loginType, code });
+         if (res?.status === 200) {
+            console.log('=== Success ===');
+            message?.success('Đăng nhập thành công');
+            dispatch(updateInformationUser(res.data.user));
+            dispatch(updateToken(res.data.accessToken));
+            navigate(PATH_CONSTANTS.HOME);
+         } else if (res.status === 409) {
+            console.log('=== Error ===');
+            message?.error(res?.message);
+            navigate(PATH_CONSTANTS.SIGN_IN);
+         }
+      } catch (error) {
+         console.log('=== Error ===');
          message?.error('Có lỗi xảy ra!');
          navigate(PATH_CONSTANTS.SIGN_IN);
       }
@@ -45,7 +52,7 @@ export const SocialSignInCallback = () => {
             loginType = 'FACEBOOK';
          } else {
             message?.error('Có lỗi xảy ra!');
-            navigate(PATH_CONSTANTS.HOME);
+            navigate(PATH_CONSTANTS.SIGN_IN);
          }
       }
    }, [searchParams]);

@@ -16,13 +16,15 @@ export const SignUpPage = () => {
    const [isRegisted, setIsRegisted] = useState(false);
    const [emailRegisted, setEmailRegisted] = useState('');
    const handleSignUp = async (value: SignUpType) => {
-      const res = await signUpAPI(value);
-      if (res?.status === 201) {
-         message?.success('Đăng ký thành công');
-         setIsRegisted(true);
-         setEmailRegisted(res.data?.email);
-      } else {
-         message?.error(res?.message);
+      try {
+         const res = await signUpAPI(value);
+         if (res?.status === 201) {
+            message?.success('Đăng ký thành công');
+            setIsRegisted(true);
+            setEmailRegisted(res.data?.email);
+         }
+      } catch (error: any) {
+         message?.error(error?.response?.data?.message);
       }
    };
 

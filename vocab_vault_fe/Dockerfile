@@ -5,13 +5,13 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 
 # Copy package files
-COPY package*.json ./
+COPY vocab_vault_fe/package*.json ./
 
 # Install all dependencies (including devDependencies for build)
 RUN npm ci --no-audit --no-fund
 
 # Copy source code
-COPY . .
+COPY vocab_vault_fe/ .
 
 # Set environment variable for production build
 ENV NODE_ENV=production
@@ -23,7 +23,10 @@ RUN npx vite build
 FROM nginx:alpine
 
 # Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
+# Copy frontend-specific server configuration for SPA routing
+COPY nginx/frontend.conf /etc/nginx/conf.d/default.conf
 
 # Copy built app from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html

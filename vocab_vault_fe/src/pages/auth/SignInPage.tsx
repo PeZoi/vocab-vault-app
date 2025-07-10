@@ -1,7 +1,7 @@
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message } from 'antd';
 import { signInAPI, socialSignInAPI } from 'apis';
-import ICON from 'assets/icon.svg';
+import {ICON_SVG} from 'assets';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { SignInType } from 'types';
@@ -38,7 +38,7 @@ export const SignInPage = () => {
       <div className="flex items-center justify-center bg-background h-screen overflow-hidden">
          <div className="w-[500px] bg-white rounded-lg flex flex-col items-center p-10">
             <Link to={PATH_CONSTANTS.HOME}>
-               <img src={ICON} alt="icon" className="size-24" />
+               <img src={ICON_SVG} alt="icon" className="size-24" />
             </Link>
             <p className="font-bold uppercase text-2xl">ĐĂNG NHẬP</p>
             <p className="mt-2 text-sm text-gray-600">Chào mừng bạn đến với Vocab Vault</p>
