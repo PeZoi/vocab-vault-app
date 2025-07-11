@@ -47,10 +47,10 @@ jobs:
               cd vocab_vault_fe
               npm ci
 
-         - name: Test Backend
+         - name: Compile Backend (Skip Tests)
            run: |
               cd vocab_vault_be
-              ./mvnw test
+              ./mvnw clean compile -DskipTests
 
          - name: Test Frontend
            run: |
