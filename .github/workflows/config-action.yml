@@ -141,7 +141,7 @@ jobs:
               password: ${{ secrets.SERVER_PASSWORD }}
               port: ${{ secrets.SERVER_PORT || 22 }}
               script: |
-                 cd ${{ secrets.DEPLOY_PATH || '/opt/vocab-vault' }}
+                 cd ${{ secrets.DEPLOY_PATH || '/opt/vocab-vault-app' }}
 
                  # Pull latest images
                  docker compose pull
