@@ -81,7 +81,7 @@ export function HomePage() {
          {/* SEO content section */}
          <section className="mt-12 prose max-w-none bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-2xl">
             <h2 className="text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-8">
-               Tại Sao Chọn Vocab Vault Để Học Từ Vựng?
+               Tại Sao Chọn Vocab Vault Để Học Từ Vựng ?
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
                <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-blue-100">
