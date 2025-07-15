@@ -86,6 +86,15 @@ axiosInstance.interceptors.response.use(
          return Promise.reject(error);
       }
 
+      // Exclude login and registration endpoints from token refresh logic
+      // For these endpoints, 401 means invalid credentials, not expired token
+      const isAuthEndpoint = originalRequest.url?.includes('/api/auth/login') ||
+         originalRequest.url?.includes('/api/auth/register');
+
+      if (isAuthEndpoint) {
+         return Promise.reject(error);
+      }
+
       // Mark the request as retried to prevent infinite loops
       originalRequest._retry = true;
 

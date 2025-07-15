@@ -56,3 +56,43 @@ export const changePasswordAPI = async (value: { token: string, password: string
    return data;
 }
 
+export const updateProfileAPI = async (value: { fullName?: string; avatar?: string }): Promise<ApiResponse> => {
+   const formData = new FormData();
+
+   // Add fullName to form data
+   if (value.fullName) {
+      formData.append('fullName', value.fullName);
+   }
+
+   // Convert base64 avatar to file if provided
+   if (value.avatar && value.avatar.startsWith('data:image/')) {
+      try {
+         // Convert base64 to blob
+         const response = await fetch(value.avatar);
+         const blob = await response.blob();
+
+         // Create file from blob
+         const file = new File([blob], `avatar_${Date.now()}.jpg`, {
+            type: blob.type || 'image/jpeg'
+         });
+
+         formData.append('avatar', file);
+      } catch (error) {
+         console.error('Error converting base64 to file:', error);
+         throw new Error('Có lỗi xảy ra khi xử lý ảnh avatar');
+      }
+   }
+
+   const { data } = await axiosInstance.put("/api/users/change-profile", formData, {
+      headers: {
+         'Content-Type': 'multipart/form-data',
+      },
+   });
+   return data;
+}
+
+export const updatePasswordAPI = async (value: { currentPassword: string; newPassword: string }): Promise<ApiResponse> => {
+   const { data } = await axiosInstance.put("/api/users/change-password", value);
+   return data;
+}
+

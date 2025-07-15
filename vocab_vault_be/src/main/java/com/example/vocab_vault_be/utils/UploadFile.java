@@ -26,4 +26,14 @@ public class UploadFile {
             throw new CustomException("Tải file lên cloud không thành công!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    public String uploadFileOnCloudinary(MultipartFile file, String customFileName) {
+        try {
+            Map r = cloudinary.uploader().upload(file.getBytes(), Cloudinary.asMap("resource_type", "auto",
+                    "public_id", customFileName));
+            return (String) r.get("secure_url");
+        } catch (IOException e) {
+            throw new CustomException("Tải file lên cloud không thành công!", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

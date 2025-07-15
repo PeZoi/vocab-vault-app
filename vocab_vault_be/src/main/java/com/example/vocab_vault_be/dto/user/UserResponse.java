@@ -18,6 +18,7 @@ public class UserResponse {
     private String fullName;
     private String email;
     private String avatar;
+    private String type;
     private Instant createAt;
     private Instant updateAt;
     private boolean enabled;
