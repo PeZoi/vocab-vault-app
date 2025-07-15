@@ -45,7 +45,9 @@ export const Header: React.FC = () => {
    return (
       <Headerr className="bg-white px-0 flex items-center">
          <div className="flex items-center justify-between flex-1 px-5">
-            <img src={ICON_SVG} alt="icon" className="size-20" />
+            <Link to={PATH_CONSTANTS.HOME}>
+               <img src={ICON_SVG} alt="icon" className="size-20" />
+            </Link>
             {user ? (
                <>
                   <Dropdown menu={{ items }} placement="bottomRight" className="cursor-pointer">

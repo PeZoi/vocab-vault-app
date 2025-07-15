@@ -13,25 +13,43 @@ export const SignInPage = () => {
    const navigate = useNavigate();
 
    const handleSignIn = async (value: SignInType) => {
-      const res = await signInAPI(value);
-      if (res?.status === 200) {
-         message?.success('Đăng nhập thành công');
-
-         dispatch(updateInformationUser(res.data.user));
-         dispatch(updateToken(res.data.accessToken));
-         navigate(PATH_CONSTANTS.HOME);
-      } else {
-         message?.error(res?.message);
+      try {
+         const res = await signInAPI(value);
+         if (res?.status === 200) {
+            message?.success('Đăng nhập thành công');
+            dispatch(updateInformationUser(res.data.user));
+            dispatch(updateToken(res.data.accessToken));
+            navigate(PATH_CONSTANTS.HOME);
+         } else {
+            // Handle non-200 status codes
+            message?.error('Đăng nhập thất bại. Vui lòng thử lại.');
+         }
+         
+      } catch (error: any) {
+         console.error('Sign in error:', error);
+         // More comprehensive error handling
+         const errorMessage = error?.response?.data?.message || 
+                              error?.message || 
+                              'Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại.';
+         message?.error(errorMessage);
       }
    };
 
    const handleClickGoogle = async () => {
-      const res = await socialSignInAPI('GOOGLE');
-      if (res.status !== 200) {
-         message?.error('Có lỗi gì đó');
-         return;
+      try {
+         const res = await socialSignInAPI('GOOGLE');
+         if (res.status !== 200) {
+            message?.error('Có lỗi xảy ra khi đăng nhập với Google');
+            return;
+         }
+         window.location.replace(res?.data);
+      } catch (error: any) {
+         console.error('Google sign in error:', error);
+         const errorMessage = error?.response?.data?.message || 
+                              error?.message || 
+                              'Có lỗi xảy ra khi đăng nhập với Google. Vui lòng thử lại.';
+         message?.error(errorMessage);
       }
-      window.location.replace(res?.data);
    };
 
    return (
@@ -44,7 +62,16 @@ export const SignInPage = () => {
             <p className="mt-2 text-sm text-gray-600">Chào mừng bạn đến với Vocab Vault</p>
             <p className="text-sm text-gray-600">Nơi dành cho những người muốn lưu trữ từ vựng tiếng anh</p>
 
-            <Form name="normal_login" onFinish={handleSignIn} layout="vertical" className="mt-10 w-full">
+            <Form 
+               name="normal_login" 
+               onFinish={handleSignIn} 
+               onFinishFailed={(errorInfo) => {
+                  console.log('Form validation failed:', errorInfo);
+               }}
+               layout="vertical" 
+               className="mt-10 w-full"
+               preserve={false}
+            >
                <Form.Item
                   name="email"
                   rules={[

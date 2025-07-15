@@ -247,18 +247,27 @@ public class AuthService {
         // REGISTER IF EMAIL HASN'T ALREADY EXIST YET
         if (!userRepository.existsByEmail(email)) {
             MultipartFile avatarMultipartFile = CommonFunction.convertUrlToMultipartFile(avatar, email);
-            avatar = uploadFile.uploadFileOnCloudinary(avatarMultipartFile);
 
             Role role = roleRepository.findByName(String.valueOf(Roles.ROLE_USER));
             User user = new User();
-            user.setAvatar(avatar);
             user.setEnabled(true);
             user.setFullName(fullName);
             user.setEmail(email);
             user.setStatus(Status.ACTIVE);
             user.setRole(role);
             user.setType(loginType);
-            userRepository.save(user);
+
+            // Save user first to get ID
+            User savedUser = userRepository.save(user);
+
+            // Upload avatar with custom filename using user email (sanitized)
+            String sanitizedEmail = savedUser.getEmail().replace("@", "_").replace(".", "_");
+            String customFileName = "avatar_" + sanitizedEmail;
+            avatar = uploadFile.uploadFileOnCloudinary(avatarMultipartFile, customFileName);
+
+            // Update user with avatar URL
+            savedUser.setAvatar(avatar);
+            userRepository.save(savedUser);
         }
 
         // RESPONSE TOKEN
