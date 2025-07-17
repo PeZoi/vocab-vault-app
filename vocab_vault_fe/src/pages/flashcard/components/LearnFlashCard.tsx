@@ -1,9 +1,11 @@
 import { LoadingOutlined } from '@ant-design/icons';
-import { Button, Divider, Progress, Tooltip, Typography } from 'antd';
+import { Button, Divider, Modal, Progress, Tooltip, Typography } from 'antd';
 import { Stack } from 'collections';
+import { CheckParagraph } from 'components/CheckParagraph';
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { AiFillSound } from 'react-icons/ai';
+import { FaRegSquareCheck } from 'react-icons/fa6';
 import { GrRevert } from 'react-icons/gr';
 import { IoCheckmarkSharp, IoClose } from 'react-icons/io5';
 import { MdOutlineShuffle } from 'react-icons/md';
@@ -29,6 +31,7 @@ type Props = {
 
 export const LearnFlashCard: React.FC<Props> = ({flashCardDoneList, flashCardInfo, flashCardList, setIsCompleteFC, infoProgress, setInfoProgress, setFlipped, flipped, handleClickReset}) => {
    const [_, setShuffle] = useState(false);
+   const [isModalCheckParagraph, setIsModalCheckParagraph] = useState(false);
 
    const [currentWord, setCurrentWord] = useState<string>('');
    const { data: audioData, isLoading: isLoadingAudio } = useGetSoundForWordQuery({ word: currentWord }, { skip: !currentWord});
@@ -212,8 +215,20 @@ export const LearnFlashCard: React.FC<Props> = ({flashCardDoneList, flashCardInf
                         <MdOutlineShuffle />
                      </Button>
                   </Tooltip>
+                  <Tooltip title="Kiểm tra đoạn văn">
+                     <Button className="rounded-full" onClick={() => setIsModalCheckParagraph(true)}>
+                        <FaRegSquareCheck />
+                     </Button>
+                  </Tooltip>
                </div>
             </div>
-         </div></>
+         </div>
+         
+         <Modal open={isModalCheckParagraph} onCancel={() => setIsModalCheckParagraph(false)} footer={null} width={800}>
+            <div className='mt-5'>
+               <CheckParagraph />
+            </div>
+         </Modal>
+         </>
   )
 }

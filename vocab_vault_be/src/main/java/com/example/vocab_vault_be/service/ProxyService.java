@@ -32,7 +32,6 @@ public class ProxyService {
                 .block();
     }
 
-
     public JsonNode fetchSuggestionsVi(String word, String prefix) {
         return WebClient.builder()
                 .baseUrl("https://quizlet.com")
@@ -74,42 +73,47 @@ public class ProxyService {
                                                 "parts", List.of(
                                                         Map.of(
                                                                 "text", String.format(
-                                                                        "Bạn là một chuyên gia ngôn ngữ có khả năng tạo flashcard chất lượng cao. " +
-                                                                                "Hãy tạo flashcard cho từ \"%s\" với ngôn ngữ english.\n\n" +
+                                                                        "Bạn là một chuyên gia ngôn ngữ có khả năng tạo flashcard chất lượng cao. "
+                                                                                +
+                                                                                "Hãy tạo flashcard cho từ \"%s\" với ngôn ngữ english.\n\n"
+                                                                                +
                                                                                 "Yêu cầu:\n" +
-                                                                                "1. Phải cung cấp thông tin chính xác và đầy đủ\n" +
+                                                                                "1. Phải cung cấp thông tin chính xác và đầy đủ\n"
+                                                                                +
                                                                                 "2. Ví dụ phải thực tế và dễ hiểu\n" +
-                                                                                "3. Ghi chú phải hữu ích cho việc ghi nhớ\n" +
+                                                                                "3. Ghi chú phải hữu ích cho việc ghi nhớ\n"
+                                                                                +
                                                                                 "4. Định dạng JSON phải chính xác\n\n" +
                                                                                 "5. origin phải là tiếng anh, từ " +
                                                                                 "muốn dịch\n\n" +
                                                                                 "6. define phải là tiếng việt, từ " +
                                                                                 "định nghĩa ngắn gọn dễ hiểu\n\n" +
-                                                                                "Trả về kết quả theo cấu trúc JSON sau và KHÔNG kèm theo bất kỳ giải thích nào:\n" +
+                                                                                "Trả về kết quả theo cấu trúc JSON sau và KHÔNG kèm theo bất kỳ giải thích nào:\n"
+                                                                                +
                                                                                 "{\n" +
                                                                                 "   \"origin\": \"\",\n // Từ muốn " +
                                                                                 "dịch nghĩa" +
-                                                                                "   \"define\": \"\",\n // Định nghĩa bằng tiếng Việt, ngắn gọn và dễ hiểu" +
-                                                                                "   \"partsOfSpeech\": \"\",\n // Loại " +
-                                                                                "từ (Nound, Adj, Adv, Verb, Phrasal verb, Idioms etc.)" +
+                                                                                "   \"define\": \"\",\n // Định nghĩa bằng tiếng Việt, ngắn gọn và dễ hiểu"
+                                                                                +
+                                                                                "   \"partsOfSpeech\": \"\",\n // Loại "
+                                                                                +
+                                                                                "từ (Nound, Adj, Adv, Verb, Phrasal verb, Idioms etc.)"
+                                                                                +
                                                                                 "   \"ipa\": \"\",\n // Phiên âm " +
                                                                                 "chuẩn IPA" +
-                                                                                "   \"level\": \"\",\n // Từ này thuộc cấp mấy (A1, A2, ... C1, C2)" +
+                                                                                "   \"level\": \"\",\n // Từ này thuộc cấp mấy (A1, A2, ... C1, C2)"
+                                                                                +
                                                                                 "   \"examples\": [\n" +
-                                                                                "       {\"en\": \"\", \"vi\": \"\"},\n" +
-                                                                                "       {\"en\": \"\", \"vi\": \"\"},\n" +
+                                                                                "       {\"en\": \"\", \"vi\": \"\"},\n"
+                                                                                +
+                                                                                "       {\"en\": \"\", \"vi\": \"\"},\n"
+                                                                                +
                                                                                 "   ],\n // Ví dụ cho tôi 2 đơn giản " +
                                                                                 "nhất có thể" +
                                                                                 "   \"note\": \"\"\n // ghi chú bằng " +
                                                                                 "tiếng việt giúp tôi" +
-                                                                                "}", word
-                                                                )
-                                                        )
-                                                )
-                                        )
-                                )
-                        )
-                )
+                                                                                "}",
+                                                                        word)))))))
                 .retrieve()
                 .bodyToMono(JsonNode.class)
                 .block();
@@ -134,31 +138,68 @@ public class ProxyService {
                                                 "role", "user",
                                                 "parts", List.of(
                                                         Map.of(
-                                                                "text", String.format(
-                                                                        "Bạn là một chuyên gia kiểm tra chính tả và ngữ pháp rất chính xác. Khi tôi cung cấp cho bạn một đoạn văn bạn hãy kiểm tra nó giúp tôi với các yêu cầu sau:\n" +
-                                                                                "1. edited: đây là đoạn văn bạn đã chỉnh sửa từ đoạn văn gốc và hãy trả về cho tôi dạng html, nếu từ nào sai hay ngữ pháp không đúng hãy css bằng tailwind với gạch ngang là màu " +
-                                                                                "đỏ từ sai đó và sửa lại ngay bên cạnh bằng từ đúng và css bằng tailwind với gạch chân dưới là màu xanh từ đúng đó. Không cần bọc thẻ tag gì ở ngoài hết. Nếu không sai mà chỉ " +
-                                                                                "thiếu từ thì không cần gạch ngang màu đỏ, từ nào thêm thì gạch chân và màu chữ màu xanh từ mà bạn thêm" +
-                                                                                ". Ví dụ: This is a apple, thì hãy sửa thành: This is <span className='line-through text-red-500'>a</span> <span className='underline text-green-500'>an</span> apple\n" +
-                                                                                "2. explains: là một mảng các lỗi sai và giải đáp thắc mắc tại sao lại sai\n" +
-                                                                                "3. Tất cả các key trong chuỗi json là \"\";\n" +
-                                                                                "4. Tất cả giá trị dạng html đổi \"\" thành '' và class thành className và không có bất cứ ký tự sau: \\', \\\"\n" +
-                                                                                "5. Trả về kết quả theo cấu trúc JSON sau và không kèm theo lời giải thích nào:\n" +
-                                                                                "{\n" +
-                                                                                "edited: // Lấy toàn bộ đoạn văn gốc và chỉnh sửa lô sai trên câu gốc đó, nếu không sai gì hết thì trả về câu gốc\n" +
-                                                                                "explains: // Nếu không sai gì hết thì không ần trả v [\n" +
-                                                                                "{wrongWord: // Đây là từ sai;   explain: // Đây là giải đáp tại sao từ đó lại sai bằng tiếng việt}\n" +
-                                                                                "]\n" +
-                                                                                "vi: // dịch câu gốc ra thành tiếng việt\n" +
-                                                                                "}\n" +
-                                                                                "Câu gốc: " + paragraph
-                                                                )
-                                                        )
-                                                )
-                                        )
-                                )
-                        )
-                )
+                                                                "text",
+                                                                String.format(
+                                                                        "You are an English grammar and spelling expert. Please check the following text and provide corrections.\n\n"
+                                                                                +
+                                                                                "TASK: Check grammar, spelling, and provide corrections with visual markup.\n\n"
+                                                                                +
+                                                                                "REQUIREMENTS:\n"
+                                                                                +
+                                                                                "1. Return corrected HTML with Tailwind CSS classes\n"
+                                                                                +
+                                                                                "2. Mark wrong words with: <span className='line-through text-red-500'>wrong_word</span>\n"
+                                                                                +
+                                                                                "3. Mark correct words with: <span className='underline text-green-500'>correct_word</span>\n"
+                                                                                +
+                                                                                "4. For missing words: only add with green underline (no red strikethrough)\n"
+                                                                                +
+                                                                                "5. Provide explanations for each error in Vietnamese\n"
+                                                                                +
+                                                                                "6. Translate the original text to Vietnamese\n\n"
+                                                                                +
+                                                                                "7. If there are no errors, return the original text in 'edited' and an empty array in 'explains'\n\n"
+                                                                                +
+                                                                                "EXAMPLE:\n"
+                                                                                +
+                                                                                "Input: \"This is a apple\"\n"
+                                                                                +
+                                                                                "Output: \"This is <span className='line-through text-red-500'>a</span> <span className='underline text-green-500'>an</span> apple\"\n\n"
+                                                                                +
+                                                                                "RESPONSE FORMAT (JSON only, no explanations):\n"
+                                                                                +
+                                                                                "{\n"
+                                                                                +
+                                                                                "  \"edited\": \"corrected HTML text with Tailwind classes\",\n"
+                                                                                +
+                                                                                "  \"explains\": [\n"
+                                                                                +
+                                                                                "    {\n"
+                                                                                +
+                                                                                "      \"wrongWord\": \"incorrect word\",\n"
+                                                                                +
+                                                                                "      \"explain\": \"explanation in Vietnamese\"\n"
+                                                                                +
+                                                                                "    }\n"
+                                                                                +
+                                                                                "  ],\n"
+                                                                                +
+                                                                                "  \"vi\": \"Vietnamese translation of original text\"\n"
+                                                                                +
+                                                                                "}\n\n"
+                                                                                +
+                                                                                "IMPORTANT NOTES:\n"
+                                                                                +
+                                                                                "- Use single quotes (') for HTML attributes, not double quotes (\")\n"
+                                                                                +
+                                                                                "- Use 'className' instead of 'class'\n"
+                                                                                +
+                                                                                "- If no errors found, return original text in 'edited' and empty array in 'explains'\n"
+                                                                                +
+                                                                                "- All JSON keys must use double quotes\n\n"
+                                                                                +
+                                                                                "TEXT TO CHECK: "
+                                                                                + paragraph)))))))
                 .retrieve()
                 .bodyToMono(JsonNode.class)
                 .block();
