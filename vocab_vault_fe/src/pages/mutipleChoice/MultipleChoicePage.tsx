@@ -1,5 +1,5 @@
 import { LeftOutlined } from '@ant-design/icons';
-import { Button, Divider, InputNumber, message, Modal } from "antd";
+import { Button, Divider, InputNumber, message, Modal, Tooltip } from "antd";
 import { getMultipleChoiceAPI, getResultMultipleChoiceAPI } from 'apis';
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
@@ -11,6 +11,8 @@ import { MultipleChoiceType, ResultAnswerType } from "types";
 import { PATH_CONSTANTS } from 'utils';
 import { CompleteMutipleChoice } from './CompleteMutipleChoice';
 import { MultipleChoiceItem } from "./MultipleChoiceItem";
+import { FaRegSquareCheck } from 'react-icons/fa6';
+import { CheckParagraph } from 'components/CheckParagraph';
 
 export const MultipleChoicePage = () => {
   const { id } = useParams();
@@ -21,6 +23,7 @@ export const MultipleChoicePage = () => {
   const [results, setResults] = useState<ResultAnswerType[]>([]);
   const [isModalOpen] = useState(true);
   const [isModalConfirmSubmitOpen, setIsModalConfirmSubmitOpen] = useState(false);
+  const [isModalCheckParagraph, setIsModalCheckParagraph] = useState(false);
   const [isAllDoneAnswers, setIsAllDoneAnswers] = useState(false);
   const [confirmMultipleChoice, setConfirmMultipleChoice] = useState(false);
   const [isHiddenQuestionList, setIsHiddenQuestionList] = useState(true);
@@ -160,7 +163,10 @@ export const MultipleChoicePage = () => {
       <div className="flex relative ">
         <div className='min-w-[10px]'>
           <div className="sticky top-5 w-fit">
-            <Button className="round-full" onClick={() => setIsHiddenQuestionList(!isHiddenQuestionList)}>{isHiddenQuestionList ? <AiOutlineMenuFold /> : <AiOutlineMenuUnfold />}</Button>
+            <div className='flex gap-2'>
+              <Tooltip title={isHiddenQuestionList ? 'Hiện danh sách câu hỏi' : 'Ẩn danh sách câu hỏi'}><Button className="round-full" onClick={() => setIsHiddenQuestionList(!isHiddenQuestionList)}>{isHiddenQuestionList ? <AiOutlineMenuFold /> : <AiOutlineMenuUnfold />}</Button></Tooltip>
+              <Tooltip title="Kiểm tra đoạn văn"><Button className="round-full" onClick={() => setIsModalCheckParagraph(true)}><FaRegSquareCheck /></Button></Tooltip>
+            </div>
               {
                 isHiddenQuestionList ? (
                   <motion.div initial={{ transform: 'translateX(-10%)', opacity: 0 }} animate={{ transform: 'translateX(0)', opacity: 1 }} exit={{ transform: 'translateX(-10%)', opacity: 0 }}  className="border border-gray-200 rounded-lg p-5 col-span-1 h-fit mt-5">
@@ -198,6 +204,12 @@ export const MultipleChoicePage = () => {
           <p className="text-center text-lg">Bạn muốn xem lại các câu hỏi đã bỏ qua hay nộp bài kiểm tra ngay bây giờ?</p>
           <Divider/>
         </div>
+      </Modal>
+
+      <Modal open={isModalCheckParagraph} onCancel={() => setIsModalCheckParagraph(false)} footer={null} width={800}>
+          <div className='mt-5'>
+            <CheckParagraph />
+          </div>
       </Modal>
     </AnimatePresence>
   )
