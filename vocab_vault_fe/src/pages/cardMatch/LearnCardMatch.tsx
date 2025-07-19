@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { CardMatchResponse, CardMatchType, VocabType } from 'types';
+import { capitalizeFirstLetter } from 'utils/common';
 import { ConfirmStartCardMatch } from './ConfirmStartCardMatch';
 
 type Props = {
-  data: any[];
+  data: CardMatchResponse | null;
   countRef: React.MutableRefObject<number>;
   setIsComplete: (isComplete: boolean) => void;
 }
@@ -13,6 +15,7 @@ export const LearnCardMatch = ({
   countRef,
   setIsComplete,
 }: Props) => {
+  const [cardData, setCardData] = useState<CardMatchType[]>([]);
   const [arrMatch, setArrMatch] = useState<any[]>([]);
 	const [matchingCards, setMatchingCards] = useState<number[]>([]);
 	const [cardClickFirst, setCardClickFirst] = useState<number | null>(null);
@@ -28,8 +31,6 @@ export const LearnCardMatch = ({
 		}
 	}, [cardClickSecond]);
 
-  
-
   useEffect(() => {
     countRef.current = 0;
     const intervalId = setInterval(() => {
@@ -41,6 +42,21 @@ export const LearnCardMatch = ({
     };
   }, []);
 
+  useEffect(() => {
+		if (data) {
+			let formatData: CardMatchType[] = [];
+			data?.vocabList?.forEach((item: VocabType) => {
+				formatData.push({
+					word: capitalizeFirstLetter(item.origin),
+					idMatch: item.id
+				}, {
+					word: capitalizeFirstLetter(item.define),
+					idMatch: item.id
+				});
+			});
+			setCardData(formatData.sort(() => Math.random() - 0.5));
+		}
+	}, [data])
   
 	const handleClickCard = (index: number) => {
 		if (cardClickFirst === index) {
@@ -59,22 +75,24 @@ export const LearnCardMatch = ({
 	const handelMatch = () => {
 		if (cardClickFirst === null || cardClickSecond === null) return;
 
-		const isMatch = data[cardClickFirst].idMatch === data[cardClickSecond].idMatch;
+		const isMatch = cardData[cardClickFirst].idMatch === cardData[cardClickSecond].idMatch;
 		if (isMatch) {
 			setMatchingCards([cardClickFirst, cardClickSecond]);
 
 			setTimeout(() => {
-				setArrMatch((prev) => [...prev, cardClickFirst, cardClickSecond]);
+				setArrMatch((prev) => {
+					const newArrMatch = [...prev, cardClickFirst, cardClickSecond];
+					if (newArrMatch.length === cardData.length) {
+						setIsComplete(true);
+					}
+					return newArrMatch;
+				});
 				setMatchingCards([]);
-
-        if(arrMatch.length === 10) {
-          setIsComplete(true);
-        }
 			}, 600);
 		} else {
-      countRef.current += 2;
-      setCount(countRef.current);
-    }
+			countRef.current += 2;
+			setCount(countRef.current);
+		}
 
 		setCardClickFirst(null);
 		setCardClickSecond(null);
@@ -89,7 +107,7 @@ export const LearnCardMatch = ({
       <div className="text-center text-lg font-bold"><span className="rounded-full bg-gray-50 ring-2 ring-[#bdbcbc] px-4 py-1">{count}s</span></div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6 md:gap-10 mx-4 sm:mx-10 md:mx-20 mt-8 sm:mt-12">
-        {data.map((item: any, index: number) => (
+        {cardData.map((item: any, index: number) => (
           <motion.div
             key={item.word}
             className={`flex items-center justify-center rounded-md p-4 w-80 h-40 ring-2 ring-[#bdbcbc] cursor-pointer hover:border-
