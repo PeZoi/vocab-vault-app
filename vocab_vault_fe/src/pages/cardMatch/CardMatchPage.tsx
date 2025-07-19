@@ -3,18 +3,19 @@ import { Button, Divider, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from 'react-router';
 import { useGetCardMatchQuery } from 'redux/api';
-import { CardMatchType, VocabType } from 'types';
-import { capitalizeFirstLetter, PATH_CONSTANTS } from 'utils';
+import { PATH_CONSTANTS } from 'utils';
 import { CompleteCardMatch } from './CompleteCardMatch';
 import { LearnCardMatch } from "./LearnCardMatch";
 
 export const CardMatchPage = () => {
-	const [data, setData] = useState<CardMatchType[]>([]);
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [isComplete, setIsComplete] = useState(false);
 
-	const { data: cardMatchData, isLoading: loading, error } = useGetCardMatchQuery({ id: id ?? '' });
+	const { data: cardMatchData, isLoading: loading, error, refetch } = useGetCardMatchQuery(
+		{ id: id ?? '' },
+		{ refetchOnMountOrArgChange: true }
+	);
 
 	useEffect(() => {
 		if (error) {
@@ -22,22 +23,6 @@ export const CardMatchPage = () => {
 				navigate(PATH_CONSTANTS.HOME);
 		}
 	}, [error]);
-
-	useEffect(() => {
-		if (cardMatchData) {
-			let formatData: CardMatchType[] = [];
-			cardMatchData?.vocabList?.forEach((item: VocabType) => {
-				formatData.push({
-					word: capitalizeFirstLetter(item.origin),
-					idMatch: item.id
-				}, {
-					word: capitalizeFirstLetter(item.define),
-					idMatch: item.id
-				});
-			});
-			setData(formatData.sort(() => Math.random() - 0.5));
-		}
-	}, [cardMatchData])
 
 	const countRef = useRef(0);
 	
@@ -55,8 +40,8 @@ export const CardMatchPage = () => {
 
 			<Divider />
 			
-			{isComplete ? <CompleteCardMatch count={countRef.current} setIsComplete={setIsComplete} /> : <LearnCardMatch
-				data={data || []}
+			{isComplete ? <CompleteCardMatch count={countRef.current} setIsComplete={setIsComplete} refetch={refetch} /> : <LearnCardMatch
+				data={cardMatchData || null}
 				countRef={countRef}
 				setIsComplete={setIsComplete}
 			/>}

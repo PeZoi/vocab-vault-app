@@ -26,9 +26,10 @@ const MESSAGES_MAP: Record<number, string[]> = {
 type Props = {
   count: number;
   setIsComplete: (value: boolean) => void;
+  refetch: () => void;
 }
 
-export const CompleteCardMatch: React.FC<Props> = ({count, setIsComplete}) => {
+export const CompleteCardMatch: React.FC<Props> = ({count, setIsComplete, refetch}) => {
 
   const {id} = useParams();
   const [showConfetti, setShowConfetti] = useState(false);
@@ -60,6 +61,7 @@ export const CompleteCardMatch: React.FC<Props> = ({count, setIsComplete}) => {
   const handleReset = () => {
     setIsComplete(false);
     count = 0;
+    refetch();
   }
   
   return (
